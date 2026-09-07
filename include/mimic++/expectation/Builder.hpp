@@ -48,42 +48,79 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                 return copy;
             }
         };
+
+        template <typename SequenceConfig, typename FinalizePolicy, typename... Policies>
+        struct BuilderPolicies
+        {
+            using FinalizePolicyType = FinalizePolicy;
+
+            using TimesConfig = policies::detail::TimesConfig;
+            TimesConfig times{};
+            SequenceConfig sequences{};
+            FinalizePolicy finalize{};
+            std::tuple<Policies...> policies{};
+
+            constexpr auto with_times(TimesConfig newTimes) &&
+            {
+                return BuilderPolicies{
+                    std::move(newTimes),
+                    std::move(sequences),
+                    std::move(finalize),
+                    std::move(policies)};
+            }
+
+            template <typename Policy>
+            constexpr auto with_sequences(Policy&& policy) &&
+            {
+                auto newSequences = sequences.concat(std::forward<Policy>(policy));
+
+                return BuilderPolicies<decltype(newSequences), FinalizePolicy, Policies...>{
+                    std::move(times),
+                    std::move(newSequences),
+                    std::move(finalize),
+                    std::move(policies)};
+            }
+
+            template <typename Policy>
+            constexpr auto with_finalize(Policy&& policy) &&
+            {
+                return BuilderPolicies<SequenceConfig, std::remove_cvref_t<Policy>, Policies...>{
+                    std::move(times),
+                    std::move(sequences),
+                    std::forward<Policy>(policy),
+                    std::move(policies)};
+            }
+
+            template <typename Policy>
+            constexpr auto with_policy(Policy&& policy) &&
+            {
+                return BuilderPolicies<SequenceConfig, FinalizePolicy, Policies..., std::remove_cvref_t<Policy>>{
+                    std::move(times),
+                    std::move(sequences),
+                    std::move(finalize),
+                    std::tuple_cat(
+                        std::move(policies),
+                        std::forward_as_tuple(std::forward<Policy>(policy)))};
+            }
+        };
     }
 
-    template <
-        typename Signature,
-        detail::BuilderState state,
-        typename SequenceConfig,
-        typename FinalizePolicy,
-        expectation_policy_for<Signature>... Policies>
+    template <typename Signature, detail::BuilderState state, typename Policies>
     class BasicBuilder
     {
     public:
         using TimesConfig = policies::detail::TimesConfig;
-        using PolicyList = std::tuple<Policies...>;
 
         BasicBuilder(BasicBuilder const&) = delete;
         BasicBuilder& operator=(BasicBuilder const&) = delete;
 
         ~BasicBuilder() = default;
 
-        template <typename FinalizePolicyArg, typename PolicyListArg>
-            requires std::constructible_from<FinalizePolicy, FinalizePolicyArg>
-                      && std::constructible_from<PolicyList, PolicyListArg>
         [[nodiscard]]
-        explicit BasicBuilder(
-            Registry::Ptr registry,
-            reporting::TargetReport target,
-            TimesConfig timesConfig,
-            SequenceConfig sequenceConfig,
-            FinalizePolicyArg&& finalizePolicyArg,
-            PolicyListArg&& policyListArg)
+        explicit BasicBuilder(Registry::Ptr&& registry, reporting::TargetReport&& target, Policies&& policies)
             : m_Registry{std::move(registry)},
               m_TargetReport{std::move(target)},
-              m_TimesConfig{std::move(timesConfig)},
-              m_SequenceConfig{std::move(sequenceConfig)},
-              m_FinalizePolicy{std::forward<FinalizePolicyArg>(finalizePolicyArg)},
-              m_ExpectationPolicies{std::forward<PolicyListArg>(policyListArg)}
+              m_Policies{std::move(policies)}
         {
             MIMICPP_ASSERT(m_Registry, "Null registry is not allowed.");
         }
@@ -106,20 +143,16 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                 "Only one finalize-policy may be specified per expectation. "
                 "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
 
+            auto newPolicies = std::move(builder.m_Policies).with_finalize(std::forward<Policy>(policy));
             using Builder = BasicBuilder<
                 Signature,
                 state.with(&detail::BuilderState::finalizeConfigured),
-                SequenceConfig,
-                std::remove_cvref_t<Policy>,
-                Policies...>;
+                decltype(newPolicies)>;
 
             return Builder{
                 std::move(builder.m_Registry),
                 std::move(builder.m_TargetReport),
-                std::move(builder.m_TimesConfig),
-                std::move(builder.m_SequenceConfig),
-                std::forward<Policy>(policy),
-                std::move(builder.m_ExpectationPolicies)};
+                std::move(newPolicies)};
         }
 
         template <typename Policy>
@@ -127,23 +160,16 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         [[nodiscard]]
         friend constexpr auto operator&&(BasicBuilder&& builder, Policy&& policy)
         {
-            using ExtendedBuilder = BasicBuilder<
+            auto newPolicies = std::move(builder.m_Policies).with_policy(std::forward<Policy>(policy));
+            using Builder = BasicBuilder<
                 Signature,
                 state,
-                SequenceConfig,
-                FinalizePolicy,
-                Policies...,
-                std::remove_cvref_t<Policy>>;
+                decltype(newPolicies)>;
 
-            return ExtendedBuilder{
+            return Builder{
                 std::move(builder.m_Registry),
                 std::move(builder.m_TargetReport),
-                std::move(builder.m_TimesConfig),
-                std::move(builder.m_SequenceConfig),
-                std::move(builder.m_FinalizePolicy),
-                std::tuple_cat(
-                    std::move(builder.m_ExpectationPolicies),
-                    std::forward_as_tuple(std::forward<Policy>(policy)))};
+                std::move(newPolicies)};
         }
 
         [[nodiscard]]
@@ -157,46 +183,35 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
             using Builder = BasicBuilder<
                 Signature,
                 state.with(&detail::BuilderState::timesConfigured),
-                SequenceConfig,
-                FinalizePolicy,
-                Policies...>;
+                Policies>;
 
             return Builder{
                 std::move(builder.m_Registry),
                 std::move(builder.m_TargetReport),
-                std::move(config),
-                std::move(builder.m_SequenceConfig),
-                std::move(builder.m_FinalizePolicy),
-                std::move(builder.m_ExpectationPolicies)};
+                std::move(builder.m_Policies).with_times(std::forward<TimesConfig>(config))};
         }
 
         template <typename... Sequences>
         [[nodiscard]]
         friend constexpr auto operator&&(BasicBuilder&& builder, sequence::detail::Config<Sequences...>&& config)
         {
-            sequence::detail::Config newConfig = builder.m_SequenceConfig.concat(std::move(config));
-
-            using ExtendedBuilder = BasicBuilder<
+            auto newPolicies = std::move(builder.m_Policies).with_sequences(std::move(config));
+            using Builder = BasicBuilder<
                 Signature,
                 state,
-                decltype(newConfig),
-                FinalizePolicy,
-                Policies...>;
+                decltype(newPolicies)>;
 
-            return ExtendedBuilder{
+            return Builder{
                 std::move(builder.m_Registry),
                 std::move(builder.m_TargetReport),
-                std::move(builder.m_TimesConfig),
-                std::move(newConfig),
-                std::move(builder.m_FinalizePolicy),
-                std::move(builder.m_ExpectationPolicies)};
+                std::move(newPolicies)};
         }
 
         [[nodiscard]]
         Owner finalize(util::SourceLocation sourceLocation) &&
         {
             static_assert(
-                finalize_policy_for<FinalizePolicy, Signature>,
+                finalize_policy_for<typename Policies::FinalizePolicyType, Signature>,
                 "For non-void return types, a finalize-policy must be specified. "
                 "See: https://dnkpp.github.io/mimicpp/db/d7a/group___e_x_p_e_c_t_a_t_i_o_n___f_i_n_a_l_i_z_e_r.html#details");
 
@@ -206,11 +221,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
                         std::in_place_type<Signature>,
                         std::move(sourceLocation),
                         std::move(m_TargetReport),
-                        policies::ControlPolicy{sourceLocation, std::move(m_TimesConfig), std::move(m_SequenceConfig)},
-                        std::move(m_FinalizePolicy),
+                        policies::ControlPolicy{sourceLocation, std::move(m_Policies.times), std::move(m_Policies.sequences)},
+                        std::move(m_Policies.finalize),
                         std::move(policies)...);
                 },
-                m_ExpectationPolicies);
+                m_Policies.policies);
 
             return Owner{std::move(m_Registry), std::move(expectation)};
         }
@@ -218,10 +233,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
     private:
         Registry::Ptr m_Registry;
         reporting::TargetReport m_TargetReport;
-        TimesConfig m_TimesConfig{};
-        SequenceConfig m_SequenceConfig{};
-        FinalizePolicy m_FinalizePolicy{};
-        PolicyList m_ExpectationPolicies{};
+        Policies m_Policies;
     };
 
     namespace detail
@@ -291,7 +303,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         [[nodiscard]]
         constexpr auto extend_builder_with_arg_policies(
             Builder&& builder,
-            [[maybe_unused]] std::index_sequence<indices...> const,
+            std::index_sequence<indices...> const /*seq*/,
             Args&&... args)
         {
             return (
@@ -303,20 +315,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
         template <typename Signature, typename... Args>
         auto make_builder(Registry::Ptr registry, reporting::TargetReport target, Args&&... args)
         {
-            using Builder = BasicBuilder<
-                Signature,
-                BuilderState{},
-                sequence::detail::Config<>,
-                policies::InitFinalize>;
+            using Policies = BuilderPolicies<sequence::detail::Config<>, policies::InitFinalize>;
+            using Builder = BasicBuilder<Signature, BuilderState{}, Policies>;
 
             return detail::extend_builder_with_arg_policies<Signature>(
-                Builder{
-                    std::move(registry),
-                    std::move(target),
-                    policies::detail::TimesConfig{},
-                    sequence::detail::Config<>{},
-                    policies::InitFinalize{},
-                    std::tuple{}},
+                Builder{std::move(registry), std::move(target), Policies{}},
                 std::index_sequence_for<Args...>{},
                 std::forward<Args>(args)...);
         }

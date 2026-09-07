@@ -17,8 +17,7 @@ namespace
     using BaseBuilder = expectation::BasicBuilder<
         Signature,
         expectation::detail::BuilderState{},
-        sequence::detail::Config<>,
-        expectation::policies::InitFinalize>;
+        expectation::detail::BuilderPolicies<sequence::detail::Config<>, expectation::policies::InitFinalize>>;
 
     template <typename Signature>
     [[nodiscard]]
@@ -27,10 +26,7 @@ namespace
         return BaseBuilder<Signature>{
             std::move(registry),
             reporting::TargetReport{"Test-Mock", reporting::TypeReport::make<Signature>()},
-            TimesConfig{},
-            sequence::detail::Config<>{},
-            expectation::policies::InitFinalize{},
-            std::tuple{}
+            {}
         };
     }
 
