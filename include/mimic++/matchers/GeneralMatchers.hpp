@@ -425,8 +425,16 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
      * \snippet CustomMatcher.cpp matcher custom variadic usage
      *
      * When there are very special needs, users can also just define their own matcher type without any base-class.
+     * The only requirement is a single `matches` function, returning a `mimicpp::expectation::MatchResult`.
      * \snippet CustomMatcher.cpp matcher custom standalone definition
      * \snippet CustomMatcher.cpp matcher custom standalone usage
+     *
+     * #### Legacy matchers
+     * Older versions of *mimic++* required matchers to provide a separate `matches` (returning a plain `bool`) and `describe` function.
+     * This interface is still fully supported for backwards-compatibility,
+     * but its use is discouraged in favor of the single-`matches`-function interface shown above.
+     * \snippet CustomMatcher.cpp matcher custom legacy definition
+     * \snippet CustomMatcher.cpp matcher custom legacy usage
      *
      *\{
      */

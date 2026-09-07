@@ -411,10 +411,9 @@ the ``mimic++`` codebase.
 Matchers are used to check whether arguments satisfy specific requirements. While there are many existing matchers
 available, users often have unique needs.
 
-``mimic++`` provides a very generic ``mimicpp::PredicateMatcher``, which is often sufficient for most cases.
+*mimic++* provides the very generic `mimicpp::GenericMatcher`, which is often sufficient for most cases.
 However, if you need full control, you can start with a fresh type (without any inheritance) and build your own.
-Custom matchers simply need to conform to the ``mimicpp::matcher_for`` concept.
-For more information, please refer to the documentation.
+Custom matchers simply need to conform to the `mimicpp::matcher_for` concept.
 
 <a name="policies"></a>
 ### Policies
