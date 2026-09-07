@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -69,7 +69,7 @@ namespace mimicpp::expectation::policies
         }
 
         template <typename Return, typename... Args>
-        static constexpr void consume(call::Info<Return, Args...> const& info) noexcept
+        static constexpr void consume([[maybe_unused]] call::Info<Return, Args...> const& info) noexcept
         {
             MIMICPP_ASSERT(mimicpp::detail::is_matching(info.fromCategory, expected), "Call does not match.");
         }
