@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -40,7 +40,7 @@ namespace mimicpp::expectation::policies
         [[nodiscard]]
         // projected arguments may come as value, so Args& won't work in all cases
         // just forward them as lvalue-ref
-        constexpr MatchResult operator()(Args&&... args) const
+        MatchResult operator()(Args&&... args) const
             noexcept(std::is_nothrow_invocable_v<matches_fn, Matcher const&, Args&...>)
         {
             return mimicpp::detail::matches_hook::matches(matcher, args...);
@@ -72,7 +72,7 @@ namespace mimicpp::expectation::policies
         template <typename Return, typename... Args>
             requires std::is_invocable_r_v<MatchResult, MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>
         [[nodiscard]]
-        constexpr MatchResult matches(call::Info<Return, Args...> const& info) const
+        MatchResult matches(call::Info<Return, Args...> const& info) const
             noexcept(std::is_nothrow_invocable_v<MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>)
         {
             auto result = std::invoke(

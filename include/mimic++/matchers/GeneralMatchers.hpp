@@ -354,7 +354,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     {
     public:
         [[nodiscard]]
-        static constexpr expectation::MatchResult matches(auto&& /*target*/) noexcept
+        static expectation::MatchResult matches(auto&& /*target*/) noexcept
         {
             return expectation::MatchSuccess{};
         }
@@ -373,7 +373,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         using is_accepting = std::is_same<T, U>;
 
         [[nodiscard]]
-        static constexpr expectation::MatchResult matches(auto&& /*target*/) noexcept
+        static expectation::MatchResult matches(auto&& /*target*/) noexcept
         {
             return expectation::MatchSuccess{};
         }

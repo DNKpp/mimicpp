@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -77,7 +77,7 @@ namespace mimicpp::detail::matches_hook
 {
     template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr expectation::MatchResult matches_impl(util::priority_tag<3> const /*tag*/, Matcher const& matcher, Ts&... targets)
+    expectation::MatchResult matches_impl(util::priority_tag<3> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
             { custom::matcher_traits<Matcher>{}.matches(matcher, targets...) } -> std::convertible_to<expectation::MatchResult>;
         }
@@ -87,7 +87,7 @@ namespace mimicpp::detail::matches_hook
 
     template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
+    expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
             { matcher.matches(targets...) } -> std::convertible_to<expectation::MatchResult>;
         }
@@ -98,7 +98,7 @@ namespace mimicpp::detail::matches_hook
     // deprecated matches overloads
     template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
+    expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
             { custom::matcher_traits<Matcher>{}.matches(matcher, targets...) } -> util::boolean_testable;
         }
@@ -117,7 +117,7 @@ namespace mimicpp::detail::matches_hook
 
     template <typename Matcher, typename... Ts>
     [[nodiscard]]
-    constexpr expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
+    expectation::MatchResult matches_impl(util::priority_tag<0> const /*tag*/, Matcher const& matcher, Ts&... targets)
         requires requires {
             { matcher.matches(targets...) } -> util::boolean_testable;
         }
@@ -140,7 +140,7 @@ namespace mimicpp::detail::matches_hook
     {
         template <typename Matcher, typename T, typename... Others>
         [[nodiscard]]
-        constexpr expectation::MatchResult operator()(Matcher const& matcher, T& target, Others&... others) const
+        expectation::MatchResult operator()(Matcher const& matcher, T& target, Others&... others) const
             requires requires {
                 { matches_impl(maxTag, matcher, target, others...) } -> std::convertible_to<expectation::MatchResult>;
             }

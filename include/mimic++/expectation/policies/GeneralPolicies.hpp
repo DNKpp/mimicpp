@@ -58,7 +58,7 @@ namespace mimicpp::expectation::policies
 
         template <typename Return, typename... Args>
         [[nodiscard]]
-        static constexpr MatchResult matches(call::Info<Return, Args...> const& info) noexcept
+        static MatchResult matches(call::Info<Return, Args...> const& info) noexcept
         {
             if (mimicpp::detail::is_matching(info.fromCategory, expected))
             {
@@ -106,7 +106,7 @@ namespace mimicpp::expectation::policies
 
         template <typename Return, typename... Args>
         [[nodiscard]]
-        static constexpr MatchResult matches(call::Info<Return, Args...> const& info) noexcept
+        static MatchResult matches(call::Info<Return, Args...> const& info) noexcept
         {
             if (mimicpp::detail::is_matching(info.fromConstness, constness))
             {

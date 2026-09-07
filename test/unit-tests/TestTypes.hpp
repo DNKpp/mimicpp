@@ -50,7 +50,7 @@ public:
     mimicpp::expectation::MatchResult matchResult{};
 
     [[nodiscard]]
-    constexpr mimicpp::expectation::MatchResult matches(CallInfoT const& /*call*/) const noexcept
+    mimicpp::expectation::MatchResult matches(CallInfoT const& /*call*/) const noexcept
     {
         return matchResult;
     }
@@ -91,7 +91,7 @@ public:
     }
 
     [[nodiscard]]
-    constexpr mimicpp::expectation::MatchResult matches(CallT const& call) const
+    mimicpp::expectation::MatchResult matches(CallT const& call) const
     {
         return std::invoke(projection, policy)
             .matches(call);
@@ -269,7 +269,7 @@ public:
 
     template <typename... Args>
     [[nodiscard]]
-    constexpr mimicpp::expectation::MatchResult matches(Args&&... args) const
+    mimicpp::expectation::MatchResult matches(Args&&... args) const
     {
         return std::invoke(m_Projection, m_Matcher)
             .matches(std::forward<Args>(args)...);
