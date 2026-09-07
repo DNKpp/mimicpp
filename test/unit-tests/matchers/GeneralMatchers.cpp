@@ -698,7 +698,7 @@ TEST_CASE(
         STATIC_CHECK(matcher_for<Matcher, int&>);
 
         int i{42};
-        CHECK_THAT(matches::_.matches(i), variant_equals(expectation::MatchSuccess{}));
+        CHECK_THAT(matcher.matches(i), variant_holds_alternative<expectation::MatchSuccess>());
     }
 
     SECTION("When argument is not an exact match.")
