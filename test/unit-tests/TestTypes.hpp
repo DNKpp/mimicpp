@@ -55,7 +55,7 @@ public:
         return matchResult;
     }
 
-    static constexpr void consume(CallInfoT const& call) noexcept
+    static constexpr void consume(CallInfoT const& /*call*/) noexcept
     {
     }
 };
