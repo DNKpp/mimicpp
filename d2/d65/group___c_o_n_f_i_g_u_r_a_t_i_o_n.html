@@ -139,59 +139,55 @@ Use <span class="tt">fmt</span> as formatting backend</h2>
 <p>Whatever the reason to use <span class="tt">fmt</span> might be, chances are good that the library is already present. <span class="tt">mimic++</span> attempts to detect it when linked as CMake target, before pulling it from GitHub. To reuse an existing <span class="tt">fmt</span> package, ensure it can be found via <span class="tt">find_package(fmt)</span>.</p>
 <p>If C++20 modules are supported, you can also control how <span class="tt">fmt</span> is included via the <span class="tt">MIMICPP_CONFIG_IMPORT_FMT</span> option (default: <span class="tt">ON</span>). When set to <span class="tt">ON</span>, <span class="tt">import fmt;</span> will be used. Otherwise, it will fall back to a traditional <span class="tt">#include</span> directive.</p>
 <hr  />
-<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION"></a></p>
+<p><a class="anchor" id="MIMICPP_CONFIG_STACKTRACE"></a></p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md32"></a>
+Enable experimental stacktrace support</h2>
+<p><b>Name:</b> <span class="tt">MIMICPP_CONFIG_STACKTRACE</span></p>
+<p>When enabled, <em>mimic++</em> uses stacktrace information to provide more helpful diagnostics. Users can choose between the C++23 <span class="tt">std::stacktrace</span> (<span class="tt">c++23</span>), the third-party <span class="tt">cpptrace</span> (<span class="tt">cpptrace</span>) or <span class="tt">boost</span> (<span class="tt">boost</span>), or a custom stacktrace backend (<span class="tt">custom</span>). </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html" title="stacktrace">stacktrace</a> documentation</dd></dl>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+Non-cmake usage</h3>
+<p>In cases where <em>mimic++</em> is not configured via cmake, users can manually define the following macros (set them to <span class="tt">1</span>) before the inclusion of any <em>mimic++</em> header.</p><ul>
+<li><span class="tt">MIMICPP_CONFIG_USE_CXX23_STACKTRACE</span></li>
+<li><span class="tt">MIMICPP_CONFIG_USE_CPPTRACE</span></li>
+<li><span class="tt">MIMICPP_CONFIG_USE_BOOST_STACKTRACE</span></li>
+<li><span class="tt">MIMICPP_CONFIG_USE_CUSTOM_STACKTRACE</span></li>
+</ul>
+<hr  />
+<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION"></a></p>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
 Enable experimental catch2-matcher integration</h2>
 <p><b>Name:</b> <span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION</span></p>
 <p>If enabled, all matchers from the <span class="tt">Catch::Matcher</span> namespaces can be directly used everywhere, where <span class="tt">mimic++</span>-matchers are suitable. </p><dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, and may be removed during any release.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md33"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
 Why is this feature experimental?</h3>
 <p>Unfortunatly <span class="tt">catch2</span> matchers are desgined to be used in-place. Every combination you do, like negation via <span class="tt">operator !</span> or <span class="tt">operator &amp;&amp;</span>, just takes a const-reference to the source-matcher. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#combining-operators-and-lifetimes">https://github.com/catchorg/Catch2/blob/devel/docs/matchers.md#combining-operators-and-lifetimes</a></dd></dl>
 <p><span class="tt">mimic++</span> needs to store the matcher inside the expectation. These requirements are not playing well together. Nevertheless <span class="tt">catch2</span> offers some nice matcher definitions, which could be very helpfull for testing. But as already said, they are dangerous, thus I decided to make them opt-in as experimental features.</p>
 <hr  />
 <p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md35"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
 Enable experimental string-matcher unicode support</h2>
 <p><b>Name:</b> <span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_UNICODE_STR_MATCHER</span></p>
 <p>If enabled, all string-matchers get full unicode support. This is relevant, when comparing case-insensitively. It's not required for the base-version of string-matchers.</p>
 <p>This will require the rather light-weight library <span class="tt">uni-algo</span>, which can be found on github. </p><dl class="section see"><dt>See also</dt><dd><a href="https://github.com/uni-algo/uni-algo">https://github.com/uni-algo/uni-algo</a></dd></dl>
 <p><span class="tt">mimic++</span> first tries to find the dependency via <span class="tt">find_package</span>, but will fetch it from github if not available.</p>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, and may be removed during any release.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md36"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
 Why is this feature experimental?</h3>
 <p>I recently switched from <span class="tt">cpp-unicodelib</span>, which I didn't like very much for several reasons. <span class="tt">uni-algo</span> seems more mature, but I would like to get some feedback, before I'll declare this as a stable feature.</p>
 <hr  />
-<p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md38"></a>
-Enable experimental stacktrace support</h2>
-<p><b>Name:</b> <span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE</span></p>
-<p>When enabled, <span class="tt">mimic++</span> uses stacktrace information to provide more helpful diagnostics. Users can choose between the C++23 <span class="tt">std::stacktrace</span> (<span class="tt">c++23</span>), the third-party <span class="tt">cpptrace</span> (<span class="tt">cpptrace</span>) or <span class="tt">boost</span> (<span class="tt">boost</span>), or a custom stacktrace backend (<span class="tt">custom</span>). </p><dl class="section see"><dt>See also</dt><dd><a class="el" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html" title="stacktrace">stacktrace</a> documentation</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md39"></a>
-Non-cmake usage</h3>
-<p>In cases where <em>mimic++</em> is not configured via cmake, users can manually define the following macros (set them to <span class="tt">1</span>) before the inclusion of any <em>mimic++</em> header.</p><ul>
-<li><span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE</span></li>
-<li><span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE</span></li>
-<li><span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_USE_BOOST_STACKTRACE</span></li>
-<li><span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE</span></li>
-</ul>
-<dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, which may be removed during any release.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md40"></a>
-Why is this feature experimental?</h3>
-<p>The stacktrace integration has recently been reworked. Stacktraces are now collected only when a violation is detected (or <span class="tt">settings::report_success</span> is enabled). Previously, they were gathered on every mock call, which introduced significant overhead. With this change, the implementation is close to its intended design and may become stable soon.</p>
-<hr  />
 <p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md41"></a>
 Enable experimental pretty type-printing</h2>
 <p><b>Name:</b> <span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_PRETTY_TYPES</span></p>
 <p>When enabled, <span class="tt">mimic++</span> enhances type printing to closely match their actual representation in code, making error messages <b>more readable and informative</b>.</p>
 <p>However, this feature can introduce additional overhead, especially with heavily templated types. Without it, most types will be printed using <span class="tt">typeid(T).name()</span>, or, if <span class="tt">mimic++</span> is given a stringified type-name, it will output that string as-is. This usually provides a <b>rough indication of the type</b>, but often includes extra noise.</p>
 <dl class="section attention"><dt>Attention</dt><dd>This is an experimental feature, which may be removed during any release.</dd></dl>
-<h3 class="doxsection"><a class="anchor" id="autotoc_md43"></a>
+<h3 class="doxsection"><a class="anchor" id="autotoc_md42"></a>
 Why is this feature experimental?</h3>
 <p>The complexity lies in <b>post-processing</b> type strings into a uniform and human-readable format. Since compilers produce <b>inconsistent and platform-dependent</b> type names, <span class="tt">mimic++</span> must handle <b>a wide range of patterns, quirks, and edge cases</b>. While great effort has been made to make this reliable, unexpected cases may still exist in certain environments.</p>
 <hr  />
 <p><a class="anchor" id="MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__"></a></p>
-<h2 class="doxsection"><a class="anchor" id="autotoc_md45"></a>
+<h2 class="doxsection"><a class="anchor" id="autotoc_md44"></a>
 Enable experimental C++20 modules.</h2>
 <p><b>Name:</b> <span class="tt">MIMICPP_CONFIG_EXPERIMENTAL_ENABLE_CXX20_MODULES__UNPORTABLE__</span></p>
 <p>C++20 modules have come a long way and are finally appearing on the horizon. Unfortunately, they still require a very up-to-date toolchain (CMake, compiler, etc.), which is often not available by default. Even then, there's a significant chance of encountering compiler bugs that are difficult or impossible to work around. Because of this, users must explicitly opt-in to this feature. </p><dl class="section note"><dt>Note</dt><dd>This option is only available when CMake actually supports C++20 Modules (i.e. version <span class="tt">3.28</span> and later).</dd></dl>

@@ -34,7 +34,7 @@ var searchData=
   ['boosttest_2ehpp_31',['BoostTest.hpp',['../d9/d42/_boost_test_8hpp.html',1,'']]],
   ['boosttestreportert_32',['BoostTestReporterT',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html#ga170062931e79babbf3543affc8a7ad27',1,'mimicpp::reporting']]],
   ['bracelikes_33',['braceLikes',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#aa7a125de4df0fcfb7fb3bd06fc95693b',1,'mimicpp::printing::type::lexing::texts']]],
-  ['bring_20your_20own_20string_20and_20char_20types_34',['Bring your own string- and char-types',['../index.html#autotoc_md62',1,'']]],
+  ['bring_20your_20own_20string_20and_20char_20types_34',['Bring your own string- and char-types',['../index.html#autotoc_md61',1,'']]],
   ['builder_2ehpp_35',['Builder.hpp',['../d6/d15/_builder_8hpp.html',1,'']]],
   ['builtintype_36',['BuiltinType',['../df/d42/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_builtin_type.html',1,'mimicpp::printing::type::parsing::state']]],
   ['byte_20string_37',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md8',1,'']]]

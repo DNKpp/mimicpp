@@ -1,10 +1,10 @@
 var searchData=
 [
-  ['a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
+  ['a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_0',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]],
   ['a_20word_20on_20sequences_20with_20times_1',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md24',1,'']]],
   ['abstractdeclarator_2',['AbstractDeclarator',['../df/d96/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_abstract_declarator.html',1,'mimicpp::printing::type::parsing::state']]],
   ['access_3',['access',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#adab672e3469b40473720dc427ef0b064',1,'mimicpp::printing::type::lexing::texts']]],
-  ['acknowledgement_4',['Special Acknowledgement',['../index.html#autotoc_md78',1,'']]],
+  ['acknowledgement_4',['Special Acknowledgement',['../index.html#autotoc_md77',1,'']]],
   ['adapters_5',['test framework adapters',['../d4/d5c/group___r_e_p_o_r_t_i_n_g___a_d_a_p_t_e_r_s.html',1,'']]],
   ['add_5fcall_5fconvention_5ft_6',['add_call_convention_t',['../d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html#a8aaaa02958d794699258c27f8bf468dd',1,'mimicpp::call_convention_traits&lt; detail::default_call_convention &gt;']]],
   ['add_5foverload_7',['ADD_OVERLOAD',['../dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098',1,'Facade.hpp']]],
@@ -13,8 +13,8 @@ var searchData=
   ['always_5ffalse_10',['always_false',['../d4/df2/structmimicpp_1_1util_1_1always__false.html',1,'mimicpp::util']]],
   ['alwaysfalse_2ehpp_11',['AlwaysFalse.hpp',['../dc/dec/_always_false_8hpp.html',1,'']]],
   ['and_20assignment_20operator_12',['Move-constructor and -assignment-operator',['../d3/d5d/classmimicpp_1_1_watched.html#autotoc_md14',1,'']]],
-  ['and_20char_20types_13',['Bring your own string- and char-types',['../index.html#autotoc_md62',1,'']]],
-  ['and_20mostly_20macro_20free_20mocking_20framework_14',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
+  ['and_20char_20types_13',['Bring your own string- and char-types',['../index.html#autotoc_md61',1,'']]],
+  ['and_20mostly_20macro_20free_20mocking_20framework_14',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md46',1,'']]],
   ['and_20related_20strings_15',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md20',1,'']]],
   ['and_20variadic_20templates_16',['Mocks and variadic templates',['../dc/da4/group___f_a_c_a_d_e.html#autotoc_md2',1,'']]],
   ['any_17',['any',['../d1/d11/namespacemimicpp.html#a96efa41dafaf424bc936fc152467feb1a100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any'],['../d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec',1,'mimicpp::any']]],
