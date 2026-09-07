@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -12,25 +12,30 @@ namespace
 {
     //! [matcher custom contains definition]
     [[nodiscard]]
-    constexpr auto Contains(int expectedElement)
+    constexpr auto Contains(int const expectedElement)
     {
-        return mimicpp::PredicateMatcher{
+        return mimicpp::make_generic_matcher(
             // This is the actual predicate.
-            // The first argument is the actual input and the other are the stored tuple-elements.
-            [](auto const& argument, auto const& element) {
+            // The first argument is the context of the matcher, which holds the attached expectations
+            // (in this case the single `expectedElement`).
+            // `argument` is the actual argument from the currently processed function call.
+            // Note that it's not necessary to spell-out the actual type of the context. Usually `auto& ctx` works just fine.
+            [](mimicpp::MatchEvaluationContext<int>& ctx, auto const& argument) {
+                auto const& [element] = ctx.expectations(); // `expectations` returns a tuple, which need to decompose.
+                ctx.capture(argument);                      // Optionally, users can capture any variable and
+                                                            // the matcher will add that to the description if the predicate fails.
                 return std::ranges::find(argument, element) != std::ranges::end(argument);
             },
-            "contains element {}",     // This is the description format-string.
-            "contains not element {}", // This is the description string for the negated matcher (i.e. when `!Contains` is used).
-            // Capture additional data, which will be forwarded to both, the predicate and the description.
-            std::make_tuple(expectedElement)};
+            "contains element {}", // This is the description format-string.
+            expectedElement        // this captures the provided expectation
+        );
     }
 
     //! [matcher custom contains definition]
 }
 
 TEST_CASE(
-    "Custom matchers can be easily composed with the generic mimicpp::PredicateMatcher.",
+    "Custom matchers can be easily composed with the generic mimicpp::GenericMatcher.",
     "[example][example::matcher]")
 {
     //! [matcher custom contains usage]
@@ -56,22 +61,25 @@ namespace
     [[nodiscard]]
     auto MatchesRegex(std::string pattern)
     {
-        return mimicpp::PredicateMatcher{
+        return mimicpp::make_generic_matcher(
             // This is the actual predicate.
-            // The first argument is the actual input and the other are the stored tuple-elements.
-            [](std::ranges::range auto&& input, [[maybe_unused]] std::string const& patternString, std::regex const& regex) {
+            // The first argument is the context of the matcher, which holds the attached expectations
+            // (in this case the raw "pattern" and the pre-processed regex).
+            // `input` is the actual argument from the currently processed function call.
+            [](auto& ctx, std::ranges::range auto&& input) {
+                auto const& [regex, rawPattern] = ctx.expectations();
                 return std::regex_match(
                     std::ranges::begin(input),
                     std::ranges::end(input),
                     regex);
             },
-            "matches regex {}",        // This is the description format-string.
-            "does not match regex {}", // This is the description string for the negated matcher (i.e. when `!MatchesRegex` is used).
-            // PredicateMatcher accepts arbitrary additional date, wrapped as std::tuple.
-            // Each tuple-element will internally be applied to the predicate function and both format-strings.
+            "matches regex {1}", // Note the explicit positional argument
+            // The GenericMatchers accepts arbitrary additional data.
+            // Each such captured value will internally be to the format-string.
             // Note: It is allowed to store more elements than actually referenced by the format-strings.
             // The formatter will consume the arguments in the stored order.
-            std::make_tuple(pattern, std::regex{pattern})};
+            std::regex{pattern},
+            std::move(pattern));
     }
 
     //! [matcher custom regex definition]
@@ -102,15 +110,17 @@ namespace
     [[nodiscard]]
     constexpr auto MatchesSum(int const expectedSum)
     {
-        return mimicpp::PredicateMatcher{
+        return mimicpp::make_generic_matcher(
             // This is the actual predicate.
-            // The first two arguments are the input from the call and the last input is the set expectation.
-            [](int const firstArg, int const secondArg, int const expected) {
-                return firstArg + secondArg == expected;
+            // The last two arguments are the input from the call.
+            [](auto& ctx, int const firstArg, int const secondArg) {
+                auto const& [sum] = ctx.expectations();
+                ctx.capture(firstArg);
+                ctx.capture(secondArg);
+                return sum == firstArg + secondArg;
             },
-            "matches sum {}",        // This is the description format-string.
-            "does not match sum {}", // This is the description string for the negated matcher (i.e. when `!MatchesSum` is used).
-            std::make_tuple(expectedSum)};
+            "matches sum {}", // Note the explicit positional argument
+            expectedSum);
     }
 
     //! [matcher custom variadic definition]
@@ -142,21 +152,27 @@ namespace
     class IsEvenMatcher
     {
     public:
+        // The only requirement for a matcher is a single `matches` function, returning a `mimicpp::expectation::MatchResult`.
+        // The result either denotes a successful or a failed match and may optionally carry a textual description,
+        // which will be used for reporting purposes (e.g. when a call does not match any expectation).
         [[nodiscard]]
-        bool matches(int const input) const
+        static mimicpp::expectation::MatchResult matches(int const input)
         {
-            return 0 == input % 2;
-        }
+            if (0 == input % 2)
+            {
+                return mimicpp::expectation::MatchSuccess{
+                    .description = mimicpp::format::format("{} is an even number.", input)
+                };
+            }
 
-        [[nodiscard]]
-        std::string_view describe() const
-        {
-            return "is an even number.";
+            return mimicpp::expectation::MatchFailure{
+                .description = mimicpp::format::format("{} is not an even number.", input)
+            };
         }
     };
 
     // Let's see, whether we actually satisfy all constraints.
-    // This checks, that `IsEvenNumber` is a matcher for a single `int` argument.
+    // This checks, that `IsEvenMatcher` is a matcher for a single `int` argument.
     static_assert(mimicpp::matcher_for<IsEvenMatcher, int>);
     //! [matcher custom standalone definition]
 }
@@ -174,7 +190,50 @@ TEST_CASE(
     mock(42);
 
     // Note: It's the users responsibility to add additional feature, like negation.
-    // The `matcher_for` concept does only require the absolute minimal feature-set (a `matches` and `describe` function).
+    // The `matcher_for` concept does only require the absolute minimal feature-set (a single `matches` function).
     // So, in this case `!IsEvenMatcher{}` will not work.
     //! [matcher custom standalone usage]
 }
+
+namespace
+{
+    //! [matcher custom legacy definition]
+    // Discouraged: This is the legacy matcher interface, which is still supported for backwards-compatibility.
+    // It requires a `matches` function returning a plain `bool` and a separate `describe` function, providing the
+    // textual description. Prefer the single-`matches`-function interface shown above instead.
+    class IsEvenMatcherLegacy
+    {
+    public:
+        [[nodiscard]]
+        constexpr bool matches(int const input) const
+        {
+            return 0 == input % 2;
+        }
+
+        [[nodiscard]]
+        constexpr std::string_view describe() const
+        {
+            return "is an even number.";
+        }
+    };
+
+    // This still satisfies the `matcher_for` concept, as `matches` and `describe` are detected and combined
+    // into an equivalent `mimicpp::expectation::MatchResult` behind the scenes.
+    static_assert(mimicpp::matcher_for<IsEvenMatcherLegacy, int>);
+    //! [matcher custom legacy definition]
+}
+
+TEST_CASE(
+    "Legacy matchers with separate matches and describe functions are still supported, but discouraged.",
+    "[example][example::matcher]")
+{
+    //! [matcher custom legacy usage]
+    mimicpp::Mock<void(int)> mock{};
+
+    // This expects the input to be an even number.
+    SCOPED_EXP mock.expect_call(IsEvenMatcherLegacy{});
+
+    mock(42);
+    //! [matcher custom legacy usage]
+}
+
