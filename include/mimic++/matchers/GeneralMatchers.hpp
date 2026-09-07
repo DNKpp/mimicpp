@@ -247,7 +247,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         using ArgsStorage = std::tuple<Args...>;
 
         [[nodiscard]]
-        explicit constexpr GenericMatcher(Predicate predicate, StringViewT fmt, ArgsStorage args)
+        explicit constexpr GenericMatcher(Predicate predicate, format::vformat_string fmt, ArgsStorage args)
             noexcept(
                 std::is_nothrow_move_constructible_v<Predicate>
                 && std::is_nothrow_move_constructible_v<ArgsStorage>)
@@ -305,7 +305,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     private:
         Predicate m_Predicate;
-        StringViewT m_FormatString;
+        format::vformat_string m_FormatString;
         ArgsStorage m_Args;
 
         template <print_iterator OutIter>

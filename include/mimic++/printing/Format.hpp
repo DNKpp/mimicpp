@@ -86,15 +86,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format::detail::fmt
 {
     template <typename... Args>
     using format_string = std::basic_format_string<CharT, std::type_identity_t<Args>...>;
+    using vformat_string = StringViewT;
     using std::format_args;
     using std::formatter;
     using std::make_format_args;
     using std::vformat;
     using std::vformat_to;
-}
 
-namespace mimicpp::format::detail::fmt
-{
     template <typename Char>
     struct format_context;
 
@@ -145,6 +143,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format::detail::fmt
 {
     template <typename... Args>
     using format_string = ::fmt::format_string<Args...>;
+    using vformat_string = ::fmt::basic_string_view<CharT>;
     using ::fmt::format_args;
     using ::fmt::formatter;
     using ::fmt::make_format_args;
@@ -166,6 +165,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
 
     using detail::fmt::format_args;
     using detail::fmt::format_string;
+    using detail::fmt::vformat_string;
     using detail::fmt::formatter;
     using detail::fmt::make_format_args;
     using detail::fmt::vformat_to;
