@@ -280,45 +280,67 @@ private:
     Projection m_Projection;
 };
 
-template <std::equality_comparable Value>
-class VariantEqualsMatcher final
+template <typename Value, std::predicate<Value const&> Comparator>
+class VariantMatchesMatcher final
     : public Catch::Matchers::MatcherGenericBase
 {
 public:
     [[nodiscard]]
-    explicit constexpr VariantEqualsMatcher(Value value)
-        : m_Value{std::move(value)}
+    explicit constexpr VariantMatchesMatcher(std::string description, Comparator comparer = Comparator{})
+        : m_Description{std::move(description)},
+          m_Compare{std::move(comparer)}
     {
     }
 
     template <typename... Alternatives>
     [[nodiscard]]
-    constexpr bool match(const std::variant<Alternatives...>& other) const
+    bool match(std::variant<Alternatives...> const& other) const
         requires requires { { std::holds_alternative<Value>(other) } -> std::convertible_to<bool>; }
     {
+        UNSCOPED_CAPTURE(other.index(), other);
         return std::holds_alternative<Value>(other)
-            && m_Value == std::get<Value>(other);
+            && std::invoke(m_Compare, std::get<Value>(other));
     }
 
     [[nodiscard]]
     std::string describe() const override
     {
-        return std::string{"Variant state equals: "}
-             + mimicpp::print_type<Value>()
-             + ": "
-             + Catch::Detail::stringify(m_Value);
+        return m_Description;
     }
 
 private:
-    Value m_Value;
+    std::string m_Description;
+    Comparator m_Compare;
 };
+
+template <typename Alternative, std::predicate<Alternative const&> Comparator>
+[[nodiscard]]
+constexpr auto variant_matches(Comparator compare, std::string description = "Variant matches predicate")
+{
+    return VariantMatchesMatcher<Alternative, Comparator>{std::move(description), std::move(compare)};
+}
+
+template <typename Alternative>
+[[nodiscard]]
+constexpr auto variant_holds_alternative()
+{
+    return variant_matches<Alternative>(
+        [](Alternative const& /*value*/) { return true; },
+        std::string{"Variant holds alternative "}
+            + mimicpp::print_type<Alternative>());
+}
 
 template <typename Value>
 [[nodiscard]]
 constexpr auto variant_equals(Value&& value)
 {
-    return VariantEqualsMatcher<std::remove_cvref_t<Value>>{
-        std::forward<Value>(value)};
+    auto description = std::string{"Variant state equals: "}
+                     + mimicpp::print_type<Value>()
+                     + ": "
+                     + Catch::Detail::stringify(value);
+    return variant_matches<std::remove_cvref_t<Value>>(
+        std::bind_front(std::equal_to<>{}, std::forward<Value>(value)),
+        std::move(description));
 }
 
 class FakeSequenceStrategy

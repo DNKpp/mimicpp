@@ -19,21 +19,23 @@ namespace
     public:
         [[nodiscard]]
         explicit constexpr TokenMatcher(TokenClass tokenClass)
-            : m_ClassMatcher{std::move(tokenClass)}
+            : m_Expected{std::move(tokenClass)}
         {
         }
 
         [[nodiscard]]
         explicit constexpr TokenMatcher(StringViewT content, TokenClass tokenClass)
-            : m_ClassMatcher{std::move(tokenClass)},
+            : m_Expected{std::move(tokenClass)},
               m_Content{std::move(content)}
         {
         }
 
         [[nodiscard]]
-        constexpr bool match(printing::type::lexing::token const& token) const
+        bool match(printing::type::lexing::token const& token) const
         {
-            return m_ClassMatcher.match(token.classification)
+            UNSCOPED_CAPTURE(token);
+            return std::holds_alternative<TokenClass>(token.classification)
+                && m_Expected == std::get<TokenClass>(token.classification)
                 && (!m_Content || token.content == m_Content.value());
         }
 
@@ -53,7 +55,7 @@ namespace
         }
 
     private:
-        VariantEqualsMatcher<TokenClass> m_ClassMatcher;
+        TokenClass m_Expected;
         std::optional<StringViewT> m_Content{};
     };
 
