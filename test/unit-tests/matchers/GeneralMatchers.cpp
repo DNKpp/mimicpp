@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -606,38 +606,50 @@ TEST_CASE(
     int instance{42};
     const auto matcher = matches::instance(instance);
 
-    REQUIRE_THAT(
-        matcher.describe(),
-        Catch::Matchers::Matches("is instance at 0x[\\dAaBbCcDdEeFf]{1,16}"));
+    auto withDescription = [](StringT regex) {
+        return [regex = std::move(regex)](auto const& value) {
+            UNSCOPED_CAPTURE(value.description);
+            REQUIRE(value.description);
+            CHECK_THAT(*value.description, Catch::Matchers::Matches(regex));
+            return true;
+        };
+    };
 
     SECTION("When target is the instance.")
     {
-        REQUIRE(matcher.matches(instance));
+        CHECK_THAT(
+            matcher.matches(instance),
+            variant_matches<expectation::MatchSuccess>(withDescription("is instance at 0x[\\dAaBbCcDdEeFf]{1,16}")));
     }
 
     SECTION("When target is not the instance.")
     {
         constexpr int target{};
-        REQUIRE(!matcher.matches(target));
+        CHECK_THAT(
+            matcher.matches(target),
+            variant_matches<expectation::MatchFailure>(
+                withDescription("is instance at 0x[\\dAaBbCcDdEeFf]{1,16}, but actually 0x[\\dAaBbCcDdEeFf]{1,16}")));
     }
 
     SECTION("Matcher can be inverted.")
     {
         const auto invertedMatcher = !matches::instance(instance);
 
-        REQUIRE_THAT(
-            invertedMatcher.describe(),
-            Catch::Matchers::Matches("is not instance at 0x[\\dAaBbCcDdEeFf]{1,16}"));
-
         SECTION("When target is not the instance.")
         {
             constexpr int target{};
-            REQUIRE(!matcher.matches(target));
+            CHECK_THAT(
+                invertedMatcher.matches(target),
+                variant_matches<expectation::MatchSuccess>(
+                    withDescription(R"(not \(is instance at 0x[\dAaBbCcDdEeFf]{1,16}\))")));
         }
 
         SECTION("When target is the instance.")
         {
-            REQUIRE(matcher.matches(instance));
+            CHECK_THAT(
+                invertedMatcher.matches(instance),
+                variant_matches<expectation::MatchFailure>(
+                    withDescription(R"(not \(is instance at 0x[\dAaBbCcDdEeFf]{1,16}\), but actually 0x[\dAaBbCcDdEeFf]{1,16})")));
         }
     }
 }
@@ -655,18 +667,22 @@ TEST_CASE(
     {
     };
 
-    derived constexpr object{};
+    constexpr derived object{};
     auto const matcher = matches::instance(object);
 
     SECTION("Matches, when same instance is provided.")
     {
-        CHECK(matcher.matches(static_cast<base const&>(object)));
+        CHECK_THAT(
+            matcher.matches(static_cast<base const&>(object)),
+            variant_holds_alternative<expectation::MatchSuccess>());
     }
 
     SECTION("Does not match, when other instance is provided.")
     {
-        derived constexpr other{};
-        CHECK(!matcher.matches(static_cast<base const&>(other)));
+        constexpr derived other{};
+        CHECK_THAT(
+            matcher.matches(static_cast<base const&>(other)),
+            variant_holds_alternative<expectation::MatchFailure>());
     }
 }
 

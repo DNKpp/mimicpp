@@ -564,7 +564,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
     }
 
     /**
-     * \brief Tests, whether the target is the expected instance.
+     * \brief Tests whether the target is the expected instance.
      * \tparam T Instance type.
      * \param instance The instance to be compared to.
      * \snippet Requirements.cpp matcher instance
@@ -573,15 +573,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
     [[nodiscard]]
     constexpr auto instance(T&& instance) // NOLINT(cppcoreguidelines-missing-std-forward)
     {
-        return PredicateMatcher{
-            []<typename Other>(Other const& target, auto const* instancePtr) noexcept
+        return make_generic_matcher(
+            []<typename Other>(auto& ctx, Other const& target) noexcept
                 requires std::is_convertible_v<std::remove_cvref_t<T> const volatile*, Other const volatile*>
             {
-                return std::addressof(target) == instancePtr;
+                auto const& [expected] = ctx.expectations();
+                auto* const targetPtr = std::addressof(target);
+                ctx.capture(targetPtr);
+                return expected == targetPtr;
             },
             "is instance at {}",
-            "is not instance at {}",
-            std::make_tuple(std::addressof(instance))};
+            std::addressof(instance));
     }
 
     /**
