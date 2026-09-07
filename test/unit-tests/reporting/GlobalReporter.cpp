@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -84,7 +84,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     SECTION("When report_inapplicable_matches() is called.")
     {
-        MatchReport const report{.expectationReport = expectationReport};
+        MatchReport const report{.expectationReport = expectationReport, .matchResults = {}};
 
         REQUIRE_CALL(reporter, report_inapplicable_matches(callReport, std::vector{report}))
             .THROW(TestException{});
@@ -96,7 +96,7 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     SECTION("When report_full_match() is called.")
     {
-        MatchReport const report{.expectationReport = expectationReport};
+        MatchReport const report{.expectationReport = expectationReport, .matchResults = {}};
 
         REQUIRE_CALL(reporter, report_full_match(callReport, report));
 
