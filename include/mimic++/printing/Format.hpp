@@ -233,6 +233,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
             return detail::fallback_formattable<T>{std::forward<T>(target)};
         }
     }
+
+    template <typename T>
+    using fallback_formattable_t = decltype(fallback_formattable(std::declval<T>()));
 }
 
 template <typename T>
