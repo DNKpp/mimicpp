@@ -17,7 +17,7 @@ var hierarchy =
     ] ],
     [ "mimicpp::facade::basic_as_member&lt; TargetTemplate &gt;", "dc/d2a/structmimicpp_1_1facade_1_1basic__as__member.html", null ],
     [ "mimicpp::facade::basic_as_member_with_this&lt; Self, TargetTemplate &gt;", "d8/db0/structmimicpp_1_1facade_1_1basic__as__member__with__this.html", null ],
-    [ "mimicpp::expectation::BasicBuilder&lt; timesConfigured, SequenceConfig, Signature, FinalizePolicy, Policies &gt;", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html", null ],
+    [ "mimicpp::expectation::BasicBuilder&lt; Signature, state, Policies &gt;", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html", null ],
     [ "mimicpp::detail::BasicMock&lt; FirstSignature &gt;", null, [
       [ "mimicpp::Mock< FirstSignature, OtherSignatures >", "d2/d48/classmimicpp_1_1_mock.html", null ]
     ] ],

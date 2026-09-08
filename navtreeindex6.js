@@ -1,7 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"de/daf/classmimicpp_1_1util_1_1_static_string.html#ae9115aceec7f39c076ad5dd8af28613a":[5,0,0,7,9,5],
-"de/daf/classmimicpp_1_1util_1_1_static_string.html#aedf61489a44f11a96dcdbf46ee224cd5":[3,0,0,13,9,7],
 "de/daf/classmimicpp_1_1util_1_1_static_string.html#aedf61489a44f11a96dcdbf46ee224cd5":[5,0,0,7,9,7],
 "de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html":[2,12,1],
 "de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f":[2,12,1,4],
@@ -249,5 +247,7 @@ var NAVTREEINDEX6 =
 "index.html#autotoc_md50":[0,0],
 "index.html#autotoc_md52":[0,1],
 "index.html#autotoc_md53":[0,1,2],
-"index.html#autotoc_md54":[0,1,3]
+"index.html#autotoc_md54":[0,1,3],
+"index.html#autotoc_md55":[0,1,4],
+"index.html#autotoc_md57":[0,2]
 };

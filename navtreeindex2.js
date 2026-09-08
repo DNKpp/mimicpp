@@ -1,7 +1,5 @@
 var NAVTREEINDEX2 =
 {
-"d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html#a18afb7e9b6b3dbd566b0dde52623147c":[5,0,0,2,0,2,0],
-"d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html#a3478e12a2f13e98dee910fb492f1ccb2":[3,0,0,3,0,2,2],
 "d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html#a3478e12a2f13e98dee910fb492f1ccb2":[5,0,0,2,0,2,2],
 "d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html#a73b73c562209ce548faefe0aee49411c":[3,0,0,3,0,2,3],
 "d4/dbe/classmimicpp_1_1expectation_1_1policies_1_1_constness.html#a73b73c562209ce548faefe0aee49411c":[5,0,0,2,0,2,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX2 =
 "d7/dc2/classmimicpp_1_1printing_1_1_print_type_fn.html#ac1ab58ab5ef54b6abb45da6a2d56905f":[5,0,0,4,2,0],
 "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html":[2,1,9],
 "d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a0650d35d81bad10f814df6fc3fd7809e":[2,1,9,6],
-"d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a1f40567d7a4e4277543f9238ba2de282":[2,1,9,1]
+"d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a1f40567d7a4e4277543f9238ba2de282":[2,1,9,1],
+"d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a2881c81e2aa756bd01c19fe8287f2775":[2,1,9,4],
+"d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a5d43ef8d03791dbf1248603550149d6a":[2,1,9,0]
 };
