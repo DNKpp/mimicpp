@@ -400,20 +400,20 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
      * \details For equality testing, there exists an even shorter syntax.
      * \snippet Requirements.cpp expect arg equal short
      *
-     * \details Most of the built-in matchers support the inversion operator (``operator !``), which then tests for the opposite
+     * \details Most of the built-in matchers support the inversion operator (`operator !`), which then tests for the opposite
      * condition.
      * \snippet Requirements.cpp matcher inverted
      *
      * ### Custom Matcher
-     * Matchers are highly customizable. In fact, any type which satisfies ``matcher_for`` concept can be used.
-     * There exists no base or interface type, but the ``PredicateMatcher`` servers as a convenient generic type, which
-     * simply contains a predicate, a format string and optional additional arguments.
+     * Matchers are highly customizable. In fact, any type which satisfies `matcher_for` concept can be used.
+     * There exists no base or interface type, but the `GenericMatcher` servers as a convenient generic type,
+     * which simply contains a predicate, a format string and optional additional arguments.
      *
      * A very straight-forward custom matcher may look like this:
      * \snippet CustomMatcher.cpp matcher custom contains definition
      * \snippet CustomMatcher.cpp matcher custom contains usage
      *
-     * In fact, the `PredicateMatcher` is very flexible and can most likely tailored to your needs.
+     * In fact, the `GenericMatcher` is very flexible and can most likely tailored to your needs.
      * For example, you can store any additional data.
      * In this case the internal formatter requires the raw-pattern string, but the actual predicate needs a `std::regex`.
      * \snippet CustomMatcher.cpp matcher custom regex definition
