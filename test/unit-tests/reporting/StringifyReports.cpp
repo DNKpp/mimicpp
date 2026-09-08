@@ -39,8 +39,8 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
             {
-                {.typeInfo = reporting::TypeReport::make<int>(), .stateString = "1337"},
-                {.typeInfo = reporting::TypeReport::make<std::string>(), .stateString = "\"Hello, World!\""},
+                {reporting::TypeReport::make<int>(), "1337"},
+                {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""},
             }},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any,
@@ -196,8 +196,8 @@ TEST_CASE(
         .returnTypeInfo = reporting::TypeReport::make<void>(),
         .argDetails = {
             {
-                {.typeInfo = reporting::TypeReport::make<int>(), .stateString = "1337"},
-                {.typeInfo = reporting::TypeReport::make<std::string>(), .stateString = "\"Hello, World!\""},
+                {reporting::TypeReport::make<int>(), "1337"},
+                {reporting::TypeReport::make<std::string>(), "\"Hello, World!\""},
             }},
         .fromCategory = ValueCategory::any,
         .fromConstness = Constness::any,
