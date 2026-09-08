@@ -75,10 +75,8 @@ namespace mimicpp::expectation::policies
         MatchResult matches(call::Info<Return, Args...> const& info) const
             noexcept(std::is_nothrow_invocable_v<MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>)
         {
-            auto result = std::invoke(
-                m_MatchesStrategy,
-                matcher_matches_fn<Matcher>{m_Matcher},
-                info);
+            matcher_matches_fn<Matcher> const matches{m_Matcher};
+            auto result = std::invoke(m_MatchesStrategy, matches, info);
             std::visit([&](auto& inner) {
                 if (auto& description = inner.description)
                 {
