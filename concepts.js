@@ -19,7 +19,8 @@ var concepts =
         [ "same_as_any", "d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html", null ],
         [ "satisfies", "dc/d18/conceptmimicpp_1_1util_1_1satisfies.html", null ],
         [ "boolean_testable", "d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html", null ],
-        [ "weakly_equality_comparable_with", "d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html", null ]
+        [ "weakly_equality_comparable_with", "d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html", null ],
+        [ "unqualified", "da/dce/conceptmimicpp_1_1util_1_1unqualified.html", null ]
       ] ],
       [ "case_foldable_string", "d0/d48/conceptmimicpp_1_1case__foldable__string.html", null ],
       [ "has_default_call_convention", "da/d58/conceptmimicpp_1_1has__default__call__convention.html", null ],

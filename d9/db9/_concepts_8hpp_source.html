@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('d9/db9/_concep
   <div class="headertitle"><div class="title">Concepts.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="../../d9/db9/_concepts_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.</span></div>
+<a href="../../d9/db9/_concepts_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Distributed under the Boost Software License, Version 1.0.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//          https://www.boost.org/LICENSE_1_0.txt)</span></div>
@@ -182,9 +182,12 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('d9/db9/_concep
 <div class="line"><a id="l00084" name="l00084"></a><span class="lineno">   84</span>        };</div>
 </div>
 <div class="line"><a id="l00085" name="l00085"></a><span class="lineno">   85</span></div>
-<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>}</div>
-<div class="line"><a id="l00090" name="l00090"></a><span class="lineno">   90</span> </div>
-<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00089" name="l00089"></a><span class="lineno">   89</span>    <span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
+<div class="line"><a id="l00090" name="l00090"></a><span class="lineno"><a class="line" href="../../da/dce/conceptmimicpp_1_1util_1_1unqualified.html">   90</a></span>    <span class="keyword">concept </span><a class="code hl_concept" href="../../da/dce/conceptmimicpp_1_1util_1_1unqualified.html">unqualified</a> = std::same_as&lt;T, std::remove_cvref_t&lt;T&gt;&gt;;</div>
+<div class="line"><a id="l00091" name="l00091"></a><span class="lineno">   91</span></div>
+<div class="line"><a id="l00095" name="l00095"></a><span class="lineno">   95</span>}</div>
+<div class="line"><a id="l00096" name="l00096"></a><span class="lineno">   96</span> </div>
+<div class="line"><a id="l00097" name="l00097"></a><span class="lineno">   97</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
 <div class="ttc" id="a_config_8hpp_html_af5897385afd790dba0e4971e29c1e3e0"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MODULE_EXPORT</div><div class="ttdef"><b>Definition</b> Config.hpp:19</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1boolean__testable_html"><div class="ttname"><a href="../../d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html">mimicpp::util::boolean_testable</a></div><div class="ttdoc">Determines, whether B behaves as a the builtin type bool.</div><div class="ttdef"><b>Definition</b> Concepts.hpp:66</div></div>
@@ -192,6 +195,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('d9/db9/_concep
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1nothrow__explicitly__convertible__to_html"><div class="ttname"><a href="../../db/d6a/conceptmimicpp_1_1util_1_1nothrow__explicitly__convertible__to.html">mimicpp::util::nothrow_explicitly_convertible_to</a></div><div class="ttdoc">Determines, whether From can be explicitly converted to To, without throwing.</div><div class="ttdef"><b>Definition</b> Concepts.hpp:43</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1same__as__any_html"><div class="ttname"><a href="../../d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html">mimicpp::util::same_as_any</a></div><div class="ttdoc">Determines, whether T is the same as any type of the pack Others.</div><div class="ttdef"><b>Definition</b> Concepts.hpp:53</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1satisfies_html"><div class="ttname"><a href="../../dc/d18/conceptmimicpp_1_1util_1_1satisfies.html">mimicpp::util::satisfies</a></div><div class="ttdoc">Determines, whether T satisfies the specified trait type.</div><div class="ttdef"><b>Definition</b> Concepts.hpp:59</div></div>
+<div class="ttc" id="aconceptmimicpp_1_1util_1_1unqualified_html"><div class="ttname"><a href="../../da/dce/conceptmimicpp_1_1util_1_1unqualified.html">mimicpp::util::unqualified</a></div><div class="ttdoc">Determines, whether T is unqualified.</div><div class="ttdef"><b>Definition</b> Concepts.hpp:90</div></div>
 <div class="ttc" id="aconceptmimicpp_1_1util_1_1weakly__equality__comparable__with_html"><div class="ttname"><a href="../../d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html">mimicpp::util::weakly_equality_comparable_with</a></div><div class="ttdoc">Determines, whether T can be equality compared with U.</div><div class="ttdef"><b>Definition</b> Concepts.hpp:78</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1util_html"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html">mimicpp::util</a></div><div class="ttdef"><b>Definition</b> Fwd.hpp:435</div></div>
 </div><!-- fragment --></div><!-- contents -->

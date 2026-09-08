@@ -125,8 +125,10 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('d9/dd5/_genera
 <code>#include &quot;<a class="el" href="../../d5/dec/_format_8hpp_source.html">mimic++/printing/Format.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d52/printing_2_fwd_8hpp_source.html">mimic++/printing/Fwd.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../de/d62/_state_printer_8hpp_source.html">mimic++/printing/StatePrinter.hpp</a>&quot;</code><br />
+<code>#include &quot;<a class="el" href="../../d6/d35/_type_printer_8hpp_source.html">mimic++/printing/TypePrinter.hpp</a>&quot;</code><br />
 <code>#include &quot;<a class="el" href="../../d9/db9/_concepts_8hpp_source.html">mimic++/utilities/Concepts.hpp</a>&quot;</code><br />
 <code>#include &lt;array&gt;</code><br />
+<code>#include &lt;any&gt;</code><br />
 <code>#include &lt;functional&gt;</code><br />
 <code>#include &lt;tuple&gt;</code><br />
 <code>#include &lt;type_traits&gt;</code><br />
@@ -148,6 +150,8 @@ This graph shows which files directly or indirectly include this file:</div>
 Classes</h2></td></tr>
 <tr class="memitem:mimicpp_3A_3APredicateMatcher_3C_20Predicate_2C_20AdditionalArgs_20_3E" id="r_mimicpp_3A_3APredicateMatcher_3C_20Predicate_2C_20AdditionalArgs_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html">mimicpp::PredicateMatcher&lt; Predicate, AdditionalArgs &gt;</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Generic matcher and the basic building block of most of the built-in matchers.  <a href="../../dc/d5e/classmimicpp_1_1_predicate_matcher.html#details">More...</a><br /></td></tr>
+<tr class="memitem:mimicpp_3A_3AMatchEvaluationContext_3C_20Args_20_3E" id="r_mimicpp_3A_3AMatchEvaluationContext_3C_20Args_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d4/da8/classmimicpp_1_1_match_evaluation_context.html">mimicpp::MatchEvaluationContext&lt; Args &gt;</a></td></tr>
+<tr class="memitem:mimicpp_3A_3AGenericMatcher_3C_20isInverted_2C_20Predicate_2C_20Args_20_3E" id="r_mimicpp_3A_3AGenericMatcher_3C_20isInverted_2C_20Predicate_2C_20Args_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d0/db8/classmimicpp_1_1_generic_matcher.html">mimicpp::GenericMatcher&lt; isInverted, Predicate, Args &gt;</a></td></tr>
 <tr class="memitem:mimicpp_3A_3AWildcardMatcher" id="r_mimicpp_3A_3AWildcardMatcher"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html">mimicpp::WildcardMatcher</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Matcher, which never fails.  <a href="../../db/de6/classmimicpp_1_1_wildcard_matcher.html#details">More...</a><br /></td></tr>
 <tr class="memitem:mimicpp_3A_3ATypeMatcher_3C_20T_20_3E" id="r_mimicpp_3A_3ATypeMatcher_3C_20T_20_3E"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d6/db3/classmimicpp_1_1_type_matcher.html">mimicpp::TypeMatcher&lt; T &gt;</a></td></tr>
@@ -160,6 +164,8 @@ Namespaces</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
+<tr class="memitem:a09a3fb984207cf2b36e8b59f70bfaccd" id="r_a09a3fb984207cf2b36e8b59f70bfaccd"><td class="memTemplParams" colspan="2">template&lt;typename Predicate, typename... Args&gt; </td></tr>
+<tr class="memitem:a09a3fb984207cf2b36e8b59f70bfaccd template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="../../d1/d11/namespacemimicpp.html#a09a3fb984207cf2b36e8b59f70bfaccd">mimicpp::make_generic_matcher</a> (Predicate &amp;&amp;predicate, format::format_string&lt; <a class="el" href="../../d3/d54/namespacemimicpp_1_1format.html#ac8a6d050b52a08e920447cfc4010d06b">format::fallback_formattable_t</a>&lt; Args &gt;... &gt; const formatString, Args &amp;&amp;... args)</td></tr>
 <tr class="memitem:gaae47b82f14695a5e774ad398df069825" id="r_gaae47b82f14695a5e774ad398df069825"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:gaae47b82f14695a5e774ad398df069825 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#gaae47b82f14695a5e774ad398df069825">mimicpp::matches::eq</a> (T &amp;&amp;value)</td></tr>
 <tr class="memdesc:gaae47b82f14695a5e774ad398df069825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target compares equal to the expected value.  <br /></td></tr>
@@ -183,7 +189,7 @@ Functions</h2></td></tr>
 <tr class="memdesc:gaba69db0df12ff432cee8242275310a9c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target fulfills the given predicate.  <br /></td></tr>
 <tr class="memitem:ga369aedf4edb7313cf70f7ac78ec233f9" id="r_ga369aedf4edb7313cf70f7ac78ec233f9"><td class="memTemplParams" colspan="2">template&lt;util::satisfies&lt; std::is_lvalue_reference &gt; T&gt; </td></tr>
 <tr class="memitem:ga369aedf4edb7313cf70f7ac78ec233f9 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">mimicpp::matches::instance</a> (T &amp;&amp;instance)</td></tr>
-<tr class="memdesc:ga369aedf4edb7313cf70f7ac78ec233f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests, whether the target is the expected instance.  <br /></td></tr>
+<tr class="memdesc:ga369aedf4edb7313cf70f7ac78ec233f9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests whether the target is the expected instance.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>

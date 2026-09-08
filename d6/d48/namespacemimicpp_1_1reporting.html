@@ -133,10 +133,8 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the extracted info from a typed expectation.  <a href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#details">More...</a><br /></td></tr>
 <tr class="memitem:IReporter" id="r_IReporter"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html">IReporter</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The reporter interface.  <a href="../../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#details">More...</a><br /></td></tr>
-<tr class="memitem:NoMatchReport" id="r_NoMatchReport"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html">NoMatchReport</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the requirement-outcomes (where at least one is negative) and the related expectation-report.  <a href="../../df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html#details">More...</a><br /></td></tr>
-<tr class="memitem:RequirementOutcomes" id="r_RequirementOutcomes"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html">RequirementOutcomes</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the boolean outcomes of a match-test.  <a href="../../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#details">More...</a><br /></td></tr>
+<tr class="memitem:MatchReport" id="r_MatchReport"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">MatchReport</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains the expectation-report and the match-results to a specific call.  <a href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html#details">More...</a><br /></td></tr>
 <tr class="memitem:SequenceReport" id="r_SequenceReport"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a></td></tr>
 <tr class="memitem:state_5Fapplicable" id="r_state_5Fapplicable"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html">state_applicable</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Denotes an applicable expectation state.  <a href="../../db/d99/structmimicpp_1_1reporting_1_1state__applicable.html#details">More...</a><br /></td></tr>
@@ -177,9 +175,9 @@ requires std::constructible_from&lt;T, Args...&gt;</td></tr>
 <tr class="memitem:ga8741204d8bd4ff129677d5526885404a template"><td class="memItemLeft">constexpr <a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a>&#160;</td><td class="memItemRight"><a class="el" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga8741204d8bd4ff129677d5526885404a">make_sequence_report</a> (sequence::detail::BasicSequence&lt; Id, priorityStrategy &gt; const &amp;seq)</td></tr>
 <tr class="memitem:ga2269fb9a739c635f996eebc7f1c2f4d5" id="r_ga2269fb9a739c635f996eebc7f1c2f4d5"><td class="memTemplParams" colspan="2">template&lt;typename Id, auto priorityStrategy&gt; </td></tr>
 <tr class="memitem:ga2269fb9a739c635f996eebc7f1c2f4d5 template"><td class="memItemLeft">constexpr <a class="el" href="../../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html">SequenceReport</a>&#160;</td><td class="memItemRight"><a class="el" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga2269fb9a739c635f996eebc7f1c2f4d5">make_sequence_report</a> (sequence::detail::BasicSequenceInterface&lt; Id, priorityStrategy &gt; const &amp;seq)</td></tr>
-<tr class="memitem:aeca22e8d15625bfcd46825358c29d30d" id="r_aeca22e8d15625bfcd46825358c29d30d"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#aeca22e8d15625bfcd46825358c29d30d">stringify_full_match</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, <a class="el" href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">ExpectationReport</a> expectation)</td></tr>
-<tr class="memitem:aba19596f12a846065efee9cd261081bb" id="r_aba19596f12a846065efee9cd261081bb"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#aba19596f12a846065efee9cd261081bb">stringify_inapplicable_matches</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, std::span&lt; <a class="el" href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">ExpectationReport</a> &gt; expectations)</td></tr>
-<tr class="memitem:ac1ed9be684207ba82b9dabeb01660489" id="r_ac1ed9be684207ba82b9dabeb01660489"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#ac1ed9be684207ba82b9dabeb01660489">stringify_no_matches</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, std::span&lt; <a class="el" href="../../df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html">NoMatchReport</a> &gt; noMatchReports)</td></tr>
+<tr class="memitem:a0f5d94356c3397bf6c7c6f87e1c46104" id="r_a0f5d94356c3397bf6c7c6f87e1c46104"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a0f5d94356c3397bf6c7c6f87e1c46104">stringify_full_match</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, <a class="el" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">MatchReport</a> match)</td></tr>
+<tr class="memitem:aa8d5efb5090e7ada5b27bd408b7804dd" id="r_aa8d5efb5090e7ada5b27bd408b7804dd"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#aa8d5efb5090e7ada5b27bd408b7804dd">stringify_inapplicable_matches</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, std::span&lt; <a class="el" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">MatchReport</a> &gt; reports)</td></tr>
+<tr class="memitem:aedd5cacf0a85e6c488effc83bb816593" id="r_aedd5cacf0a85e6c488effc83bb816593"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#aedd5cacf0a85e6c488effc83bb816593">stringify_no_matches</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, std::span&lt; <a class="el" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">MatchReport</a> &gt; noMatchReports)</td></tr>
 <tr class="memitem:a8a21a24b7dd11518a07e0980ee3d53af" id="r_a8a21a24b7dd11518a07e0980ee3d53af"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a8a21a24b7dd11518a07e0980ee3d53af">stringify_unfulfilled_expectation</a> (<a class="el" href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">ExpectationReport</a> const &amp;expectationReport)</td></tr>
 <tr class="memitem:a31f05e9181e8ca535aaed2884ab8edaa" id="r_a31f05e9181e8ca535aaed2884ab8edaa"><td class="memItemLeft"><a class="el" href="../../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1">StringT</a>&#160;</td><td class="memItemRight"><a class="el" href="#a31f05e9181e8ca535aaed2884ab8edaa">stringify_unhandled_exception</a> (<a class="el" href="../../de/d56/classmimicpp_1_1reporting_1_1_call_report.html">CallReport</a> const &amp;call, <a class="el" href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">ExpectationReport</a> const &amp;expectationReport, std::exception_ptr const &amp;exception)</td></tr>
 <tr class="memitem:ga3106fae8499d5613d76fc8bd4cd09166" id="r_ga3106fae8499d5613d76fc8bd4cd09166"><td class="memTemplParams" colspan="2">template&lt;typename Return, typename... Params&gt; </td></tr>
@@ -216,8 +214,8 @@ requires std::constructible_from&lt;T, Args...&gt;</td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
-<a id="aeca22e8d15625bfcd46825358c29d30d" name="aeca22e8d15625bfcd46825358c29d30d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeca22e8d15625bfcd46825358c29d30d">&#9670;&#160;</a></span>stringify_full_match()</h2>
+<a id="a0f5d94356c3397bf6c7c6f87e1c46104" name="a0f5d94356c3397bf6c7c6f87e1c46104"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0f5d94356c3397bf6c7c6f87e1c46104">&#9670;&#160;</a></span>stringify_full_match()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -233,7 +231,7 @@ requires std::constructible_from&lt;T, Args...&gt;</td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">ExpectationReport</a></td>          <td class="paramname"><span class="paramname"><em>expectation</em></span>&#160;)</td>
+          <td class="paramtype"><a class="el" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">MatchReport</a></td>          <td class="paramname"><span class="paramname"><em>match</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -245,13 +243,13 @@ requires std::constructible_from&lt;T, Args...&gt;</td></tr>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d6/d48/namespacemimicpp_1_1reporting_aeca22e8d15625bfcd46825358c29d30d_icgraph.svg" width="395" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d6/d48/namespacemimicpp_1_1reporting_a0f5d94356c3397bf6c7c6f87e1c46104_icgraph.svg" width="395" height="112"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
-<a id="aba19596f12a846065efee9cd261081bb" name="aba19596f12a846065efee9cd261081bb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aba19596f12a846065efee9cd261081bb">&#9670;&#160;</a></span>stringify_inapplicable_matches()</h2>
+<a id="aa8d5efb5090e7ada5b27bd408b7804dd" name="aa8d5efb5090e7ada5b27bd408b7804dd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa8d5efb5090e7ada5b27bd408b7804dd">&#9670;&#160;</a></span>stringify_inapplicable_matches()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -267,7 +265,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::span&lt; <a class="el" href="../../d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html">ExpectationReport</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>expectations</em></span>&#160;)</td>
+          <td class="paramtype">std::span&lt; <a class="el" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">MatchReport</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>reports</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -279,13 +277,13 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d6/d48/namespacemimicpp_1_1reporting_aba19596f12a846065efee9cd261081bb_icgraph.svg" width="468" height="192"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d6/d48/namespacemimicpp_1_1reporting_aa8d5efb5090e7ada5b27bd408b7804dd_icgraph.svg" width="468" height="192"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>
 </div>
-<a id="ac1ed9be684207ba82b9dabeb01660489" name="ac1ed9be684207ba82b9dabeb01660489"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac1ed9be684207ba82b9dabeb01660489">&#9670;&#160;</a></span>stringify_no_matches()</h2>
+<a id="aedd5cacf0a85e6c488effc83bb816593" name="aedd5cacf0a85e6c488effc83bb816593"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aedd5cacf0a85e6c488effc83bb816593">&#9670;&#160;</a></span>stringify_no_matches()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -301,7 +299,7 @@ Here is the caller graph for this function:</div>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">std::span&lt; <a class="el" href="../../df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html">NoMatchReport</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>noMatchReports</em></span>&#160;)</td>
+          <td class="paramtype">std::span&lt; <a class="el" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">MatchReport</a> &gt;</td>          <td class="paramname"><span class="paramname"><em>noMatchReports</em></span>&#160;)</td>
         </tr>
       </table>
   </td>
@@ -311,14 +309,9 @@ Here is the caller graph for this function:</div>
 </table>
 </div><div class="memdoc">
 <div class="dynheader">
-Here is the call graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d6/d48/namespacemimicpp_1_1reporting_ac1ed9be684207ba82b9dabeb01660489_cgraph.svg" width="375" height="52"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
-<div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d6/d48/namespacemimicpp_1_1reporting_ac1ed9be684207ba82b9dabeb01660489_icgraph.svg" width="416" height="192"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d6/d48/namespacemimicpp_1_1reporting_aedd5cacf0a85e6c488effc83bb816593_icgraph.svg" width="416" height="192"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
 </div>
 
 </div>

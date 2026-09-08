@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['lazyscopedsequence_0',['LazyScopedSequence',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga9efea600d953c01de2d99d7d144264e4',1,'mimicpp']]]
+  ['info_5ffor_5fsignature_5ft_0',['info_for_signature_t',['../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb',1,'mimicpp::call']]],
+  ['is_5faccepting_1',['is_accepting',['../d6/db3/classmimicpp_1_1_type_matcher.html#ad038609fce3bf59eaee411e9d101ee78',1,'mimicpp::TypeMatcher']]]
 ];

@@ -13,9 +13,9 @@ var searchData=
   ['stateguard_10',['StateGuard',['../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html#afdf1573691dbbcf1213da9147a9e22ec',1,'mimicpp::printing::type::parsing::StateGuard::StateGuard(StateGuard const &amp;)=delete'],['../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html#aba8dd3021b04a08cf9ef004157015395',1,'mimicpp::printing::type::parsing::StateGuard::StateGuard(StateGuard &amp;&amp;)=delete'],['../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html#ad246ae548b04fa59dbf5e39ef7470664',1,'mimicpp::printing::type::parsing::StateGuard::StateGuard(TokenStream &amp;stream, Args &amp;&amp;... args)']]],
   ['staticstring_11',['StaticString',['../d8/da3/namespacemimicpp_1_1util.html#ac4fcfcaa329db378296093c1deff115e',1,'mimicpp::util']]],
   ['str_12',['str',['../de/daf/classmimicpp_1_1util_1_1_static_string.html#a3aae8fea55d78b1ad19269a415a367c7',1,'mimicpp::util::StaticString']]],
-  ['stringify_5ffull_5fmatch_13',['stringify_full_match',['../d6/d48/namespacemimicpp_1_1reporting.html#aeca22e8d15625bfcd46825358c29d30d',1,'mimicpp::reporting']]],
-  ['stringify_5finapplicable_5fmatches_14',['stringify_inapplicable_matches',['../d6/d48/namespacemimicpp_1_1reporting.html#aba19596f12a846065efee9cd261081bb',1,'mimicpp::reporting']]],
-  ['stringify_5fno_5fmatches_15',['stringify_no_matches',['../d6/d48/namespacemimicpp_1_1reporting.html#ac1ed9be684207ba82b9dabeb01660489',1,'mimicpp::reporting']]],
+  ['stringify_5ffull_5fmatch_13',['stringify_full_match',['../d6/d48/namespacemimicpp_1_1reporting.html#a0f5d94356c3397bf6c7c6f87e1c46104',1,'mimicpp::reporting']]],
+  ['stringify_5finapplicable_5fmatches_14',['stringify_inapplicable_matches',['../d6/d48/namespacemimicpp_1_1reporting.html#aa8d5efb5090e7ada5b27bd408b7804dd',1,'mimicpp::reporting']]],
+  ['stringify_5fno_5fmatches_15',['stringify_no_matches',['../d6/d48/namespacemimicpp_1_1reporting.html#aedd5cacf0a85e6c488effc83bb816593',1,'mimicpp::reporting']]],
   ['stringify_5funfulfilled_5fexpectation_16',['stringify_unfulfilled_expectation',['../d6/d48/namespacemimicpp_1_1reporting.html#a8a21a24b7dd11518a07e0980ee3d53af',1,'mimicpp::reporting']]],
   ['stringify_5funhandled_5fexception_17',['stringify_unhandled_exception',['../d6/d48/namespacemimicpp_1_1reporting.html#a31f05e9181e8ca535aaed2884ab8edaa',1,'mimicpp::reporting']]]
 ];

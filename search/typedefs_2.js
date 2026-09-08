@@ -6,5 +6,6 @@ var searchData=
   ['chart_3',['CharT',['../d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc',1,'mimicpp']]],
   ['chartraitst_4',['CharTraitsT',['../d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad',1,'mimicpp']]],
   ['constantexpression_5',['ConstantExpression',['../d4/dac/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1state.html#a31c93999e98a262d548a9a3c9ebfc90e',1,'mimicpp::printing::type::parsing::state']]],
-  ['control_5fstate_5ft_6',['control_state_t',['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga93f64fbd97d1117f31dbf2125d5fdc2f',1,'mimicpp::reporting']]]
+  ['context_6',['Context',['../d0/db8/classmimicpp_1_1_generic_matcher.html#a62fc95f3da2e8efda7d1b8b12fc16524',1,'mimicpp::GenericMatcher']]],
+  ['control_5fstate_5ft_7',['control_state_t',['../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga93f64fbd97d1117f31dbf2125d5fdc2f',1,'mimicpp::reporting']]]
 ];

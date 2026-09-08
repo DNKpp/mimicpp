@@ -6,8 +6,7 @@ var namespacemimicpp_1_1reporting =
     [ "Error", "dd/d2e/classmimicpp_1_1reporting_1_1_error.html", "dd/d2e/classmimicpp_1_1reporting_1_1_error" ],
     [ "ExpectationReport", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report" ],
     [ "IReporter", "d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html", "d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter" ],
-    [ "NoMatchReport", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report" ],
-    [ "RequirementOutcomes", "d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html", "d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes" ],
+    [ "MatchReport", "d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html", "d2/d2f/classmimicpp_1_1reporting_1_1_match_report" ],
     [ "SequenceReport", "d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html", "d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report" ],
     [ "state_applicable", "db/d99/structmimicpp_1_1reporting_1_1state__applicable.html", "db/d99/structmimicpp_1_1reporting_1_1state__applicable" ],
     [ "state_inapplicable", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html", "da/dab/structmimicpp_1_1reporting_1_1state__inapplicable" ],
@@ -26,9 +25,9 @@ var namespacemimicpp_1_1reporting =
     [ "make_call_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166", null ],
     [ "make_sequence_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga8741204d8bd4ff129677d5526885404a", null ],
     [ "make_sequence_report", "d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga2269fb9a739c635f996eebc7f1c2f4d5", null ],
-    [ "stringify_full_match", "d6/d48/namespacemimicpp_1_1reporting.html#aeca22e8d15625bfcd46825358c29d30d", null ],
-    [ "stringify_inapplicable_matches", "d6/d48/namespacemimicpp_1_1reporting.html#aba19596f12a846065efee9cd261081bb", null ],
-    [ "stringify_no_matches", "d6/d48/namespacemimicpp_1_1reporting.html#ac1ed9be684207ba82b9dabeb01660489", null ],
+    [ "stringify_full_match", "d6/d48/namespacemimicpp_1_1reporting.html#a0f5d94356c3397bf6c7c6f87e1c46104", null ],
+    [ "stringify_inapplicable_matches", "d6/d48/namespacemimicpp_1_1reporting.html#aa8d5efb5090e7ada5b27bd408b7804dd", null ],
+    [ "stringify_no_matches", "d6/d48/namespacemimicpp_1_1reporting.html#aedd5cacf0a85e6c488effc83bb816593", null ],
     [ "stringify_unfulfilled_expectation", "d6/d48/namespacemimicpp_1_1reporting.html#a8a21a24b7dd11518a07e0980ee3d53af", null ],
     [ "stringify_unhandled_exception", "d6/d48/namespacemimicpp_1_1reporting.html#a31f05e9181e8ca535aaed2884ab8edaa", null ]
 ];

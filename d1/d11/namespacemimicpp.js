@@ -48,6 +48,7 @@ var namespacemimicpp =
     [ "call_convention_traits&lt; detail::default_call_convention &gt;", "d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4.html", "d7/dfe/structmimicpp_1_1call__convention__traits_3_01detail_1_1default__call__convention_01_4" ],
     [ "case_insensitive_t", "d2/dd4/structmimicpp_1_1case__insensitive__t.html", null ],
     [ "for_base_tag", "d6/da7/structmimicpp_1_1for__base__tag.html", "d6/da7/structmimicpp_1_1for__base__tag" ],
+    [ "GenericMatcher", "d0/db8/classmimicpp_1_1_generic_matcher.html", "d0/db8/classmimicpp_1_1_generic_matcher" ],
     [ "GreedySequence", "db/d43/classmimicpp_1_1_greedy_sequence.html", "db/d43/classmimicpp_1_1_greedy_sequence" ],
     [ "is_character", "d2/d73/structmimicpp_1_1is__character.html", null ],
     [ "is_character&lt; char &gt;", "d2/dad/structmimicpp_1_1is__character_3_01char_01_4.html", null ],
@@ -61,6 +62,7 @@ var namespacemimicpp =
     [ "is_overloadable_with", "d4/dd6/structmimicpp_1_1is__overloadable__with.html", null ],
     [ "LazySequence", "db/d46/classmimicpp_1_1_lazy_sequence.html", "db/d46/classmimicpp_1_1_lazy_sequence" ],
     [ "LifetimeWatcher", "db/d98/classmimicpp_1_1_lifetime_watcher.html", "db/d98/classmimicpp_1_1_lifetime_watcher" ],
+    [ "MatchEvaluationContext", "d4/da8/classmimicpp_1_1_match_evaluation_context.html", "d4/da8/classmimicpp_1_1_match_evaluation_context" ],
     [ "Mock", "d2/d48/classmimicpp_1_1_mock.html", "d2/d48/classmimicpp_1_1_mock" ],
     [ "MockSettings", "d4/d24/classmimicpp_1_1_mock_settings.html", "d4/d24/classmimicpp_1_1_mock_settings" ],
     [ "PredicateMatcher", "dc/d5e/classmimicpp_1_1_predicate_matcher.html", "dc/d5e/classmimicpp_1_1_predicate_matcher" ],
@@ -153,6 +155,7 @@ var namespacemimicpp =
       [ "rvalue", "d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aab5528fe69322e9e7de4c701519197fcd", null ],
       [ "any", "d1/d11/namespacemimicpp.html#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec", null ]
     ] ],
+    [ "make_generic_matcher", "d1/d11/namespacemimicpp.html#a09a3fb984207cf2b36e8b59f70bfaccd", null ],
     [ "case_insensitive", "d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga7211982f3a8ff2ab2165d7803edc9ac8", null ],
     [ "for_base_v", "dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#gace3dbca1a90cde9b3d2e145819615a75", null ],
     [ "is_character_v", "dc/d26/group___t_y_p_e___t_r_a_i_t_s___i_s___c_h_a_r_a_c_t_e_r.html#ga88d25d2fd5d4f51c8a9d81bdfb57bcb2", null ],

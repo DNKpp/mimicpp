@@ -29,7 +29,7 @@ var group___e_x_p_e_c_t_a_t_i_o_n =
       [ "from", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#ab2628a50111599e7fef798d86fb122a9", null ],
       [ "is_applicable", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#a250b4a663d0524792d86df2c8c63d8ab", null ],
       [ "is_satisfied", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#a02ce24be732488e39f0e6cd7e095637c", null ],
-      [ "matches", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#a9487d772822dd8fc0255c0dabed8a552", null ],
+      [ "matches", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#ab7aece3d1911ca361f563b989053fd16", null ],
       [ "mock_name", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#a7a4993585e6b57ec8afecdb95d459f81", null ],
       [ "operator=", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#aeba62b97296fec052f83001d42ee4dc3", null ],
       [ "operator=", "dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#a3f1a2a0290663d08799fc2410691f20e", null ],

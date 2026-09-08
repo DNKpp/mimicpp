@@ -24,6 +24,7 @@ var namespacemimicpp_1_1util =
     [ "satisfies", "dc/d18/conceptmimicpp_1_1util_1_1satisfies.html", null ],
     [ "boolean_testable", "d9/d0b/conceptmimicpp_1_1util_1_1boolean__testable.html", null ],
     [ "weakly_equality_comparable_with", "d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html", null ],
+    [ "unqualified", "da/dce/conceptmimicpp_1_1util_1_1unqualified.html", null ],
     [ "projected_value_t", "d8/da3/namespacemimicpp_1_1util.html#a12291b493e006530a4a4c77ec7e37741", null ],
     [ "type_list_pop_back_t", "d8/da3/namespacemimicpp_1_1util.html#ade36f86aac332827425e8d069c0e6586", null ],
     [ "type_list_populate_t", "d8/da3/namespacemimicpp_1_1util.html#ac33626f0a0b03836340f5fb0efd4847c", null ],

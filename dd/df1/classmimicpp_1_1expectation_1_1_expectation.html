@@ -150,9 +150,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a02ce24be732488e39f0e6cd7e095637c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries all policies, whether they are satisfied.  <br /></td></tr>
 <tr class="memitem:a250b4a663d0524792d86df2c8c63d8ab" id="r_a250b4a663d0524792d86df2c8c63d8ab"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a250b4a663d0524792d86df2c8c63d8ab">is_applicable</a> () const noexcept</td></tr>
 <tr class="memdesc:a250b4a663d0524792d86df2c8c63d8ab"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries the control policy, whether it's in the applicable state.  <br /></td></tr>
-<tr class="memitem:a9487d772822dd8fc0255c0dabed8a552" id="r_a9487d772822dd8fc0255c0dabed8a552"><td class="memTemplParams" colspan="2">template&lt;typename Return, typename... Args&gt; </td></tr>
-<tr class="memitem:a9487d772822dd8fc0255c0dabed8a552 template"><td class="memItemLeft">std::optional&lt; <a class="el" href="../../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html">reporting::RequirementOutcomes</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a9487d772822dd8fc0255c0dabed8a552">matches</a> (<a class="el" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info</a>&lt; Return, Args... &gt; const &amp;callInfo) const</td></tr>
-<tr class="memdesc:a9487d772822dd8fc0255c0dabed8a552"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries all policies, whether they accept the given call.  <br /></td></tr>
+<tr class="memitem:ab7aece3d1911ca361f563b989053fd16" id="r_ab7aece3d1911ca361f563b989053fd16"><td class="memTemplParams" colspan="2">template&lt;typename Return, typename... Args&gt; </td></tr>
+<tr class="memitem:ab7aece3d1911ca361f563b989053fd16 template"><td class="memItemLeft">std::optional&lt; <a class="el" href="../../d9/db6/namespacemimicpp_1_1expectation.html#a2b6a992df8ddd6de832e7a63005ec63a">MatchResults</a> &gt;&#160;</td><td class="memItemRight"><a class="el" href="#ab7aece3d1911ca361f563b989053fd16">matches</a> (<a class="el" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info</a>&lt; Return, Args... &gt; const &amp;callInfo) const</td></tr>
+<tr class="memdesc:ab7aece3d1911ca361f563b989053fd16"><td class="mdescLeft">&#160;</td><td class="mdescRight">Queries all policies, whether they accept the given call.  <br /></td></tr>
 <tr class="memitem:acbc9b53983a4b477ad896271b24053af" id="r_acbc9b53983a4b477ad896271b24053af"><td class="memTemplParams" colspan="2">template&lt;typename Return, typename... Args&gt; </td></tr>
 <tr class="memitem:acbc9b53983a4b477ad896271b24053af template"><td class="memItemLeft">Return&#160;</td><td class="memItemRight"><a class="el" href="#acbc9b53983a4b477ad896271b24053af">consume</a> (<a class="el" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info</a>&lt; Return, Args... &gt; const &amp;callInfo)</td></tr>
 <tr class="memdesc:acbc9b53983a4b477ad896271b24053af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Informs all policies that the given call was accepted.  <br /></td></tr>
@@ -464,8 +464,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a9487d772822dd8fc0255c0dabed8a552" name="a9487d772822dd8fc0255c0dabed8a552"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9487d772822dd8fc0255c0dabed8a552">&#9670;&#160;</a></span>matches()</h2>
+<a id="ab7aece3d1911ca361f563b989053fd16" name="ab7aece3d1911ca361f563b989053fd16"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab7aece3d1911ca361f563b989053fd16">&#9670;&#160;</a></span>matches()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -476,7 +476,7 @@ template&lt;typename Return, typename... Args&gt; </div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::optional&lt; <a class="el" href="../../d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html">reporting::RequirementOutcomes</a> &gt; mimicpp::expectation::Expectation::matches </td>
+          <td class="memname">std::optional&lt; <a class="el" href="../../d9/db6/namespacemimicpp_1_1expectation.html#a2b6a992df8ddd6de832e7a63005ec63a">MatchResults</a> &gt; mimicpp::expectation::Expectation::matches </td>
           <td>(</td>
           <td class="paramtype"><a class="el" href="../../d4/d44/classmimicpp_1_1call_1_1_info.html">call::Info</a>&lt; Return, Args... &gt; const &amp;</td>          <td class="paramname"><span class="paramname"><em>callInfo</em></span></td><td>)</td>
           <td> const</td>

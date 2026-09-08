@@ -130,8 +130,11 @@ Concepts</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
+<tr class="memitem:ac8a6d050b52a08e920447cfc4010d06b" id="r_ac8a6d050b52a08e920447cfc4010d06b"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:ac8a6d050b52a08e920447cfc4010d06b template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#ac8a6d050b52a08e920447cfc4010d06b">fallback_formattable_t</a> = decltype(<a class="el" href="#a01600aee079cc8936b63ea7b7914f344">fallback_formattable</a>(std::declval&lt;T&gt;()))</td></tr>
 <tr class="memitem:aab4354cee938433bc0573df96a91a78f" id="r_aab4354cee938433bc0573df96a91a78f"><td class="memTemplParams" colspan="2">template&lt;typename... Args&gt; </td></tr>
 <tr class="memitem:aab4354cee938433bc0573df96a91a78f template"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#aab4354cee938433bc0573df96a91a78f">format_string</a></td></tr>
+<tr class="memitem:a295abc262f530fcc1a4e774383af4755" id="r_a295abc262f530fcc1a4e774383af4755"><td class="memItemLeft">using&#160;</td><td class="memItemRight"><a class="el" href="#a295abc262f530fcc1a4e774383af4755">vformat_string</a></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
 Functions</h2></td></tr>
@@ -143,6 +146,22 @@ Functions</h2></td></tr>
 <tr class="memitem:a01600aee079cc8936b63ea7b7914f344 template"><td class="memItemLeft">constexpr decltype(auto)&#160;</td><td class="memItemRight"><a class="el" href="#a01600aee079cc8936b63ea7b7914f344">fallback_formattable</a> (T &amp;&amp;target)</td></tr>
 </table>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Typedef Documentation</h2>
+<a id="ac8a6d050b52a08e920447cfc4010d06b" name="ac8a6d050b52a08e920447cfc4010d06b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8a6d050b52a08e920447cfc4010d06b">&#9670;&#160;</a></span>fallback_formattable_t</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+      <table class="memname">
+        <tr>
+          <td class="memname">using <a class="el" href="#ac8a6d050b52a08e920447cfc4010d06b">mimicpp::format::fallback_formattable_t</a> = decltype(<a class="el" href="#a01600aee079cc8936b63ea7b7914f344">fallback_formattable</a>(std::declval&lt;T&gt;()))</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="aab4354cee938433bc0573df96a91a78f" name="aab4354cee938433bc0573df96a91a78f"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#aab4354cee938433bc0573df96a91a78f">&#9670;&#160;</a></span>format_string</h2>
 
@@ -153,6 +172,20 @@ template&lt;typename... Args&gt; </div>
       <table class="memname">
         <tr>
           <td class="memname">using mimicpp::format::detail::fmt::format_string</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a295abc262f530fcc1a4e774383af4755" name="a295abc262f530fcc1a4e774383af4755"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a295abc262f530fcc1a4e774383af4755">&#9670;&#160;</a></span>vformat_string</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">using mimicpp::format::detail::fmt::vformat_string</td>
         </tr>
       </table>
 </div><div class="memdoc">

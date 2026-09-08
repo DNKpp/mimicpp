@@ -164,6 +164,8 @@ Concepts</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines, whether <span class="tt">B</span> behaves as a the builtin type <span class="tt">bool</span>. <br /></td></tr>
 <tr class="memitem:weakly_5Fequality_5Fcomparable_5Fwith" id="r_weakly_5Fequality_5Fcomparable_5Fwith"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="../../d7/db6/conceptmimicpp_1_1util_1_1weakly__equality__comparable__with.html">weakly_equality_comparable_with</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines, whether <span class="tt">T</span> can be equality compared with <span class="tt">U</span>. <br /></td></tr>
+<tr class="memitem:unqualified" id="r_unqualified"><td class="memItemLeft">concept &#160;</td><td class="memItemRight"><a class="el" href="../../da/dce/conceptmimicpp_1_1util_1_1unqualified.html">unqualified</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines, whether <span class="tt">T</span> is unqualified. <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-typedef-members" class="groupheader"><a id="typedef-members" name="typedef-members"></a>
 Typedefs</h2></td></tr>
@@ -632,11 +634,6 @@ requires std::ranges::sized_range&lt;Target&gt; &amp;&amp; std::ranges::sized_ra
 <p>This algorithm partitions the target range by evaluating the associated elements of the control range. This means, that if the predicate evaluates the control-element to <span class="tt">false</span>, the associated target-element moves into the second half; otherwise it stays at its position. The association is simply index based =&gt; <span class="tt">target[i]</span> is associated with <span class="tt">control[i]</span>.</p>
 <dl class="section note"><dt>Note</dt><dd>Due to <span class="tt">std::vector&lt;bool&gt;::iterator</span> (and other Proxy-Iterators) not satisfying <span class="tt">std::permutable</span>, this requirement is dropped. Nevertheless, the range must semantically still be permutable. </dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a href="https://stackoverflow.com/questions/63412623/should-c20-stdrangessort-not-need-to-support-stdvectorbool">https://stackoverflow.com/questions/63412623/should-c20-stdrangessort-not-need-to-support-stdvectorbool</a> </dd></dl>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d8/da3/namespacemimicpp_1_1util_a1cacfa68d0494f3efdf72b945dfe65ca_icgraph.svg" width="630" height="192"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
-</div>
 
 </div>
 </div>

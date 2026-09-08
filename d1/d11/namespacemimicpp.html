@@ -148,6 +148,7 @@ Classes</h2></td></tr>
 <tr class="memitem:case_5Finsensitive_5Ft" id="r_case_5Finsensitive_5Ft"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html">case_insensitive_t</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tag type, used in string matchers.  <a href="../../d2/dd4/structmimicpp_1_1case__insensitive__t.html#details">More...</a><br /></td></tr>
 <tr class="memitem:for_5Fbase_5Ftag" id="r_for_5Fbase_5Ftag"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../d6/da7/structmimicpp_1_1for__base__tag.html">for_base_tag</a></td></tr>
+<tr class="memitem:GenericMatcher" id="r_GenericMatcher"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d0/db8/classmimicpp_1_1_generic_matcher.html">GenericMatcher</a></td></tr>
 <tr class="memitem:GreedySequence" id="r_GreedySequence"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../db/d43/classmimicpp_1_1_greedy_sequence.html">GreedySequence</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The greedy sequence interface.  <a href="../../db/d43/classmimicpp_1_1_greedy_sequence.html#details">More...</a><br /></td></tr>
 <tr class="memitem:is_5Fcharacter" id="r_is_5Fcharacter"><td class="memItemLeft">struct &#160;</td><td class="memItemRight"><a class="el" href="../../d2/d73/structmimicpp_1_1is__character.html">is_character</a></td></tr>
@@ -174,6 +175,7 @@ Classes</h2></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">The lazy sequence interface.  <a href="../../db/d46/classmimicpp_1_1_lazy_sequence.html#details">More...</a><br /></td></tr>
 <tr class="memitem:LifetimeWatcher" id="r_LifetimeWatcher"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html">LifetimeWatcher</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A watcher type, which reports it's destructor calls.  <a href="../../db/d98/classmimicpp_1_1_lifetime_watcher.html#details">More...</a><br /></td></tr>
+<tr class="memitem:MatchEvaluationContext" id="r_MatchEvaluationContext"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d4/da8/classmimicpp_1_1_match_evaluation_context.html">MatchEvaluationContext</a></td></tr>
 <tr class="memitem:Mock" id="r_Mock"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d2/d48/classmimicpp_1_1_mock.html">Mock</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">A <a class="el" href="../../d2/d48/classmimicpp_1_1_mock.html" title="A Mock type, which fully supports overload sets.">Mock</a> type, which fully supports overload sets.  <a href="../../d2/d48/classmimicpp_1_1_mock.html#details">More...</a><br /></td></tr>
 <tr class="memitem:MockSettings" id="r_MockSettings"><td class="memItemLeft">class &#160;</td><td class="memItemRight"><a class="el" href="../../d4/d24/classmimicpp_1_1_mock_settings.html">MockSettings</a></td></tr>
@@ -352,6 +354,11 @@ Enumerations</h2></td></tr>
 , <a class="el" href="#a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec">any</a> = lvalue | rvalue
  }</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
+Functions</h2></td></tr>
+<tr class="memitem:a09a3fb984207cf2b36e8b59f70bfaccd" id="r_a09a3fb984207cf2b36e8b59f70bfaccd"><td class="memTemplParams" colspan="2">template&lt;typename Predicate, typename... Args&gt; </td></tr>
+<tr class="memitem:a09a3fb984207cf2b36e8b59f70bfaccd template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#a09a3fb984207cf2b36e8b59f70bfaccd">make_generic_matcher</a> (Predicate &amp;&amp;predicate, format::format_string&lt; <a class="el" href="../../d3/d54/namespacemimicpp_1_1format.html#ac8a6d050b52a08e920447cfc4010d06b">format::fallback_formattable_t</a>&lt; Args &gt;... &gt; const formatString, Args &amp;&amp;... args)</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
 <tr class="memitem:ga9c8cd4e82dd32deb1f0f2afc9361ee3f" id="r_ga9c8cd4e82dd32deb1f0f2afc9361ee3f"><td class="memTemplParams" colspan="2">template&lt;typename Signature&gt; </td></tr>
@@ -527,6 +534,48 @@ Variables</h2></td></tr>
 <tr><td class="fieldname"><a id="a6076e747dc4e61ff337a809d19f4824aab5528fe69322e9e7de4c701519197fcd" name="a6076e747dc4e61ff337a809d19f4824aab5528fe69322e9e7de4c701519197fcd"></a>rvalue&#160;</td><td class="fielddoc"></td></tr>
 <tr><td class="fieldname"><a id="a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec" name="a6076e747dc4e61ff337a809d19f4824aa100b8cad7cf2a56f6df78f171f97a1ec"></a>any&#160;</td><td class="fielddoc"></td></tr>
 </table>
+
+</div>
+</div>
+<a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Function Documentation</h2>
+<a id="a09a3fb984207cf2b36e8b59f70bfaccd" name="a09a3fb984207cf2b36e8b59f70bfaccd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a09a3fb984207cf2b36e8b59f70bfaccd">&#9670;&#160;</a></span>make_generic_matcher()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Predicate, typename... Args&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::make_generic_matcher </td>
+          <td>(</td>
+          <td class="paramtype">Predicate &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>predicate</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">format::format_string&lt; <a class="el" href="../../d3/d54/namespacemimicpp_1_1format.html#ac8a6d050b52a08e920447cfc4010d06b">format::fallback_formattable_t</a>&lt; Args &gt;... &gt; const</td>          <td class="paramname"><span class="paramname"><em>formatString</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Args &amp;&amp;...</td>          <td class="paramname"><span class="paramname"><em>args</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d1/d11/namespacemimicpp_a09a3fb984207cf2b36e8b59f70bfaccd_icgraph.svg" width="398" height="68"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
 
 </div>
 </div>

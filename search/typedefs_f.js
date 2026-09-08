@@ -1,4 +1,6 @@
 var searchData=
 [
-  ['view_5ft_0',['view_t',['../d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html#abadd99c25b1306b73572d818d6665e79',1,'mimicpp::string_traits&lt; T &gt;::view_t'],['../d3/deb/structmimicpp_1_1string__traits_3_01std_1_1basic__string_3_01_char_00_01_traits_00_01_allocator_01_4_01_4.html#a276dfba16921968745fe36e9ab08457f',1,'mimicpp::string_traits&lt; std::basic_string&lt; Char, Traits, Allocator &gt; &gt;::view_t'],['../d7/da1/structmimicpp_1_1string__traits_3_01std_1_1basic__string__view_3_01_char_00_01_traits_01_4_01_4.html#a9a73d19f3814268b4fbbb5a2a344c855',1,'mimicpp::string_traits&lt; std::basic_string_view&lt; Char, Traits &gt; &gt;::view_t']]]
+  ['uint_5fwith_5fsize_5ft_0',['uint_with_size_t',['../db/d34/group___t_y_p_e___t_r_a_i_t_s___u_i_n_t___w_i_t_h___s_i_z_e.html#gab237aa1f72f47b22bdef3f3667370dfc',1,'mimicpp']]],
+  ['unfulfilledexpectationt_1',['UnfulfilledExpectationT',['../d6/d48/namespacemimicpp_1_1reporting.html#a77555cfeac5514744dc9bf614ce5498b',1,'mimicpp::reporting']]],
+  ['unmatchedcallt_2',['UnmatchedCallT',['../d6/d48/namespacemimicpp_1_1reporting.html#abdd379793ae51648f844efc2d1b8efbd',1,'mimicpp::reporting']]]
 ];

@@ -119,7 +119,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('db/d5d/_regist
   <div class="headertitle"><div class="title">Registry.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="../../db/d5d/_registry_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024-2026.</span></div>
+<a href="../../db/d5d/_registry_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Distributed under the Boost Software License, Version 1.0.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//          https://www.boost.org/LICENSE_1_0.txt)</span></div>
@@ -206,132 +206,161 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('db/d5d/_regist
 <div class="line"><a id="l00123" name="l00123"></a><span class="lineno">  123</span>            std::size_t <span class="keyword">const</span> stacktraceSkip{1u + <a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">call</a>.baseStacktraceSkip};</div>
 <div class="line"><a id="l00124" name="l00124"></a><span class="lineno">  124</span>            <span class="keywordflow">if</span> (!std::ranges::empty(<a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">matches</a>))</div>
 <div class="line"><a id="l00125" name="l00125"></a><span class="lineno">  125</span>            {</div>
-<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                <span class="keywordflow">return</span> handle_matched_call&lt;Signature&gt;(std::move(target), std::move(<a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">call</a>), <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">matches</a>, stacktraceSkip + 1u);</div>
-<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>            }</div>
-<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span> </div>
-<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>            <span class="keywordflow">if</span> (!std::ranges::empty(inapplicableMatches))</div>
-<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>            {</div>
-<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>                <span class="keyword">auto</span> reports = inapplicableMatches | std::views::transform([](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; exp) { <span class="keywordflow">return</span> exp-&gt;report(); });</div>
-<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span>                reporting::detail::report_inapplicable_matches(</div>
-<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>                    <a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">reporting::make_call_report</a>(std::move(target), std::move(<a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">call</a>), <a class="code hl_variable" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">util::stacktrace::current</a>(stacktraceSkip)),</div>
-<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>                    std::vector(reports.begin(), reports.end()));</div>
-<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>            }</div>
-<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span> </div>
-<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>            reporting::detail::report_no_matches(</div>
-<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>                <a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">reporting::make_call_report</a>(std::move(target), std::move(<a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">call</a>), <a class="code hl_variable" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">util::stacktrace::current</a>(stacktraceSkip)),</div>
-<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span>                make_no_match_reports(std::move(noMatches)));</div>
-<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>        }</div>
+<div class="line"><a id="l00126" name="l00126"></a><span class="lineno">  126</span>                <span class="keywordflow">return</span> handle_matched_call&lt;Signature&gt;(</div>
+<div class="line"><a id="l00127" name="l00127"></a><span class="lineno">  127</span>                    std::move(target),</div>
+<div class="line"><a id="l00128" name="l00128"></a><span class="lineno">  128</span>                    std::move(<a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">call</a>),</div>
+<div class="line"><a id="l00129" name="l00129"></a><span class="lineno">  129</span>                    std::move(<a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">matches</a>),</div>
+<div class="line"><a id="l00130" name="l00130"></a><span class="lineno">  130</span>                    stacktraceSkip + 1u);</div>
+<div class="line"><a id="l00131" name="l00131"></a><span class="lineno">  131</span>            }</div>
+<div class="line"><a id="l00132" name="l00132"></a><span class="lineno">  132</span> </div>
+<div class="line"><a id="l00133" name="l00133"></a><span class="lineno">  133</span>            <span class="keywordflow">if</span> (!std::ranges::empty(inapplicableMatches))</div>
+<div class="line"><a id="l00134" name="l00134"></a><span class="lineno">  134</span>            {</div>
+<div class="line"><a id="l00135" name="l00135"></a><span class="lineno">  135</span>                reporting::detail::report_inapplicable_matches(</div>
+<div class="line"><a id="l00136" name="l00136"></a><span class="lineno">  136</span>                    <a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">reporting::make_call_report</a>(std::move(target), std::move(<a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">call</a>), <a class="code hl_variable" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">util::stacktrace::current</a>(stacktraceSkip)),</div>
+<div class="line"><a id="l00137" name="l00137"></a><span class="lineno">  137</span>                    make_match_reports(std::move(inapplicableMatches)));</div>
+<div class="line"><a id="l00138" name="l00138"></a><span class="lineno">  138</span>            }</div>
+<div class="line"><a id="l00139" name="l00139"></a><span class="lineno">  139</span> </div>
+<div class="line"><a id="l00140" name="l00140"></a><span class="lineno">  140</span>            reporting::detail::report_no_matches(</div>
+<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span>                <a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">reporting::make_call_report</a>(std::move(target), std::move(<a class="code hl_namespace" href="../../dc/d2e/namespacemimicpp_1_1call.html">call</a>), <a class="code hl_variable" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">util::stacktrace::current</a>(stacktraceSkip)),</div>
+<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>                make_match_reports(std::move(noMatches)));</div>
+<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        }</div>
 </div>
-<div class="line"><a id="l00141" name="l00141"></a><span class="lineno">  141</span> </div>
-<div class="line"><a id="l00142" name="l00142"></a><span class="lineno">  142</span>    <span class="keyword">private</span>:</div>
-<div class="line"><a id="l00143" name="l00143"></a><span class="lineno">  143</span>        std::vector&lt;Expectation&gt; m_Expectations{};</div>
-<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span>        std::mutex m_ExpectationsMx{};</div>
-<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span> </div>
-<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        <span class="keyword">static</span> std::optional&lt;reporting::RequirementOutcomes&gt; try_match_call(</div>
-<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span>            reporting::TargetReport <span class="keyword">const</span>&amp; target,</div>
-<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>            <span class="keyword">auto</span> <span class="keyword">const</span>&amp; callInfo,</div>
-<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>            Expectation <span class="keyword">const</span>&amp; expectation) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>        {</div>
-<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keywordflow">try</span></div>
-<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            {</div>
-<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>                <span class="keywordflow">return</span> expectation.matches(callInfo);</div>
-<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            }</div>
-<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            <span class="keywordflow">catch</span> (...)</div>
-<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>            {</div>
-<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>                reporting::detail::report_unhandled_exception(</div>
-<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>                    <a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">reporting::make_call_report</a>(</div>
-<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>                        target,</div>
-<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                        callInfo,</div>
-<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                        <a class="code hl_variable" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">util::stacktrace::current</a>(3u + callInfo.baseStacktraceSkip)),</div>
-<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                    expectation.report(),</div>
-<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                    std::current_exception());</div>
-<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>            }</div>
-<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span> </div>
-<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>            <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>        }</div>
+<div class="line"><a id="l00144" name="l00144"></a><span class="lineno">  144</span> </div>
+<div class="line"><a id="l00145" name="l00145"></a><span class="lineno">  145</span>    <span class="keyword">private</span>:</div>
+<div class="line"><a id="l00146" name="l00146"></a><span class="lineno">  146</span>        std::vector&lt;Expectation&gt; m_Expectations{};</div>
+<div class="line"><a id="l00147" name="l00147"></a><span class="lineno">  147</span>        std::mutex m_ExpectationsMx{};</div>
+<div class="line"><a id="l00148" name="l00148"></a><span class="lineno">  148</span> </div>
+<div class="line"><a id="l00149" name="l00149"></a><span class="lineno">  149</span>        [[nodiscard]]</div>
+<div class="line"><a id="l00150" name="l00150"></a><span class="lineno">  150</span>        <span class="keyword">static</span> std::optional&lt;MatchResults&gt; try_match_call(</div>
+<div class="line"><a id="l00151" name="l00151"></a><span class="lineno">  151</span>            reporting::TargetReport <span class="keyword">const</span>&amp; target,</div>
+<div class="line"><a id="l00152" name="l00152"></a><span class="lineno">  152</span>            <span class="keyword">auto</span> <span class="keyword">const</span>&amp; callInfo,</div>
+<div class="line"><a id="l00153" name="l00153"></a><span class="lineno">  153</span>            Expectation <span class="keyword">const</span>&amp; expectation) <span class="keyword">noexcept</span></div>
+<div class="line"><a id="l00154" name="l00154"></a><span class="lineno">  154</span>        {</div>
+<div class="line"><a id="l00155" name="l00155"></a><span class="lineno">  155</span>            <span class="keywordflow">try</span></div>
+<div class="line"><a id="l00156" name="l00156"></a><span class="lineno">  156</span>            {</div>
+<div class="line"><a id="l00157" name="l00157"></a><span class="lineno">  157</span>                <span class="keywordflow">return</span> expectation.matches(callInfo);</div>
+<div class="line"><a id="l00158" name="l00158"></a><span class="lineno">  158</span>            }</div>
+<div class="line"><a id="l00159" name="l00159"></a><span class="lineno">  159</span>            <span class="keywordflow">catch</span> (...)</div>
+<div class="line"><a id="l00160" name="l00160"></a><span class="lineno">  160</span>            {</div>
+<div class="line"><a id="l00161" name="l00161"></a><span class="lineno">  161</span>                reporting::detail::report_unhandled_exception(</div>
+<div class="line"><a id="l00162" name="l00162"></a><span class="lineno">  162</span>                    <a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">reporting::make_call_report</a>(</div>
+<div class="line"><a id="l00163" name="l00163"></a><span class="lineno">  163</span>                        target,</div>
+<div class="line"><a id="l00164" name="l00164"></a><span class="lineno">  164</span>                        callInfo,</div>
+<div class="line"><a id="l00165" name="l00165"></a><span class="lineno">  165</span>                        <a class="code hl_variable" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">util::stacktrace::current</a>(3u + callInfo.baseStacktraceSkip)),</div>
+<div class="line"><a id="l00166" name="l00166"></a><span class="lineno">  166</span>                    expectation.report(),</div>
+<div class="line"><a id="l00167" name="l00167"></a><span class="lineno">  167</span>                    std::current_exception());</div>
+<div class="line"><a id="l00168" name="l00168"></a><span class="lineno">  168</span>            }</div>
 <div class="line"><a id="l00169" name="l00169"></a><span class="lineno">  169</span> </div>
-<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        <span class="keyword">auto</span> evaluate_expectations(reporting::TargetReport <span class="keyword">const</span>&amp; target, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; callInfo)</div>
-<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span>        {</div>
-<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>            std::vector&lt;Expectation*&gt; matches{};</div>
-<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>            std::vector&lt;Expectation const*&gt; inapplicableMatches{};</div>
-<div class="line"><a id="l00175" name="l00175"></a><span class="lineno">  175</span>            std::vector&lt;std::tuple&lt;Expectation const*, reporting::RequirementOutcomes&gt;&gt; noMatches{};</div>
-<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span> </div>
-<div class="line"><a id="l00177" name="l00177"></a><span class="lineno">  177</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; exp : std::views::reverse(m_Expectations))</div>
-<div class="line"><a id="l00178" name="l00178"></a><span class="lineno">  178</span>            {</div>
-<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span>                <span class="keywordflow">if</span> (std::optional result = try_match_call(target, callInfo, exp))</div>
-<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                {</div>
-<div class="line"><a id="l00181" name="l00181"></a><span class="lineno">  181</span>                    <span class="keywordflow">if</span> (std::ranges::any_of(result-&gt;outcomes, [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; el) { return el == false; }))</div>
-<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                    {</div>
-<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                        noMatches.emplace_back(&amp;exp, *std::move(result));</div>
-<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                    }</div>
-<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!exp.is_applicable())</div>
-<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                    {</div>
-<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                        inapplicableMatches.emplace_back(&amp;exp);</div>
-<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>                    }</div>
-<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span>                    <span class="keywordflow">else</span></div>
-<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>                    {</div>
-<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>                        matches.emplace_back(&amp;exp);</div>
-<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>                    }</div>
-<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>                }</div>
-<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span>            }</div>
-<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span> </div>
-<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>            <span class="keywordflow">return</span> std::make_tuple(std::move(matches), std::move(inapplicableMatches), std::move(noMatches));</div>
-<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        }</div>
-<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span> </div>
-<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
-<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>        <a class="code hl_typedef" href="../../d0/d3b/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_t_u_r_n___t_y_p_e.html#gab7dbe7ae4fb93753e7e24603b98f9c5c">signature_return_type_t&lt;Signature&gt;</a> handle_matched_call(</div>
-<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>            reporting::TargetReport&amp;&amp; target,</div>
-<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>            <a class="code hl_typedef" href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">call::info_for_signature_t&lt;Signature&gt;</a>&amp;&amp; callInfo,</div>
-<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>            std::span&lt;Expectation* const&gt; <span class="keyword">const</span> matches,</div>
-<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>            std::size_t <span class="keyword">const</span> stacktraceSkip)</div>
-<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>        {</div>
-<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>            std::vector reports = std::invoke([&amp;] {</div>
-<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                <span class="keyword">auto</span> view = std::views::transform(matches, [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; exp) { <span class="keywordflow">return</span> exp-&gt;report(); });</div>
-<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                <span class="keywordflow">return</span> std::vector(view.begin(), view.end());</div>
-<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>            });</div>
-<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(matches.size() == reports.size(), <span class="stringliteral">&quot;Size mismatch.&quot;</span>);</div>
-<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>            <span class="keyword">auto</span> <span class="keyword">const</span> bestMatchIter = std::ranges::max_element(</div>
-<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                reports,</div>
-<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                std::not_fn(&amp;sequence::detail::has_better_rating),</div>
-<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; el) <span class="keyword">noexcept</span> -&gt; <span class="keyword">const</span> <span class="keyword">auto</span>&amp; {</div>
-<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                    <span class="keywordflow">return</span> std::get&lt;reporting::state_applicable&gt;(el.controlReport).sequenceRatings;</div>
-<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>                });</div>
-<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span>            <span class="keyword">auto</span>&amp; expectation = *matches[std::ranges::distance(reports.cbegin(), bestMatchIter)];</div>
-<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span> </div>
-<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="../../db/d9c/group___s_e_t_t_i_n_g_s.html#gae1e66f9f6bdfb761224d25fac7556a2b">settings::report_success</a>())</div>
-<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span>            {</div>
-<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>                <span class="comment">// Todo: Avoid the call copy</span></div>
-<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>                <span class="comment">// Maybe we can prevent the copy here, but we should keep the instruction order as-is,</span></div>
-<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>                <span class="comment">// because in cases of a throwing finalizer, we might introduce bugs.</span></div>
-<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>                <span class="comment">// At least there are some tests, which will fail if done incorrectly.</span></div>
-<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>                reporting::detail::report_full_match(</div>
-<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>                    <a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">reporting::make_call_report</a>(std::move(target), callInfo, <a class="code hl_variable" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">util::stacktrace::current</a>(stacktraceSkip)),</div>
-<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>                    std::move(*bestMatchIter));</div>
-<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>            }</div>
-<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span> </div>
-<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>            <span class="keywordflow">return</span> expectation.consume(callInfo);</div>
-<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>        }</div>
-<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span> </div>
-<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>        [[nodiscard]]</div>
-<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>        <span class="keyword">static</span> std::vector&lt;reporting::NoMatchReport&gt; make_no_match_reports(std::vector&lt;std::tuple&lt;Expectation const*, reporting::RequirementOutcomes&gt;&gt;&amp;&amp; outcomes)</div>
-<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>        {</div>
-<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            std::vector&lt;reporting::NoMatchReport&gt; reports{};</div>
-<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>            reports.reserve(outcomes.size());</div>
-<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp;&amp; [expectationPtr, outcome] : std::move(outcomes))</div>
-<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>            {</div>
-<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                reports.emplace_back(expectationPtr-&gt;report(), std::move(outcome));</div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>            }</div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span> </div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span>            <span class="keywordflow">return</span> reports;</div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>        }</div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>    };</div>
+<div class="line"><a id="l00170" name="l00170"></a><span class="lineno">  170</span>            <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l00171" name="l00171"></a><span class="lineno">  171</span>        }</div>
+<div class="line"><a id="l00172" name="l00172"></a><span class="lineno">  172</span> </div>
+<div class="line"><a id="l00173" name="l00173"></a><span class="lineno">  173</span>        <span class="keyword">struct </span>evaluation_results</div>
+<div class="line"><a id="l00174" name="l00174"></a><span class="lineno">  174</span>        {</div>
+<div class="foldopen" id="foldopen00175" data-start="{" data-end="};">
+<div class="line"><a id="l00175" name="l00175"></a><span class="lineno"><a class="line" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html">  175</a></span>            <span class="keyword">struct </span><a class="code hl_struct" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html">entry</a></div>
+<div class="line"><a id="l00176" name="l00176"></a><span class="lineno">  176</span>            {</div>
+<div class="line"><a id="l00177" name="l00177"></a><span class="lineno"><a class="line" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#abbbeaab1c537e94cfcf3ffef0ddd599f">  177</a></span>                std::reference_wrapper&lt;Expectation&gt; <a class="code hl_variable" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#abbbeaab1c537e94cfcf3ffef0ddd599f">expectation</a>;</div>
+<div class="line"><a id="l00178" name="l00178"></a><span class="lineno"><a class="line" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#a8c68910a4b2cfefb6c82d4132dde7bf5">  178</a></span>                <a class="code hl_typedef" href="../../d9/db6/namespacemimicpp_1_1expectation.html#a2b6a992df8ddd6de832e7a63005ec63a">MatchResults</a> <a class="code hl_variable" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#a8c68910a4b2cfefb6c82d4132dde7bf5">results</a>;</div>
+<div class="line"><a id="l00179" name="l00179"></a><span class="lineno">  179</span> </div>
+<div class="line"><a id="l00180" name="l00180"></a><span class="lineno">  180</span>                [[nodiscard]]</div>
+<div class="foldopen" id="foldopen00181" data-start="{" data-end="}">
+<div class="line"><a id="l00181" name="l00181"></a><span class="lineno"><a class="line" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#a3ee9728da4207f6e099f93db7c3b57d1">  181</a></span>                <a class="code hl_class" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">reporting::MatchReport</a> <a class="code hl_function" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#a3ee9728da4207f6e099f93db7c3b57d1">to_match_report</a>() &amp;&amp;</div>
+<div class="line"><a id="l00182" name="l00182"></a><span class="lineno">  182</span>                {</div>
+<div class="line"><a id="l00183" name="l00183"></a><span class="lineno">  183</span>                    <span class="keywordflow">return</span> <a class="code hl_class" href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">reporting::MatchReport</a>{</div>
+<div class="line"><a id="l00184" name="l00184"></a><span class="lineno">  184</span>                        .expectationReport = <a class="code hl_variable" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#abbbeaab1c537e94cfcf3ffef0ddd599f">expectation</a>.get().report(),</div>
+<div class="line"><a id="l00185" name="l00185"></a><span class="lineno">  185</span>                        .matchResults = std::move(<a class="code hl_variable" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#a8c68910a4b2cfefb6c82d4132dde7bf5">results</a>),</div>
+<div class="line"><a id="l00186" name="l00186"></a><span class="lineno">  186</span>                    };</div>
+<div class="line"><a id="l00187" name="l00187"></a><span class="lineno">  187</span>                }</div>
 </div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>}</div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span> </div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00188" name="l00188"></a><span class="lineno">  188</span>            };</div>
+</div>
+<div class="line"><a id="l00189" name="l00189"></a><span class="lineno">  189</span> </div>
+<div class="line"><a id="l00190" name="l00190"></a><span class="lineno">  190</span>            std::vector&lt;entry&gt; <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">matches</a>{};</div>
+<div class="line"><a id="l00191" name="l00191"></a><span class="lineno">  191</span>            std::vector&lt;entry&gt; inapplicableMatches{};</div>
+<div class="line"><a id="l00192" name="l00192"></a><span class="lineno">  192</span>            std::vector&lt;entry&gt; noMatches{};</div>
+<div class="line"><a id="l00193" name="l00193"></a><span class="lineno">  193</span>        };</div>
+<div class="line"><a id="l00194" name="l00194"></a><span class="lineno">  194</span> </div>
+<div class="line"><a id="l00195" name="l00195"></a><span class="lineno">  195</span>        [[nodiscard]]</div>
+<div class="line"><a id="l00196" name="l00196"></a><span class="lineno">  196</span>        <span class="keyword">auto</span> evaluate_expectations(reporting::TargetReport <span class="keyword">const</span>&amp; target, <span class="keyword">auto</span> <span class="keyword">const</span>&amp; callInfo)</div>
+<div class="line"><a id="l00197" name="l00197"></a><span class="lineno">  197</span>        {</div>
+<div class="line"><a id="l00198" name="l00198"></a><span class="lineno">  198</span>            evaluation_results results{};</div>
+<div class="line"><a id="l00199" name="l00199"></a><span class="lineno">  199</span> </div>
+<div class="line"><a id="l00200" name="l00200"></a><span class="lineno">  200</span>            <span class="keywordflow">for</span> (<span class="keyword">auto</span>&amp; exp : std::views::reverse(m_Expectations))</div>
+<div class="line"><a id="l00201" name="l00201"></a><span class="lineno">  201</span>            {</div>
+<div class="line"><a id="l00202" name="l00202"></a><span class="lineno">  202</span>                <span class="keywordflow">if</span> (std::optional result = try_match_call(target, callInfo, exp))</div>
+<div class="line"><a id="l00203" name="l00203"></a><span class="lineno">  203</span>                {</div>
+<div class="line"><a id="l00204" name="l00204"></a><span class="lineno">  204</span>                    <span class="keywordflow">if</span> (std::ranges::any_of(*result, [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; el) { <span class="keywordflow">return</span> std::holds_alternative&lt;MatchFailure&gt;(el); }))</div>
+<div class="line"><a id="l00205" name="l00205"></a><span class="lineno">  205</span>                    {</div>
+<div class="line"><a id="l00206" name="l00206"></a><span class="lineno">  206</span>                        results.noMatches.emplace_back(exp, *std::move(result));</div>
+<div class="line"><a id="l00207" name="l00207"></a><span class="lineno">  207</span>                    }</div>
+<div class="line"><a id="l00208" name="l00208"></a><span class="lineno">  208</span>                    <span class="keywordflow">else</span> <span class="keywordflow">if</span> (!exp.is_applicable())</div>
+<div class="line"><a id="l00209" name="l00209"></a><span class="lineno">  209</span>                    {</div>
+<div class="line"><a id="l00210" name="l00210"></a><span class="lineno">  210</span>                        results.inapplicableMatches.emplace_back(exp, *std::move(result));</div>
+<div class="line"><a id="l00211" name="l00211"></a><span class="lineno">  211</span>                    }</div>
+<div class="line"><a id="l00212" name="l00212"></a><span class="lineno">  212</span>                    <span class="keywordflow">else</span></div>
+<div class="line"><a id="l00213" name="l00213"></a><span class="lineno">  213</span>                    {</div>
+<div class="line"><a id="l00214" name="l00214"></a><span class="lineno">  214</span>                        results.matches.emplace_back(exp, *std::move(result));</div>
+<div class="line"><a id="l00215" name="l00215"></a><span class="lineno">  215</span>                    }</div>
+<div class="line"><a id="l00216" name="l00216"></a><span class="lineno">  216</span>                }</div>
+<div class="line"><a id="l00217" name="l00217"></a><span class="lineno">  217</span>            }</div>
+<div class="line"><a id="l00218" name="l00218"></a><span class="lineno">  218</span> </div>
+<div class="line"><a id="l00219" name="l00219"></a><span class="lineno">  219</span>            <span class="keywordflow">return</span> results;</div>
+<div class="line"><a id="l00220" name="l00220"></a><span class="lineno">  220</span>        }</div>
+<div class="line"><a id="l00221" name="l00221"></a><span class="lineno">  221</span> </div>
+<div class="line"><a id="l00222" name="l00222"></a><span class="lineno">  222</span>        <span class="keyword">template</span> &lt;<span class="keyword">typename</span> Signature&gt;</div>
+<div class="line"><a id="l00223" name="l00223"></a><span class="lineno">  223</span>        [[nodiscard]]</div>
+<div class="line"><a id="l00224" name="l00224"></a><span class="lineno">  224</span>        <a class="code hl_typedef" href="../../d0/d3b/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_t_u_r_n___t_y_p_e.html#gab7dbe7ae4fb93753e7e24603b98f9c5c">signature_return_type_t&lt;Signature&gt;</a> handle_matched_call(</div>
+<div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span>            reporting::TargetReport&amp;&amp; target,</div>
+<div class="line"><a id="l00226" name="l00226"></a><span class="lineno">  226</span>            <a class="code hl_typedef" href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">call::info_for_signature_t&lt;Signature&gt;</a>&amp;&amp; callInfo,</div>
+<div class="line"><a id="l00227" name="l00227"></a><span class="lineno">  227</span>            std::vector&lt;evaluation_results::entry&gt;&amp;&amp; matches,</div>
+<div class="line"><a id="l00228" name="l00228"></a><span class="lineno">  228</span>            std::size_t <span class="keyword">const</span> stacktraceSkip)</div>
+<div class="line"><a id="l00229" name="l00229"></a><span class="lineno">  229</span>        {</div>
+<div class="line"><a id="l00230" name="l00230"></a><span class="lineno">  230</span>            std::vector reports = std::invoke([&amp;] {</div>
+<div class="line"><a id="l00231" name="l00231"></a><span class="lineno">  231</span>                <span class="keyword">auto</span> view = std::views::transform(</div>
+<div class="line"><a id="l00232" name="l00232"></a><span class="lineno">  232</span>                    matches,</div>
+<div class="line"><a id="l00233" name="l00233"></a><span class="lineno">  233</span>                    [](<span class="keyword">auto</span> <span class="keyword">const</span>&amp; entry) { <span class="keywordflow">return</span> entry.expectation.get().report(); });</div>
+<div class="line"><a id="l00234" name="l00234"></a><span class="lineno">  234</span>                <span class="keywordflow">return</span> std::vector(view.begin(), view.end());</div>
+<div class="line"><a id="l00235" name="l00235"></a><span class="lineno">  235</span>            });</div>
+<div class="line"><a id="l00236" name="l00236"></a><span class="lineno">  236</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(matches.size() == reports.size(), <span class="stringliteral">&quot;Size mismatch.&quot;</span>);</div>
+<div class="line"><a id="l00237" name="l00237"></a><span class="lineno">  237</span>            <span class="keyword">auto</span> <span class="keyword">const</span> bestIter = std::ranges::max_element(</div>
+<div class="line"><a id="l00238" name="l00238"></a><span class="lineno">  238</span>                reports,</div>
+<div class="line"><a id="l00239" name="l00239"></a><span class="lineno">  239</span>                std::not_fn(&amp;sequence::detail::has_better_rating),</div>
+<div class="line"><a id="l00240" name="l00240"></a><span class="lineno">  240</span>                [](reporting::ExpectationReport <span class="keyword">const</span>&amp; el) <span class="keyword">noexcept</span> -&gt; <span class="keyword">const</span> <span class="keyword">auto</span>&amp; {</div>
+<div class="line"><a id="l00241" name="l00241"></a><span class="lineno">  241</span>                    <span class="keywordflow">return</span> std::get&lt;reporting::state_applicable&gt;(el.controlReport).sequenceRatings;</div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span>                });</div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span>            <span class="keyword">auto</span>&amp; bestMatch = matches[std::ranges::distance(reports.cbegin(), bestIter)];</div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span> </div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="../../db/d9c/group___s_e_t_t_i_n_g_s.html#gae1e66f9f6bdfb761224d25fac7556a2b">settings::report_success</a>())</div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span>            {</div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span>                <span class="comment">// Todo: Avoid the call copy</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span>                <span class="comment">// Maybe we can prevent the copy here, but we should keep the instruction order as-is,</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span>                <span class="comment">// because in cases of a throwing finalizer, we might introduce bugs.</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span>                <span class="comment">// At least there are some tests, which will fail if done incorrectly.</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span>                reporting::detail::report_full_match(</div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span>                    <a class="code hl_function" href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">reporting::make_call_report</a>(std::move(target), callInfo, <a class="code hl_variable" href="../../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#gaa467fc74d9e076d53e5406ec8de8015f">util::stacktrace::current</a>(stacktraceSkip)),</div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span>                    {.expectationReport = std::move(*bestIter), .matchResults = std::move(bestMatch.results)});</div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span>            }</div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span> </div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span>            <span class="keywordflow">return</span> bestMatch.expectation.get().consume(callInfo);</div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span>        }</div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span> </div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span>        [[nodiscard]]</div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span>        <span class="keyword">static</span> std::vector&lt;reporting::MatchReport&gt; make_match_reports(std::vector&lt;evaluation_results::entry&gt;&amp;&amp; outcomes)</div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span>        {</div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span>            std::vector&lt;reporting::MatchReport&gt; reports{};</div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span>            reports.reserve(outcomes.size());</div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span>            std::ranges::transform(</div>
+<div class="line"><a id="l00265" name="l00265"></a><span class="lineno">  265</span>                outcomes,</div>
+<div class="line"><a id="l00266" name="l00266"></a><span class="lineno">  266</span>                std::back_inserter(reports),</div>
+<div class="line"><a id="l00267" name="l00267"></a><span class="lineno">  267</span>                [](<a class="code hl_struct" href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html">evaluation_results::entry</a>&amp; el) { <span class="keywordflow">return</span> std::move(el).to_match_report(); });</div>
+<div class="line"><a id="l00268" name="l00268"></a><span class="lineno">  268</span> </div>
+<div class="line"><a id="l00269" name="l00269"></a><span class="lineno">  269</span>            <span class="keywordflow">return</span> reports;</div>
+<div class="line"><a id="l00270" name="l00270"></a><span class="lineno">  270</span>        }</div>
+<div class="line"><a id="l00271" name="l00271"></a><span class="lineno">  271</span>    };</div>
+</div>
+<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span>}</div>
+<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span> </div>
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
 <div class="ttc" id="a_config_8hpp_html_a97ed0cb4a7de0573de2b684047cadc9f"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a></div><div class="ttdeci">#define MIMICPP_ASSERT(condition, msg)</div><div class="ttdef"><b>Definition</b> Config.hpp:51</div></div>
 <div class="ttc" id="a_config_8hpp_html_af5897385afd790dba0e4971e29c1e3e0"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#af5897385afd790dba0e4971e29c1e3e0">MIMICPP_DETAIL_MODULE_EXPORT</a></div><div class="ttdeci">#define MIMICPP_DETAIL_MODULE_EXPORT</div><div class="ttdef"><b>Definition</b> Config.hpp:19</div></div>
@@ -350,6 +379,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('db/d5d/_regist
 <div class="ttc" id="aclassmimicpp_1_1expectation_1_1_registry_html_acfb88e0a192a55a6522b2bb6ea13ddd3"><div class="ttname"><a href="../../df/df9/classmimicpp_1_1expectation_1_1_registry.html#acfb88e0a192a55a6522b2bb6ea13ddd3">mimicpp::expectation::Registry::Registry</a></div><div class="ttdeci">Registry(Registry const &amp;)=delete</div><div class="ttdoc">Deleted copy-constructor.</div></div>
 <div class="ttc" id="aclassmimicpp_1_1expectation_1_1_registry_html_ae255f0a9b40d09da766f2b5b62d40a3c"><div class="ttname"><a href="../../df/df9/classmimicpp_1_1expectation_1_1_registry.html#ae255f0a9b40d09da766f2b5b62d40a3c">mimicpp::expectation::Registry::operator=</a></div><div class="ttdeci">Registry &amp; operator=(Registry const &amp;)=delete</div><div class="ttdoc">Deleted copy-assignment-operator.</div></div>
 <div class="ttc" id="aclassmimicpp_1_1expectation_1_1_registry_html_ae82bb31d8bfdc950674322435e07ea13"><div class="ttname"><a href="../../df/df9/classmimicpp_1_1expectation_1_1_registry.html#ae82bb31d8bfdc950674322435e07ea13">mimicpp::expectation::Registry::handle_call</a></div><div class="ttdeci">signature_return_type_t&lt; Signature &gt; handle_call(reporting::TargetReport target, call::info_for_signature_t&lt; Signature &gt; call)</div><div class="ttdoc">Handles the incoming call.</div><div class="ttdef"><b>Definition</b> Registry.hpp:118</div></div>
+<div class="ttc" id="aclassmimicpp_1_1reporting_1_1_match_report_html"><div class="ttname"><a href="../../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html">mimicpp::reporting::MatchReport</a></div><div class="ttdoc">Contains the expectation-report and the match-results to a specific call.</div><div class="ttdef"><b>Definition</b> MatchReport.hpp:22</div></div>
 <div class="ttc" id="aclassmimicpp_1_1reporting_1_1_target_report_html"><div class="ttname"><a href="../../d2/d84/classmimicpp_1_1reporting_1_1_target_report.html">mimicpp::reporting::TargetReport</a></div><div class="ttdoc">Contains the extracted mock info.</div><div class="ttdef"><b>Definition</b> TargetReport.hpp:22</div></div>
 <div class="ttc" id="agroup___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s_html_ga3106fae8499d5613d76fc8bd4cd09166"><div class="ttname"><a href="../../d5/d3f/group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s.html#ga3106fae8499d5613d76fc8bd4cd09166">mimicpp::reporting::make_call_report</a></div><div class="ttdeci">CallReport make_call_report(TargetReport target, call::Info&lt; Return, Params... &gt; callInfo, util::Stacktrace stacktrace)</div><div class="ttdoc">Generates the call report for a given call info.</div><div class="ttdef"><b>Definition</b> CallReport.hpp:79</div></div>
 <div class="ttc" id="agroup___s_e_t_t_i_n_g_s_html_gae1e66f9f6bdfb761224d25fac7556a2b"><div class="ttname"><a href="../../db/d9c/group___s_e_t_t_i_n_g_s.html#gae1e66f9f6bdfb761224d25fac7556a2b">mimicpp::settings::report_success</a></div><div class="ttdeci">std::atomic_bool &amp; report_success() noexcept</div><div class="ttdoc">Controls whether successful matches are reported.</div><div class="ttdef"><b>Definition</b> Settings.hpp:32</div></div>
@@ -358,7 +388,12 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('db/d5d/_regist
 <div class="ttc" id="anamespacemimicpp_1_1call_html"><div class="ttname"><a href="../../dc/d2e/namespacemimicpp_1_1call.html">mimicpp::call</a></div><div class="ttdef"><b>Definition</b> Call.hpp:24</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1call_html_a904a8502dffb5e669557ce1a8c4b05eb"><div class="ttname"><a href="../../dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb">mimicpp::call::info_for_signature_t</a></div><div class="ttdeci">typename info_for_signature&lt; Signature &gt;::type info_for_signature_t</div><div class="ttdef"><b>Definition</b> Call.hpp:47</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1expectation_html"><div class="ttname"><a href="../../d9/db6/namespacemimicpp_1_1expectation.html">mimicpp::expectation</a></div><div class="ttdef"><b>Definition</b> Builder.hpp:33</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1expectation_html_a2b6a992df8ddd6de832e7a63005ec63a"><div class="ttname"><a href="../../d9/db6/namespacemimicpp_1_1expectation.html#a2b6a992df8ddd6de832e7a63005ec63a">mimicpp::expectation::MatchResults</a></div><div class="ttdeci">std::vector&lt; MatchResult &gt; MatchResults</div><div class="ttdef"><b>Definition</b> Common.hpp:42</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1matches_html"><div class="ttname"><a href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a></div><div class="ttdef"><b>Definition</b> FloatingPointMatchers.hpp:25</div></div>
+<div class="ttc" id="astructmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry_html"><div class="ttname"><a href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html">mimicpp::expectation::Registry::evaluation_results::entry</a></div><div class="ttdef"><b>Definition</b> Registry.hpp:176</div></div>
+<div class="ttc" id="astructmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry_html_a3ee9728da4207f6e099f93db7c3b57d1"><div class="ttname"><a href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#a3ee9728da4207f6e099f93db7c3b57d1">mimicpp::expectation::Registry::evaluation_results::entry::to_match_report</a></div><div class="ttdeci">reporting::MatchReport to_match_report() &amp;&amp;</div><div class="ttdef"><b>Definition</b> Registry.hpp:181</div></div>
+<div class="ttc" id="astructmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry_html_a8c68910a4b2cfefb6c82d4132dde7bf5"><div class="ttname"><a href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#a8c68910a4b2cfefb6c82d4132dde7bf5">mimicpp::expectation::Registry::evaluation_results::entry::results</a></div><div class="ttdeci">MatchResults results</div><div class="ttdef"><b>Definition</b> Registry.hpp:178</div></div>
+<div class="ttc" id="astructmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry_html_abbbeaab1c537e94cfcf3ffef0ddd599f"><div class="ttname"><a href="../../d0/daa/structmimicpp_1_1expectation_1_1_registry_1_1evaluation__results_1_1entry.html#abbbeaab1c537e94cfcf3ffef0ddd599f">mimicpp::expectation::Registry::evaluation_results::entry::expectation</a></div><div class="ttdeci">std::reference_wrapper&lt; Expectation &gt; expectation</div><div class="ttdef"><b>Definition</b> Registry.hpp:177</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 </div><!-- container -->

@@ -43,17 +43,12 @@ var group___r_e_p_o_r_t_i_n_g___r_e_p_o_r_t_s =
       [ "controlReport", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#ad59f96434c23acb5d1e9e55b0e261c88", null ],
       [ "finalizerDescription", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a6d32697cd0c5d9c6556483e787d95410", null ],
       [ "from", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a027d5b0050b7dfd10da75b15311aed63", null ],
-      [ "requirementDescriptions", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#a280e61fc3ce964eddc01023811e73bc4", null ],
       [ "target", "d2/d91/classmimicpp_1_1reporting_1_1_expectation_report.html#ad0b948b2d97adf49989acd9783bf72b5", null ]
     ] ],
-    [ "mimicpp::reporting::RequirementOutcomes", "d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html", [
-      [ "operator==", "d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#a298445e4c3dc396a8cfbc95263cace25", null ],
-      [ "outcomes", "d0/d66/classmimicpp_1_1reporting_1_1_requirement_outcomes.html#a4b8f1904f9c77fd148fed62a62ba0772", null ]
-    ] ],
-    [ "mimicpp::reporting::NoMatchReport", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html", [
-      [ "operator==", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html#aab6ee4844ed434c2bf566eda9eea4cba", null ],
-      [ "expectationReport", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html#ae015c5b5e2cb065dac96e526172047ed", null ],
-      [ "requirementOutcomes", "df/d1c/classmimicpp_1_1reporting_1_1_no_match_report.html#a44607d7c7fca956d65e71466cb8802c3", null ]
+    [ "mimicpp::reporting::MatchReport", "d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html", [
+      [ "operator==", "d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html#ac3c3615cba2ed8870cd5b7d09557df37", null ],
+      [ "expectationReport", "d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html#a95d518d8fef8b60833fb74f6737b8f62", null ],
+      [ "matchResults", "d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html#aaea815fe4aa555e00db30bdc8e33c12a", null ]
     ] ],
     [ "mimicpp::reporting::SequenceReport", "d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html", [
       [ "operator==", "d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html#ad2a7d330118cb923d8689e029a36d758", null ],
