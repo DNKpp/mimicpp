@@ -189,13 +189,41 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     namespace detail
     {
-        struct CapturedValue
+        class CapturedValue
         {
-            std::any value;
+        public:
+            template <typename T>
+            explicit constexpr CapturedValue(std::in_place_t const /*tag*/, T&& value, format::format_string<format::fallback_formattable_t<T>> fmt = "{}")
+                : m_Value{std::forward<T>(value)},
+                  m_Fmt{fmt.get()},
+                  m_PrintStrategy{&CapturedValue::print_to<std::remove_cvref_t<T>>}
+            {
+            }
 
             using OutIter = std::ostreambuf_iterator<char>;
-            using PrintToFun = OutIter(*)(OutIter, std::any const&);
-            PrintToFun printTo;
+            OutIter print_to(OutIter out) const // NOLINT(*-use-nodiscard)
+            {
+                MIMICPP_ASSERT(m_PrintStrategy, "Null print strategy.");
+                MIMICPP_ASSERT(m_Value.has_value(), "Null capture.");
+
+                return m_PrintStrategy(std::move(out), m_Fmt, m_Value);
+            }
+
+        private:
+            std::any m_Value;
+            format::vformat_string m_Fmt;
+            using PrintStrategy = OutIter(*)(OutIter, format::vformat_string const&, std::any const&);
+            PrintStrategy m_PrintStrategy;
+
+            template <typename T>
+            static OutIter print_to(OutIter out, format::vformat_string const& fmt, std::any const& capture)
+            {
+                auto formatter = format::fallback_formattable(std::any_cast<std::remove_cvref_t<T>>(capture));
+                return format::vformat_to(
+                    std::move(out),
+                    fmt,
+                    format::make_format_args(formatter));
+            }
         };
     }
 
@@ -224,12 +252,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         template <typename T>
         void capture(T&& value)
         {
-            *m_captureSink++ = CapturedValue{
-                .value = std::forward<T>(value),
-                .printTo = [](CapturedValue::OutIter out, std::any const& captured) {
-                    return mimicpp::print(std::move(out), std::any_cast<std::remove_cvref_t<T>>(captured));
-                },
-            };
+            *m_captureSink++ = CapturedValue{std::in_place, std::forward<T>(value)};
         }
 
     private:
@@ -277,12 +300,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
             {
                 ss << ", but actually ";
                 auto iter = captures.cbegin();
-                iter->printTo(std::ostreambuf_iterator{ss}, iter->value);
+                iter->print_to(std::ostreambuf_iterator{ss});
 
                 for (++iter; iter != captures.cend(); ++iter)
                 {
                     ss << ", ";
-                    iter->printTo(std::ostreambuf_iterator{ss}, iter->value);
+                    iter->print_to(std::ostreambuf_iterator{ss});
                 }
             }
 
