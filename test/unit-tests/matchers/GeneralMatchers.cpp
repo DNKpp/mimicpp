@@ -782,7 +782,7 @@ TEST_CASE(
 
                 CHECK_THAT(
                     matcher.matches(value),
-                    variant_equals(expectation::MatchFailure{.description = R"(my matcher!, but actually 42, "Hello, World!")"}));
+                    variant_equals(expectation::MatchFailure{.description = R"(my matcher!, but actually 42, Hello, World!)"}));
             }
 
             SECTION("When the matcher is inverted.")
@@ -794,7 +794,7 @@ TEST_CASE(
 
                 CHECK_THAT(
                     (!matcher).matches(value),
-                    variant_equals(expectation::MatchFailure{.description = R"(not (my matcher!), but actually 42, "Hello, World!")"}));
+                    variant_equals(expectation::MatchFailure{.description = R"(not (my matcher!), but actually 42, Hello, World!)"}));
             }
         }
 
@@ -846,4 +846,21 @@ TEST_CASE(
         .RETURN(result);
 
     CHECK(expected == matcher.matches(value));
+}
+
+TEST_CASE(
+    "matcher::GenericMatcher can capture values with a custom format-string.",
+    "[matcher]")
+{
+    auto const matcher = make_generic_matcher(
+        [](auto& ctx, int const /*v*/) {
+            ctx.capture(1337, "my value={}");
+            return false;
+        },
+        "my matcher");
+
+    constexpr int value{56};
+    CHECK_THAT(
+        matcher.matches(value),
+        variant_equals(expectation::MatchFailure{.description = "my matcher, but actually my value=1337"}));
 }

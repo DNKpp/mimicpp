@@ -219,10 +219,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
             static OutIter print_to(OutIter out, format::vformat_string const& fmt, std::any const& capture)
             {
                 auto formatter = format::fallback_formattable(std::any_cast<std::remove_cvref_t<T>>(capture));
-                return format::vformat_to(
-                    std::move(out),
-                    fmt,
-                    format::make_format_args(formatter));
+                return format::vformat_to(std::move(out), fmt, format::make_format_args(formatter));
             }
         };
     }
@@ -253,6 +250,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         void capture(T&& value)
         {
             *m_captureSink++ = CapturedValue{std::in_place, std::forward<T>(value)};
+        }
+
+        template <typename T>
+        void capture(T&& value, format::format_string<format::fallback_formattable_t<T>> fmt)
+        {
+            *m_captureSink++ = CapturedValue{std::in_place, std::forward<T>(value), std::move(fmt)};
         }
 
     private:
