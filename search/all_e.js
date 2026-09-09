@@ -34,7 +34,7 @@ var searchData=
   ['matchevaluationcontext_31',['MatchEvaluationContext',['../d4/da8/classmimicpp_1_1_match_evaluation_context.html',1,'mimicpp::MatchEvaluationContext&lt; Args &gt;'],['../d4/da8/classmimicpp_1_1_match_evaluation_context.html#a328978730aec281ac954d18cbd04dfd0',1,'mimicpp::MatchEvaluationContext::MatchEvaluationContext()']]],
   ['matchevaluationcontext_3c_20args_2e_2e_2e_20_3e_32',['MatchEvaluationContext&lt; Args... &gt;',['../d4/da8/classmimicpp_1_1_match_evaluation_context.html',1,'mimicpp']]],
   ['matchfailure_33',['MatchFailure',['../d7/dce/structmimicpp_1_1expectation_1_1_match_failure.html',1,'mimicpp::expectation']]],
-  ['matching_34',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
+  ['matching_34',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
   ['matching_20arguments_35',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md8',1,'']]],
   ['matchreport_36',['MatchReport',['../d2/d2f/classmimicpp_1_1reporting_1_1_match_report.html',1,'mimicpp::reporting']]],
   ['matchreport_2ehpp_37',['MatchReport.hpp',['../db/dc0/_match_report_8hpp.html',1,'']]],

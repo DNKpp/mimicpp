@@ -1,5 +1,7 @@
 var NAVTREEINDEX6 =
 {
+"de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html":[5,0,0,7,0,3],
+"de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html#a01f5fe489e7ca7383b1eda2ba2c0e245":[3,0,0,13,0,3,3],
 "de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html#a01f5fe489e7ca7383b1eda2ba2c0e245":[5,0,0,7,0,3,3],
 "de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html#a2f20f3de7c6ab6879662c09ea143d63a":[3,0,0,13,0,3,6],
 "de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html#a2f20f3de7c6ab6879662c09ea143d63a":[5,0,0,7,0,3,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX6 =
 "functions_func_v.html":[5,3,1,18],
 "functions_func_w.html":[5,3,1,19],
 "functions_func_~.html":[5,3,1,20],
-"functions_g.html":[5,3,0,6],
-"functions_h.html":[5,3,0,7],
-"functions_i.html":[5,3,0,8]
+"functions_g.html":[5,3,0,6]
 };

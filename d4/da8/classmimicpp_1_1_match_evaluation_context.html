@@ -137,6 +137,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:acc225876d42d448450afedfa26f181ee" id="r_acc225876d42d448450afedfa26f181ee"><td class="memItemLeft">constexpr <a class="el" href="#ac5419bd4f2b0d0ddc0697aa9ebf3ade4">expectation_refs</a>&#160;</td><td class="memItemRight"><a class="el" href="#acc225876d42d448450afedfa26f181ee">expectations</a> () const noexcept</td></tr>
 <tr class="memitem:a7520452757719c05e9b3ccc7e2d811b9" id="r_a7520452757719c05e9b3ccc7e2d811b9"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a7520452757719c05e9b3ccc7e2d811b9 template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7520452757719c05e9b3ccc7e2d811b9">capture</a> (T &amp;&amp;value)</td></tr>
+<tr class="memitem:adac93b0a693850746204ec8be1cbc10d" id="r_adac93b0a693850746204ec8be1cbc10d"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:adac93b0a693850746204ec8be1cbc10d template"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#adac93b0a693850746204ec8be1cbc10d">capture</a> (T &amp;&amp;value, format::format_string&lt; <a class="el" href="../../d3/d54/namespacemimicpp_1_1format.html#ac8a6d050b52a08e920447cfc4010d06b">format::fallback_formattable_t</a>&lt; T &gt; &gt; fmt)</td></tr>
 </table>
 <a name="doc-typedef-members" id="doc-typedef-members"></a><h2 id="header-doc-typedef-members" class="groupheader">Member Typedef Documentation</h2>
 <a id="ac5419bd4f2b0d0ddc0697aa9ebf3ade4" name="ac5419bd4f2b0d0ddc0697aa9ebf3ade4"></a>
@@ -189,7 +191,7 @@ template&lt;util::unqualified... Args&gt; </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
 <a id="a7520452757719c05e9b3ccc7e2d811b9" name="a7520452757719c05e9b3ccc7e2d811b9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7520452757719c05e9b3ccc7e2d811b9">&#9670;&#160;</a></span>capture()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a7520452757719c05e9b3ccc7e2d811b9">&#9670;&#160;</a></span>capture() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -206,6 +208,39 @@ template&lt;typename T&gt; </div>
           <td>(</td>
           <td class="paramtype">T &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span></td><td>)</td>
           <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adac93b0a693850746204ec8be1cbc10d" name="adac93b0a693850746204ec8be1cbc10d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adac93b0a693850746204ec8be1cbc10d">&#9670;&#160;</a></span>capture() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;util::unqualified... Args&gt; </div>
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void <a class="el" href="../../d4/da8/classmimicpp_1_1_match_evaluation_context.html">mimicpp::MatchEvaluationContext</a>&lt; Args &gt;::capture </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">format::format_string&lt; <a class="el" href="../../d3/d54/namespacemimicpp_1_1format.html#ac8a6d050b52a08e920447cfc4010d06b">format::fallback_formattable_t</a>&lt; T &gt; &gt;</td>          <td class="paramname"><span class="paramname"><em>fmt</em></span>&#160;)</td>
         </tr>
       </table>
   </td>

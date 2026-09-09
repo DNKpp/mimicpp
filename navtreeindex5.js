@@ -1,5 +1,7 @@
 var NAVTREEINDEX5 =
 {
+"dc/d66/std-stacktrace_8hpp.html":[6,0,2,1,2],
+"dc/d66/std-stacktrace_8hpp_source.html":[6,0,2,1,2],
 "dc/d70/structmimicpp_1_1signature__remove__call__convention.html":[2,11,16,0],
 "dc/d70/structmimicpp_1_1signature__remove__call__convention.html#a9771ec6b91ff94d064210f3de1a609e7":[2,11,16,0,0],
 "dc/d7a/structmimicpp_1_1is__character_3_01char16__t_01_4.html":[2,10,0,6],
@@ -155,8 +157,8 @@ var NAVTREEINDEX5 =
 "de/d02/classmimicpp_1_1call_1_1_result_storage.html":[5,0,0,0,3],
 "de/d02/classmimicpp_1_1call_1_1_result_storage.html#a1b62b92d3b1ad0be74e199af513ecb1f":[3,0,0,0,3,1],
 "de/d02/classmimicpp_1_1call_1_1_result_storage.html#a1b62b92d3b1ad0be74e199af513ecb1f":[5,0,0,0,3,1],
-"de/d02/classmimicpp_1_1call_1_1_result_storage.html#ad6e5f9f9fcbaea8e6a2e00743b6f7fd2":[3,0,0,0,3,0],
 "de/d02/classmimicpp_1_1call_1_1_result_storage.html#ad6e5f9f9fcbaea8e6a2e00743b6f7fd2":[3,0,0,0,4,0],
+"de/d02/classmimicpp_1_1call_1_1_result_storage.html#ad6e5f9f9fcbaea8e6a2e00743b6f7fd2":[3,0,0,0,3,0],
 "de/d02/classmimicpp_1_1call_1_1_result_storage.html#ad6e5f9f9fcbaea8e6a2e00743b6f7fd2":[5,0,0,0,3,0],
 "de/d02/classmimicpp_1_1call_1_1_result_storage.html#ad6e5f9f9fcbaea8e6a2e00743b6f7fd2":[5,0,0,0,4,0],
 "de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html":[2,11,6],
@@ -247,7 +249,5 @@ var NAVTREEINDEX5 =
 "de/d89/classmimicpp_1_1reporting_1_1_type_report.html#aa7c3e57963406769b38c5dcb7ba4ba32":[5,0,0,5,12,2],
 "de/da5/structmimicpp_1_1is__character_3_01signed_01char_01_4.html":[2,10,0,2],
 "de/da5/structmimicpp_1_1is__character_3_01signed_01char_01_4.html":[2,11,1,2],
-"de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html":[3,0,0,13,0,3],
-"de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html":[5,0,0,7,0,3],
-"de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html#a01f5fe489e7ca7383b1eda2ba2c0e245":[3,0,0,13,0,3,3]
+"de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html":[3,0,0,13,0,3]
 };

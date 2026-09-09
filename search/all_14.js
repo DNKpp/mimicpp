@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['safety_0',['Thread-Safety',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md24',1,'']]],
+  ['safety_0',['Thread-Safety',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md20',1,'']]],
   ['same_5fas_5fany_1',['same_as_any',['../d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html',1,'mimicpp::util']]],
   ['satisfies_2',['satisfies',['../dc/d18/conceptmimicpp_1_1util_1_1satisfies.html',1,'mimicpp::util']]],
   ['scoped_5fexp_3',['SCOPED_EXP',['../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a',1,'ScopedExpectation.hpp']]],
@@ -20,7 +20,7 @@ var searchData=
   ['sequencereport_17',['SequenceReport',['../d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html',1,'mimicpp::reporting']]],
   ['sequencereport_2ehpp_18',['SequenceReport.hpp',['../d5/dc7/_sequence_report_8hpp.html',1,'']]],
   ['sequences_19',['sequences',['../da/dab/structmimicpp_1_1reporting_1_1state__inapplicable.html#a46d0865b1b02d8a8a557f08cb7a64259',1,'mimicpp::reporting::state_inapplicable::sequences'],['../d3/d76/structmimicpp_1_1reporting_1_1state__saturated.html#a83218f8ebcd505a78bc8a40de70a3573',1,'mimicpp::reporting::state_saturated::sequences']]],
-  ['sequences_20with_20times_20',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md25',1,'']]],
+  ['sequences_20with_20times_20',['A word on sequences with times',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md21',1,'']]],
   ['sequencet_21',['SequenceT',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf6777ae3a4ea46f945ad2e998885a07c',1,'mimicpp']]],
   ['settings_22',['settings',['../db/d9c/group___s_e_t_t_i_n_g_s.html',1,'']]],
   ['settings_2ehpp_23',['Settings.hpp',['../dd/d90/_settings_8hpp.html',1,'']]],
@@ -139,16 +139,16 @@ var searchData=
   ['stringify_5funhandled_5fexception_136',['stringify_unhandled_exception',['../d6/d48/namespacemimicpp_1_1reporting.html#a31f05e9181e8ca535aaed2884ab8edaa',1,'mimicpp::reporting']]],
   ['stringifyreports_2ehpp_137',['StringifyReports.hpp',['../d9/d70/_stringify_reports_8hpp.html',1,'']]],
   ['stringmatchers_2ehpp_138',['StringMatchers.hpp',['../d2/d56/_string_matchers_8hpp.html',1,'']]],
-  ['strings_139',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md21',1,'']]],
-  ['strings_20with_20common_20char_20type_140',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md20',1,'']]],
+  ['strings_139',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
+  ['strings_20with_20common_20char_20type_140',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['strings_20with_20other_20character_20types_141',['Strings with other character-types',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
   ['stringstreamt_142',['StringStreamT',['../d1/d11/namespacemimicpp.html#a6b761dc4fb4f361e95dd3ec37da4a8a8',1,'mimicpp']]],
   ['stringt_143',['StringT',['../d1/d11/namespacemimicpp.html#afd8074742a9c25b893fcdfe534b912e1',1,'mimicpp']]],
   ['stringviewt_144',['StringViewT',['../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6',1,'mimicpp']]],
   ['strip_5fparens_145',['strip_parens',['../d7/d0f/group___m_a_c_r_o___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html',1,'']]],
   ['support_146',['support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Enable experimental stacktrace support'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'Enable experimental string-matcher unicode support']]],
-  ['support_20for_20case_20insensitive_20matching_147',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
-  ['support_20for_20printing_148',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
+  ['support_20for_20case_20insensitive_20matching_147',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
+  ['support_20for_20printing_148',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
   ['symbol_149',['Symbol',['../dd/d50/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_operator_function_id.html#aa3ca84dca9a3c4445880127a4f660256',1,'mimicpp::printing::type::parsing::state::OperatorFunctionId']]],
   ['symbol_150',['symbol',['../dd/d50/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_operator_function_id.html#ab4c99f1fd76bc98addad70d4da3cf13a',1,'mimicpp::printing::type::parsing::state::OperatorFunctionId']]]
 ];
