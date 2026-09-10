@@ -194,3 +194,12 @@ IncludeBlocks: Preserve
 PointerAlignment: Left
 ReferenceAlignment: Left
 QualifierAlignment: Leave
+
+# Macros
+# Teach clang-format that this expands to the "export" keyword, so it can
+# correctly disambiguate "&&"/"&" as reference-declarators (instead of
+# misinterpreting them as the logical binary operators) within the
+# module-export-marked namespaces.
+Macros:
+  - MIMICPP_DETAIL_MODULE_EXPORT=export
+
