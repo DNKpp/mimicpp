@@ -14,6 +14,7 @@
 #include "mimic++/matchers/Common.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 #include "mimic++/utilities/TypeList.hpp"
+#include "mimic++/utilities/UnwrapRef.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
@@ -77,13 +78,14 @@ namespace mimicpp::expectation::policies
         {
             matcher_matches_fn<Matcher> const matches{m_Matcher};
             auto result = std::invoke(m_MatchesStrategy, matches, info);
-            std::visit([&](auto& inner) {
-                if (auto& description = inner.description)
-                {
-                   description = std::invoke(m_DescribeStrategy, *description);
-                }
-            },
-            result);
+            std::visit(
+                [&](auto& inner) {
+                    if (auto& description = inner.description)
+                    {
+                        description = std::invoke(m_DescribeStrategy, *description);
+                    }
+                },
+                result);
 
             return result;
         }
@@ -97,6 +99,51 @@ namespace mimicpp::expectation::policies
         Matcher m_Matcher;
         [[no_unique_address]] MatchesStrategy m_MatchesStrategy;
         [[no_unique_address]] DescribeStrategy m_DescribeStrategy;
+    };
+
+    template <typename Target, typename Matcher>
+        requires matcher_for<Matcher, Target>
+    class ThatRequirement
+    {
+    public:
+        ThatRequirement(ThatRequirement const&) = delete;
+        ThatRequirement& operator=(ThatRequirement const&) = delete;
+
+        ~ThatRequirement() = default;
+
+        [[nodiscard]]
+        ThatRequirement(ThatRequirement&&) = default;
+        ThatRequirement& operator=(ThatRequirement&&) = default;
+
+        [[nodiscard]]
+        explicit constexpr ThatRequirement(Target target, Matcher condition)
+            noexcept(std::is_nothrow_move_constructible_v<Target> && std::is_nothrow_move_constructible_v<Matcher>)
+            : m_Target{std::move(target)},
+              m_Matcher{std::move(condition)}
+        {
+        }
+
+        [[nodiscard]]
+        static constexpr bool is_satisfied() noexcept
+        {
+            return true;
+        }
+
+        template <typename Return, typename... Args>
+        [[nodiscard]]
+        MatchResult matches(call::Info<Return, Args...> const& /*call*/) const
+        {
+            return mimicpp::detail::matches_hook::matches(m_Matcher, util::unwrap_ref(m_Target));
+        }
+
+        template <typename Return, typename... Args>
+        static constexpr void consume(call::Info<Return, Args...> const& /*call*/) noexcept
+        {
+        }
+
+    private:
+        Target m_Target;
+        Matcher m_Matcher;
     };
 }
 
@@ -183,9 +230,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
      */
     template <std::size_t index, typename Matcher, typename Projection = std::identity>
     [[nodiscard]]
-    constexpr auto arg(
-        Matcher&& matcher,
-        Projection&& projection = {})
+    constexpr auto arg(Matcher&& matcher, Projection&& projection = {}) //
         noexcept(
             std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>
             && std::is_nothrow_constructible_v<std::remove_cvref_t<Projection>, Projection>)
@@ -222,7 +267,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
         typename Matcher,
         typename... Projections>
     [[nodiscard]]
-    constexpr auto args(Matcher&& matcher, Projections&&... projections)
+    constexpr auto args(Matcher&& matcher, Projections&&... projections) //
         noexcept(
             std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>
             && (... && std::is_nothrow_move_constructible_v<std::remove_cvref_t<Projections>>))
@@ -251,7 +296,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
      */
     template <typename Matcher>
     [[nodiscard]]
-    constexpr auto all_args(Matcher&& matcher)
+    constexpr auto all_args(Matcher&& matcher) //
         noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>)
     {
         using arg_selector_t = expectation::policies::detail::all_args_selector_fn<std::add_lvalue_reference_t>;
@@ -262,6 +307,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
             std::forward<Matcher>(matcher),
             expectation::policies::detail::apply_args_fn(arg_selector_t{}, apply_strategy_t{}),
             describe_strategy_t{}};
+    }
+
+    template <typename Target, matcher_for<Target> Matcher>
+    [[nodiscard]]
+    constexpr auto that(Target&& target, Matcher&& matcher)
+    {
+        return expectation::policies::ThatRequirement{std::forward<Target>(target), std::forward<Matcher>(matcher)};
     }
 
     /**

@@ -1,11 +1,11 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
+#include "mimic++/expectation/policies/RequirementPolicies.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/expectation/policies/FinalizerPolicies.hpp"
-#include "mimic++/expectation/policies/RequirementPolicies.hpp"
 
 #include "TestTypes.hpp"
 
@@ -299,4 +299,110 @@ TEST_CASE(
         and finally::returns(match);
 
     REQUIRE(match == std::as_const(policy).matches(info));
+}
+
+TEST_CASE(
+    "expectation::policies::ThatRequirement is always satisfied and never consumes any call.",
+    "[expectation][expectation::policy]")
+{
+    using SignatureT = void();
+    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    CallInfoT const info{
+        .args = {},
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers)),
+    };
+
+    MatcherMock<int&> matcher{};
+    int target{1337};
+
+    expectation::policies::ThatRequirement policy{
+        target,
+        MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}}
+    };
+
+    STATIC_REQUIRE(expectation::expectation_policy_for<decltype(policy), SignatureT>);
+    STATIC_CHECK(!std::is_copy_constructible_v<decltype(policy)>);
+    STATIC_CHECK(!std::is_copy_assignable_v<decltype(policy)>);
+    STATIC_CHECK(std::is_move_constructible_v<decltype(policy)>);
+    STATIC_CHECK(std::is_move_assignable_v<decltype(policy)>);
+
+    REQUIRE(std::as_const(policy).is_satisfied());
+    REQUIRE_NOTHROW(policy.consume(info));
+}
+
+TEST_CASE(
+    "expectation::policies::ThatRequirement checks whether the captured target satisfies the matcher, ignoring the call-arguments.",
+    "[expectation][expectation::policy]")
+{
+    using trompeloeil::_;
+
+    using SignatureT = void(int);
+    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    int arg0{42};
+    CallInfoT const info{
+        .args = {arg0},
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers)),
+    };
+
+    std::string target{"Hello, World!"};
+
+    auto const match = GENERATE(
+        as<expectation::MatchResult>{},
+        expectation::MatchSuccess{},
+        expectation::MatchFailure{});
+
+    MatcherMock<std::string const&> matcher{};
+    REQUIRE_CALL(matcher, matches(_))
+        .WITH(_1 == "Hello, World!")
+        .RETURN(match);
+
+    SECTION("When a copy is stored.")
+    {
+        expectation::policies::ThatRequirement policy{
+            target,
+            MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}}
+        };
+
+        CHECK(match == std::as_const(policy).matches(info));
+    }
+
+    SECTION("When a reference_wrapper is stored.")
+    {
+        expectation::policies::ThatRequirement policy{
+            std::ref(target),
+            MatcherFacade{std::ref(matcher), UnwrapReferenceWrapper{}}
+        };
+
+        CHECK(match == std::as_const(policy).matches(info));
+    }
+}
+
+TEST_CASE(
+    "expect::that creates an expectation::policies::ThatRequirement policy.",
+    "[expectation][expectation::factories]")
+{
+    using trompeloeil::_;
+
+    using SignatureT = void(int);
+    using CallInfoT = call::info_for_signature_t<SignatureT>;
+    int arg0{42};
+    const CallInfoT info{
+        .args = {arg0},
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers)),
+    };
+
+    int target{42};
+    auto policy = expect::that(std::ref(target), matches::eq(1337));
+
+    CHECK_THAT(
+        policy.matches(info),
+        variant_holds_alternative<expectation::MatchFailure>());
+
+    target = 1337;
+    CHECK_THAT(
+        policy.matches(info),
+        variant_holds_alternative<expectation::MatchSuccess>());
 }
