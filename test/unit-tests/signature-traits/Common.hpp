@@ -9,85 +9,85 @@
 template <typename Signature>
 inline constexpr std::type_identity<Signature> type_v{};
 
-#define TEST_SIGNATURE_COLLECTION              \
-    (true, void),                              \
-        (true, void, int),                     \
-        (true, void, float, int),              \
-        (true, void, float&),                  \
-        (true, void, const float&),            \
-        (true, void, float&&),                 \
-        (true, void, const float&&),           \
-        (true, void, float*),                  \
-        (true, void, const float*),            \
-                                               \
-        (true, double),                        \
-        (true, double, int),                   \
-        (true, double, float, int),            \
-        (true, double, float&),                \
-        (true, double, const float&),          \
-        (true, double, float&&),               \
-        (true, double, const float&&),         \
-        (true, double, float*),                \
-        (true, double, const float*),          \
-                                               \
-        (true, double&),                       \
-        (true, double&, int),                  \
-        (true, double&, float, int),           \
-        (true, double&, float&),               \
-        (true, double&, const float&),         \
-        (true, double&, float&&),              \
-        (true, double&, const float&&),        \
-        (true, double&, float*),               \
-        (true, double&, const float*),         \
-                                               \
-        (true, const double&),                 \
-        (true, const double&, int),            \
-        (true, const double&, float, int),     \
-        (true, const double&, float&),         \
-        (true, const double&, const float&),   \
-        (true, const double&, float&&),        \
-        (true, const double&, const float&&),  \
-        (true, const double&, float*),         \
-        (true, const double&, const float*),   \
-                                               \
-        (true, double&&),                      \
-        (true, double&&, int),                 \
-        (true, double&&, float, int),          \
-        (true, double&&, float&),              \
-        (true, double&&, const float&),        \
-        (true, double&&, float&&),             \
-        (true, double&&, const float&&),       \
-        (true, double&&, float*),              \
-        (true, double&&, const float*),        \
-                                               \
-        (true, const double&&),                \
-        (true, const double&&, int),           \
-        (true, const double&&, float, int),    \
-        (true, const double&&, float&),        \
-        (true, const double&&, const float&),  \
-        (true, const double&&, float&&),       \
-        (true, const double&&, const float&&), \
-        (true, const double&&, float*),        \
-        (true, const double&&, const float*),  \
-                                               \
-        (true, void*),                         \
-        (true, void*, int),                    \
-        (true, void*, float, int),             \
-        (true, void*, float&),                 \
-        (true, void*, const float&),           \
-        (true, void*, float&&),                \
-        (true, void*, const float&&),          \
-        (true, void*, float*),                 \
-        (true, void*, const float*),           \
-                                               \
-        (true, const void*),                   \
-        (true, const void*, int),              \
-        (true, const void*, float, int),       \
-        (true, const void*, float&),           \
-        (true, const void*, const float&),     \
-        (true, const void*, float&&),          \
-        (true, const void*, const float&&),    \
-        (true, const void*, float*),           \
-        (true, const void*, const float*)
+#define TEST_SIGNATURE_COLLECTION      \
+    (void),                            \
+        (void, int),                   \
+        (void, float, int),            \
+        (void, float&),                \
+        (void, const float&),          \
+        (void, float&&),               \
+        (void, const float&&),         \
+        (void, float*),                \
+        (void, const float*),          \
+                                       \
+        (double),                      \
+        (double, int),                 \
+        (double, float, int),          \
+        (double, float&),              \
+        (double, const float&),        \
+        (double, float&&),             \
+        (double, const float&&),       \
+        (double, float*),              \
+        (double, const float*),        \
+                                       \
+        (double&),                     \
+        (double&, int),                \
+        (double&, float, int),         \
+        (double&, float&),             \
+        (double&, const float&),       \
+        (double&, float&&),            \
+        (double&, const float&&),      \
+        (double&, float*),             \
+        (double&, const float*),       \
+                                       \
+        (const double&),               \
+        (const double&, int),          \
+        (const double&, float, int),   \
+        (const double&, float&),       \
+        (const double&, const float&), \
+        (const double&, float&&),      \
+        (const double&, const float&&), \
+        (const double&, float*),       \
+        (const double&, const float*), \
+                                       \
+        (double&&),                    \
+        (double&&, int),               \
+        (double&&, float, int),        \
+        (double&&, float&),            \
+        (double&&, const float&),      \
+        (double&&, float&&),           \
+        (double&&, const float&&),     \
+        (double&&, float*),            \
+        (double&&, const float*),      \
+                                       \
+        (const double&&),              \
+        (const double&&, int),         \
+        (const double&&, float, int),  \
+        (const double&&, float&),      \
+        (const double&&, const float&), \
+        (const double&&, float&&),     \
+        (const double&&, const float&&), \
+        (const double&&, float*),      \
+        (const double&&, const float*), \
+                                       \
+        (void*),                       \
+        (void*, int),                  \
+        (void*, float, int),           \
+        (void*, float&),               \
+        (void*, const float&),         \
+        (void*, float&&),              \
+        (void*, const float&&),        \
+        (void*, float*),               \
+        (void*, const float*),         \
+                                       \
+        (const void*),                 \
+        (const void*, int),            \
+        (const void*, float, int),     \
+        (const void*, float&),         \
+        (const void*, const float&),   \
+        (const void*, float&&),        \
+        (const void*, const float&&),  \
+        (const void*, float*),         \
+        (const void*, const float*)
 
 #endif

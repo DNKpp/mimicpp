@@ -9,7 +9,7 @@
 TEMPLATE_TEST_CASE_SIG(
     "signature_arity yields the parameter count.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     constexpr auto with_expected_arity = std::bind_front(std::equal_to{}, sizeof...(Args));
