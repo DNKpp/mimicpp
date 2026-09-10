@@ -1,11 +1,7 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
-
-//
-// Created by dnkpp on 04.10.25.
-//
 
 #ifndef MIMICPP_UNIT_TESTS_SIGNATURE_TRAITS_COMMON_HPP
 #define MIMICPP_UNIT_TESTS_SIGNATURE_TRAITS_COMMON_HPP

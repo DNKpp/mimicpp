@@ -295,6 +295,22 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     /**
      * \brief Primary template.
+     * \ingroup TYPE_TRAITS_SIGNATURE_ARITY
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_arity;
+
+    /**
+     * \brief Convenience constant, exposing the `value` member of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_ARITY
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    inline constexpr std::size_t signature_arity_v{signature_arity<Signature>::value};
+
+    /**
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_SIGNATURE_PREPEND_PARAM
      * \tparam Signature A function signature.
      * \tparam T The type to be added.
