@@ -12,6 +12,7 @@
 #include "mimic++/config/Config.hpp"
 #include "mimic++/expectation/policies/ArgumentList.hpp"
 #include "mimic++/utilities/Concepts.hpp"
+#include "mimic++/utilities/UnwrapRef.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
@@ -148,7 +149,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::finally
     {
         return expectation::policies::ReturnsResultOf{
             [v = std::forward<T>(value)]([[maybe_unused]] auto const& call) mutable noexcept -> auto& {
-                return static_cast<std::unwrap_reference_t<decltype(v)>&>(v);
+                return util::unwrap_ref(v);
             }};
     }
 

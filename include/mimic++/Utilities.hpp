@@ -18,6 +18,7 @@
 #include "mimic++/utilities/Stacktrace.hpp"
 #include "mimic++/utilities/StaticString.hpp"
 #include "mimic++/utilities/TypeList.hpp"
+#include "mimic++/utilities/UnwrapRef.hpp"
 
 namespace mimicpp::util
 {
