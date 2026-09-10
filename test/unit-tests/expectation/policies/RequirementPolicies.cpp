@@ -3,9 +3,9 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/expectation/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/expectation/policies/FinalizerPolicies.hpp"
+#include "mimic++/expectation/policies/RequirementPolicies.hpp"
 
 #include "TestTypes.hpp"
 

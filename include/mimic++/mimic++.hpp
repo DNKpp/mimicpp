@@ -33,11 +33,11 @@
 #include "mimic++/expectation/Expectation.hpp"
 #include "mimic++/expectation/Owner.hpp"
 #include "mimic++/expectation/Registry.hpp"
-#include "mimic++/expectation/policies/ArgRequirementPolicies.hpp"
 #include "mimic++/expectation/policies/ArgumentList.hpp"
 #include "mimic++/expectation/policies/ControlPolicies.hpp"
 #include "mimic++/expectation/policies/FinalizerPolicies.hpp"
 #include "mimic++/expectation/policies/GeneralPolicies.hpp"
+#include "mimic++/expectation/policies/RequirementPolicies.hpp"
 #include "mimic++/expectation/policies/SideEffectPolicies.hpp"
 
 #include "mimic++/macros/Common.hpp"
