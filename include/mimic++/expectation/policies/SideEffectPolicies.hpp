@@ -17,7 +17,6 @@
     #include <concepts>
     #include <cstddef>
     #include <functional>
-    #include <optional>
     #include <type_traits>
     #include <utility>
 #endif
@@ -28,17 +27,16 @@ namespace mimicpp::expectation::policies
     class SideEffectAction
     {
     public:
+        SideEffectAction(SideEffectAction const&) = delete;
+        SideEffectAction& operator=(SideEffectAction const&) = delete;
+
         ~SideEffectAction() = default;
 
         [[nodiscard]]
-        explicit constexpr SideEffectAction(
-            Action&& action) noexcept(std::is_nothrow_move_constructible_v<Action>)
+        explicit constexpr SideEffectAction(Action&& action) noexcept(std::is_nothrow_move_constructible_v<Action>)
             : m_Action{std::move(action)}
         {
         }
-
-        SideEffectAction(SideEffectAction const&) = delete;
-        SideEffectAction& operator=(SideEffectAction const&) = delete;
 
         [[nodiscard]]
         SideEffectAction(SideEffectAction&&) = default;
@@ -54,12 +52,6 @@ namespace mimicpp::expectation::policies
         static MatchResult matches(call::Info<Return, Args...> const& /*call*/) noexcept
         {
             return MatchSuccess{};
-        }
-
-        [[nodiscard]]
-        static std::nullopt_t describe() noexcept
-        {
-            return std::nullopt;
         }
 
         template <typename Return, typename... Args>
