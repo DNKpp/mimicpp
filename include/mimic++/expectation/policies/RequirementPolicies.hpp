@@ -309,6 +309,30 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
             describe_strategy_t{}};
     }
 
+    /**
+     * \brief Checks whether the given target satisfies the given matcher.
+     * \tparam Target The target's type.
+     * \tparam Matcher The matcher type.
+     * \param target The target, which shall be checked.
+     * \param matcher The matcher.
+     *
+     * \details
+     * Unlike `expect::arg` (and its relatives `expect::args` and `expect::all_args`), which check one or more of the call's arguments,
+     * this requirement checks an arbitrary, user-provided `target` and is thus completely independent of the actual call and its arguments.
+     * This is useful whenever some external state (e.g. a member variable, a global variable or any other object) shall be part of the requirements,
+     * instead of (or in addition to) the call's arguments.
+     *
+     * By default, `target` is captured by value, i.e. a copy is stored inside the resulting requirement at the point of the `expect::that` call.
+     * Later changes to the original object therefore have no effect on subsequent matches.
+     * \snippet Requirements.cpp expect::that copy
+     *
+     * If `target` shall instead be evaluated at matching-time (e.g. because its value is expected to change between the `expect_call` and the actual invocation),
+     * it can be wrapped into a `std::reference_wrapper`.
+     * In that case, the requirement just stores the reference and queries the referenced object's current value on every match attempt.
+     * \snippet Requirements.cpp expect::that ref
+     *
+     * For a list of built-in matchers, see \ref MATCHERS "matcher" section.
+     */
     template <typename Target, matcher_for<Target> Matcher>
     [[nodiscard]]
     constexpr auto that(Target&& target, Matcher&& matcher)
