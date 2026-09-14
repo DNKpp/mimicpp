@@ -20,7 +20,7 @@ TEST_CASE(
     "[stacktrace]")
 {
     using Backend = decltype(util::stacktrace::detail::find_traits<util::stacktrace::backend_traits>())::Backend;
-    STATIC_REQUIRE(std::same_as<td::stacktrace, Backend>);
+    STATIC_REQUIRE(std::same_as<std::stacktrace, Backend>);
     STATIC_REQUIRE(util::stacktrace::backend<Backend>);
 }
 
