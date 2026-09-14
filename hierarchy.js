@@ -135,6 +135,7 @@ var hierarchy =
     [ "mimicpp::call::info_for_signature&lt; Return(Args...)&gt;", "d9/df4/structmimicpp_1_1call_1_1info__for__signature_3_01_return_07_args_8_8_8_08_4.html", null ],
     [ "mimicpp::expectation::policies::InitFinalize", "d7/d35/classmimicpp_1_1expectation_1_1policies_1_1_init_finalize.html", null ],
     [ "std::integral_constant", null, [
+      [ "mimicpp::signature_arity< Return(Args...)>", "d1/df4/structmimicpp_1_1signature__arity_3_01_return_07_args_8_8_8_08_4.html", null ],
       [ "mimicpp::signature_const_qualification< Signature >", "d2/de2/structmimicpp_1_1signature__const__qualification.html", null ],
       [ "mimicpp::signature_ref_qualification< Return(Params...) && >", "d1/d70/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_01_6_6_01_4.html", null ],
       [ "mimicpp::signature_ref_qualification< Return(Params...)& >", "df/de4/structmimicpp_1_1signature__ref__qualification_3_01_return_07_params_8_8_8_08_6_01_4.html", null ],
@@ -193,6 +194,7 @@ var hierarchy =
     [ "mimicpp::printing::type::parsing::state::ScopeSequence", "d4/db2/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_scope_sequence.html", null ],
     [ "mimicpp::reporting::SequenceReport", "d9/dd4/classmimicpp_1_1reporting_1_1_sequence_report.html", null ],
     [ "mimicpp::expectation::policies::SideEffectAction&lt; Action &gt;", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action.html", null ],
+    [ "mimicpp::signature_arity&lt; Signature &gt;", "d9/d20/structmimicpp_1_1signature__arity.html", null ],
     [ "mimicpp::signature_call_convention&lt; Signature &gt;", "dc/d9a/structmimicpp_1_1signature__call__convention.html", null ],
     [ "mimicpp::signature_call_convention&lt; Signature &gt;", "da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html", null ],
     [ "mimicpp::signature_decay&lt; Signature &gt;", "db/df4/structmimicpp_1_1signature__decay.html", null ],
@@ -221,6 +223,7 @@ var hierarchy =
       [ "mimicpp::string_traits< T >", "d8/db2/structmimicpp_1_1string__traits_3_01_t_01_4.html", null ]
     ] ],
     [ "mimicpp::reporting::TargetReport", "d2/d84/classmimicpp_1_1reporting_1_1_target_report.html", null ],
+    [ "mimicpp::expectation::policies::ThatRequirement&lt; Target, Matcher &gt;", "d3/de4/classmimicpp_1_1expectation_1_1policies_1_1_that_requirement.html", null ],
     [ "mimicpp::expectation::policies::Throws&lt; Exception &gt;", "de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html", null ],
     [ "mimicpp::printing::type::lexing::token", "dd/ddf/structmimicpp_1_1printing_1_1type_1_1lexing_1_1token.html", null ],
     [ "mimicpp::printing::type::parsing::TokenStream", "d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html", null ],

@@ -8,5 +8,6 @@ var namespacemimicpp_1_1expectation_1_1policies =
     [ "matcher_matches_fn", "de/d4a/structmimicpp_1_1expectation_1_1policies_1_1matcher__matches__fn.html", "de/d4a/structmimicpp_1_1expectation_1_1policies_1_1matcher__matches__fn" ],
     [ "ReturnsResultOf", "d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of.html", "d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of" ],
     [ "SideEffectAction", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action.html", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action" ],
+    [ "ThatRequirement", "d3/de4/classmimicpp_1_1expectation_1_1policies_1_1_that_requirement.html", "d3/de4/classmimicpp_1_1expectation_1_1policies_1_1_that_requirement" ],
     [ "Throws", "de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html", "de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws" ]
 ];

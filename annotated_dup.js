@@ -24,6 +24,7 @@ var annotated_dup =
           [ "matcher_matches_fn", "de/d4a/structmimicpp_1_1expectation_1_1policies_1_1matcher__matches__fn.html", "de/d4a/structmimicpp_1_1expectation_1_1policies_1_1matcher__matches__fn" ],
           [ "ReturnsResultOf", "d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of.html", "d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of" ],
           [ "SideEffectAction", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action.html", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action" ],
+          [ "ThatRequirement", "d3/de4/classmimicpp_1_1expectation_1_1policies_1_1_that_requirement.html", "d3/de4/classmimicpp_1_1expectation_1_1policies_1_1_that_requirement" ],
           [ "Throws", "de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws.html", "de/d11/classmimicpp_1_1expectation_1_1policies_1_1_throws" ]
         ] ],
         [ "BasicBuilder", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html", "d4/d01/classmimicpp_1_1expectation_1_1_basic_builder" ],
@@ -155,6 +156,8 @@ var annotated_dup =
       [ "signature_add_lvalue_ref_qualifier", "d8/dc1/structmimicpp_1_1signature__add__lvalue__ref__qualifier.html", null ],
       [ "signature_add_noexcept", "dd/db4/structmimicpp_1_1signature__add__noexcept.html", null ],
       [ "signature_add_rvalue_ref_qualifier", "d1/d2c/structmimicpp_1_1signature__add__rvalue__ref__qualifier.html", null ],
+      [ "signature_arity", "d9/d20/structmimicpp_1_1signature__arity.html", null ],
+      [ "signature_arity&lt; Return(Args...)&gt;", "d1/df4/structmimicpp_1_1signature__arity_3_01_return_07_args_8_8_8_08_4.html", null ],
       [ "signature_call_convention", "dc/d9a/structmimicpp_1_1signature__call__convention.html", null ],
       [ "signature_call_convention&lt; Signature &gt;", "da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4.html", "da/d41/structmimicpp_1_1signature__call__convention_3_01_signature_01_4" ],
       [ "signature_const_qualification", "d2/de2/structmimicpp_1_1signature__const__qualification.html", null ],

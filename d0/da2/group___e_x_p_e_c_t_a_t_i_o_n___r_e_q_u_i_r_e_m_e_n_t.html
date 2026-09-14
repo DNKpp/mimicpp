@@ -31,7 +31,7 @@ mermaid.initialize({ startOnLoad: true, theme: theme });
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.3.0</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v10.0.0</span>
    </div>
   </td>
  </tr>
@@ -139,6 +139,9 @@ Functions</h2></td></tr>
 <tr class="memitem:ga0d61a74c6d01de398bd7b04dab1357f6" id="r_ga0d61a74c6d01de398bd7b04dab1357f6"><td class="memTemplParams" colspan="2">template&lt;typename Matcher&gt; </td></tr>
 <tr class="memitem:ga0d61a74c6d01de398bd7b04dab1357f6 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#ga0d61a74c6d01de398bd7b04dab1357f6">mimicpp::expect::all_args</a> (Matcher &amp;&amp;matcher) noexcept(std::is_nothrow_constructible_v&lt; std::remove_cvref_t&lt; Matcher &gt;, Matcher &gt;)</td></tr>
 <tr class="memdesc:ga0d61a74c6d01de398bd7b04dab1357f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the all arguments satisfy the given matcher.  <br /></td></tr>
+<tr class="memitem:gadf057d568b3f442a2acf30bd8f041b42" id="r_gadf057d568b3f442a2acf30bd8f041b42"><td class="memTemplParams" colspan="2">template&lt;typename Target, matcher_for&lt; Target &gt; Matcher&gt; </td></tr>
+<tr class="memitem:gadf057d568b3f442a2acf30bd8f041b42 template"><td class="memItemLeft">constexpr auto&#160;</td><td class="memItemRight"><a class="el" href="#gadf057d568b3f442a2acf30bd8f041b42">mimicpp::expect::that</a> (Target &amp;&amp;target, Matcher &amp;&amp;matcher)</td></tr>
+<tr class="memdesc:gadf057d568b3f442a2acf30bd8f041b42"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks whether the given target satisfies the given matcher.  <br /></td></tr>
 </table>
 <a name="details" id="details"></a><h2 id="header-details" class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Requirements determine, whether an expectation matches an incoming call. </p>
@@ -191,8 +194,8 @@ template&lt;typename Matcher&gt; </div>
 <div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void(<span class="keyword">const</span> <span class="keywordtype">char</span>*, std::size_t)&gt; mock{};</div>
 <div class="line"> </div>
 <div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call(_, _)</div>
-<div class="line">        and expect::all_args(matches::predicate(</div>
-<div class="line">            [&amp;](<span class="keyword">const</span> <span class="keywordtype">char</span>* data, std::size_t length) { <span class="keywordflow">return</span> str == std::string_view{data, length}; }));</div>
+<div class="line">        and expect::all_args(</div>
+<div class="line">            matches::predicate([&amp;](<span class="keyword">const</span> <span class="keywordtype">char</span>* data, std::size_t length) { <span class="keywordflow">return</span> str == std::string_view{data, length}; }));</div>
 <div class="line">    mock(str.data(), str.size());</div>
 </div><!-- fragment --> 
 </div>
@@ -321,6 +324,77 @@ template&lt;std::size_t first, std::size_t... others, typename Matcher, typename
 <div class="line">        and expect::args&lt;1, 1&gt;(matches::predicate(std::equal_to{})); <span class="comment">// the same index may appear more than once</span></div>
 <div class="line">    mock(42, 42);</div>
 </div><!-- fragment --> 
+</div>
+</div>
+<a id="gadf057d568b3f442a2acf30bd8f041b42" name="gadf057d568b3f442a2acf30bd8f041b42"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadf057d568b3f442a2acf30bd8f041b42">&#9670;&#160;</a></span>that()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename Target, matcher_for&lt; Target &gt; Matcher&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">auto mimicpp::expect::that </td>
+          <td>(</td>
+          <td class="paramtype">Target &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>target</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">Matcher &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>matcher</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Checks whether the given target satisfies the given matcher. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">Target</td><td>The target's type. </td></tr>
+    <tr><td class="paramname">Matcher</td><td>The matcher type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">target</td><td>The target, which shall be checked. </td></tr>
+    <tr><td class="paramname">matcher</td><td>The matcher.</td></tr>
+  </table>
+  </dd>
+</dl>
+<p>Unlike <span class="tt"><a class="el" href="#ga0678d47507b2bf3f1446e9925a5d2761" title="Checks whether the selected argument satisfies the given matcher.">expect::arg</a></span> (and its relatives <span class="tt"><a class="el" href="#gabf5001e888bda11e2b3ac981845d19e3" title="Checks whether the selected arguments satisfy the given matcher.">expect::args</a></span> and <span class="tt"><a class="el" href="#ga0d61a74c6d01de398bd7b04dab1357f6" title="Checks whether the all arguments satisfy the given matcher.">expect::all_args</a></span>), which check one or more of the call's arguments, this requirement checks an arbitrary, user-provided <span class="tt">target</span> and is thus completely independent of the actual call and its arguments. This is useful whenever some external state (e.g. a member variable, a global variable or any other object) shall be part of the requirements, instead of (or in addition to) the call's arguments.</p>
+<p>By default, <span class="tt">target</span> is captured by value, i.e. a copy is stored inside the resulting requirement at the point of the <span class="tt"><a class="el" href="#gadf057d568b3f442a2acf30bd8f041b42" title="Checks whether the given target satisfies the given matcher.">expect::that</a></span> call. Later changes to the original object therefore have no effect on subsequent matches. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line">    <span class="keyword">namespace </span><a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a> = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void()&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordtype">int</span> external{42};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call()</div>
+<div class="line">        and expect::that(external, matches::eq(42)); <span class="comment">// the current value of `external` is copied into the requirement</span></div>
+<div class="line"> </div>
+<div class="line">    external = 1337; <span class="comment">// later changes have no effect on the already captured value</span></div>
+<div class="line">    mock();</div>
+</div><!-- fragment --><p>If <span class="tt">target</span> shall instead be evaluated at matching-time (e.g. because its value is expected to change between the <span class="tt">expect_call</span> and the actual invocation), it can be wrapped into a <span class="tt">std::reference_wrapper</span>. In that case, the requirement just stores the reference and queries the referenced object's current value on every match attempt. </p><div class="fragment"><div class="line">    <span class="keyword">namespace </span>matches = <a class="code hl_namespace" href="../../dd/d7b/namespacemimicpp_1_1matches.html">mimicpp::matches</a>;</div>
+<div class="line">    <span class="keyword">namespace </span><a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a> = <a class="code hl_namespace" href="../../d3/d18/namespacemimicpp_1_1expect.html">mimicpp::expect</a>;</div>
+<div class="line"> </div>
+<div class="line">    <a class="code hl_class" href="../../d2/d48/classmimicpp_1_1_mock.html">mimicpp::Mock</a>&lt;void()&gt; mock{};</div>
+<div class="line"> </div>
+<div class="line">    <span class="keywordtype">int</span> external{42};</div>
+<div class="line">    <a class="code hl_define" href="../../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a">SCOPED_EXP</a> mock.expect_call()</div>
+<div class="line">        and expect::that(std::ref(external), matches::eq(1337)); <span class="comment">// only a reference to `external` is stored</span></div>
+<div class="line"> </div>
+<div class="line">    external = 1337; <span class="comment">// must be updated before the call, as the reference always yields the up-to-date value</span></div>
+<div class="line">    mock();</div>
+</div><!-- fragment --><p>For a list of built-in matchers, see <a class="el" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html" title="matchers">matcher</a> section. </p>
+
 </div>
 </div>
 </div><!-- contents -->

@@ -16,6 +16,7 @@ var searchData=
   ['_7esourcelocation_13',['~SourceLocation',['../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412',1,'mimicpp::util::SourceLocation']]],
   ['_7estacktrace_14',['~Stacktrace',['../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#a06866e7c78fecd0887eca851a60309df',1,'mimicpp::util::Stacktrace']]],
   ['_7estateguard_15',['~StateGuard',['../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html#ae4dcd72997590ebc8e9e03c0ceb53cd3',1,'mimicpp::printing::type::parsing::StateGuard']]],
-  ['_7etransaction_16',['~Transaction',['../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#a61d4361e76af6311098fe06799403afb',1,'mimicpp::printing::type::parsing::Transaction']]],
-  ['_7ewatched_17',['~Watched',['../d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5',1,'mimicpp::Watched']]]
+  ['_7ethatrequirement_16',['~ThatRequirement',['../d3/de4/classmimicpp_1_1expectation_1_1policies_1_1_that_requirement.html#abbbad45e727e42c14b3a119e848da8f8',1,'mimicpp::expectation::policies::ThatRequirement']]],
+  ['_7etransaction_17',['~Transaction',['../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#a61d4361e76af6311098fe06799403afb',1,'mimicpp::printing::type::parsing::Transaction']]],
+  ['_7ewatched_18',['~Watched',['../d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5',1,'mimicpp::Watched']]]
 ];

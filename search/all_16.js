@@ -14,8 +14,10 @@ var searchData=
   ['unqualified_11',['unqualified',['../da/dce/conceptmimicpp_1_1util_1_1unqualified.html',1,'mimicpp::util']]],
   ['unqualifiedid_12',['UnqualifiedId',['../d3/d33/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_unqualified_id.html',1,'mimicpp::printing::type::parsing::state']]],
   ['unreachable_13',['unreachable',['../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836',1,'mimicpp::util']]],
-  ['usage_14',['Non-cmake usage',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md34',1,'']]],
-  ['use_20fmt_20as_20formatting_20backend_15',['Use &lt;span class=&quot;tt&quot;&gt;fmt&lt;/span&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md31',1,'']]],
-  ['utilities_16',['utilities',['../df/d94/group___u_t_i_l_i_t_i_e_s.html',1,'']]],
-  ['utilities_2ehpp_17',['Utilities.hpp',['../dc/d54/_utilities_8hpp.html',1,'']]]
+  ['unwrap_5fref_14',['unwrap_ref',['../d8/da3/namespacemimicpp_1_1util.html#abe75a4f052cd12986b161ae7a3790ea0',1,'mimicpp::util::unwrap_ref(std::reference_wrapper&lt; T &gt; const ref) noexcept'],['../d8/da3/namespacemimicpp_1_1util.html#a592f6d5b18ba8d22b09cbc16cc30b798',1,'mimicpp::util::unwrap_ref(T &amp;&amp;ref) noexcept']]],
+  ['unwrapref_2ehpp_15',['UnwrapRef.hpp',['../d2/d9b/_unwrap_ref_8hpp.html',1,'']]],
+  ['usage_16',['Non-cmake usage',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md34',1,'']]],
+  ['use_20fmt_20as_20formatting_20backend_17',['Use &lt;span class=&quot;tt&quot;&gt;fmt&lt;/span&gt; as formatting backend',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md31',1,'']]],
+  ['utilities_18',['utilities',['../df/d94/group___u_t_i_l_i_t_i_e_s.html',1,'']]],
+  ['utilities_2ehpp_19',['Utilities.hpp',['../dc/d54/_utilities_8hpp.html',1,'']]]
 ];

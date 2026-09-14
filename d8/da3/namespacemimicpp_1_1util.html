@@ -31,7 +31,7 @@ mermaid.initialize({ startOnLoad: true, theme: theme });
  <tbody>
  <tr id="projectrow">
   <td id="projectalign">
-   <div id="projectname">mimic++<span id="projectnumber">&#160;v9.3.0</span>
+   <div id="projectname">mimic++<span id="projectnumber">&#160;v10.0.0</span>
    </div>
   </td>
  </tr>
@@ -213,6 +213,12 @@ requires std::is_enum_v&lt;T&gt;</td></tr>
 <tr class="memitem:a15603f28dd19d50c8d917beb0e31c7ac template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a15603f28dd19d50c8d917beb0e31c7ac">Overloaded</a> (Ts...) -&gt; Overloaded&lt; Ts... &gt;</td></tr>
 <tr class="memitem:ac4fcfcaa329db378296093c1deff115e" id="r_ac4fcfcaa329db378296093c1deff115e"><td class="memTemplParams" colspan="2">template&lt;typename Char, std::size_t length&gt; </td></tr>
 <tr class="memitem:ac4fcfcaa329db378296093c1deff115e template"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#ac4fcfcaa329db378296093c1deff115e">StaticString</a> (Char const(&amp;)[length]) -&gt; StaticString&lt; Char, length - 1u &gt;</td></tr>
+<tr class="memitem:abe75a4f052cd12986b161ae7a3790ea0" id="r_abe75a4f052cd12986b161ae7a3790ea0"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
+<tr class="memitem:abe75a4f052cd12986b161ae7a3790ea0 template"><td class="memItemLeft">constexpr T &amp;&#160;</td><td class="memItemRight"><a class="el" href="#abe75a4f052cd12986b161ae7a3790ea0">unwrap_ref</a> (std::reference_wrapper&lt; T &gt; const ref) noexcept</td></tr>
+<tr class="memdesc:abe75a4f052cd12986b161ae7a3790ea0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Unwraps the given <span class="tt">std::reference_wrapper</span> and returns the referenced object.  <br /></td></tr>
+<tr class="memitem:a592f6d5b18ba8d22b09cbc16cc30b798" id="r_a592f6d5b18ba8d22b09cbc16cc30b798"><td class="memTemplParams" colspan="2">template&lt;satisfies&lt; std::is_lvalue_reference &gt; T&gt; </td></tr>
+<tr class="memitem:a592f6d5b18ba8d22b09cbc16cc30b798 template"><td class="memItemLeft">constexpr T &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a592f6d5b18ba8d22b09cbc16cc30b798">unwrap_ref</a> (T &amp;&amp;ref) noexcept</td></tr>
+<tr class="memdesc:a592f6d5b18ba8d22b09cbc16cc30b798"><td class="mdescLeft">&#160;</td><td class="mdescRight">Overload accepting arbitrary lvalues, simply forwarding the reference.  <br /></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-var-members" class="groupheader"><a id="var-members" name="var-members"></a>
 Variables</h2></td></tr>
@@ -765,6 +771,96 @@ Here is the caller graph for this function:</div>
 <div class="dyncontent">
 <div class="center"><div class="zoom"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d8/da3/namespacemimicpp_1_1util_ac58fced4701bdff093838ed1807e8836_icgraph.svg" width="100%" height="600"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div></div>
 </div>
+
+</div>
+</div>
+<a id="abe75a4f052cd12986b161ae7a3790ea0" name="abe75a4f052cd12986b161ae7a3790ea0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abe75a4f052cd12986b161ae7a3790ea0">&#9670;&#160;</a></span>unwrap_ref() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;typename T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T &amp; mimicpp::util::unwrap_ref </td>
+          <td>(</td>
+          <td class="paramtype">std::reference_wrapper&lt; T &gt; const</td>          <td class="paramname"><span class="paramname"><em>ref</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Unwraps the given <span class="tt">std::reference_wrapper</span> and returns the referenced object. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The referenced type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ref</td><td>The <span class="tt">std::reference_wrapper</span> to unwrap. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to the object, referenced by <span class="tt">ref</span>. </dd></dl>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><iframe scrolling="no" loading="lazy" frameborder="0" src="../../d8/da3/namespacemimicpp_1_1util_abe75a4f052cd12986b161ae7a3790ea0_icgraph.svg" width="399" height="118"><p><b>This browser is not able to show SVG: try Firefox, Chrome, Safari, or Opera instead.</b></p></iframe></div>
+</div>
+
+</div>
+</div>
+<a id="a592f6d5b18ba8d22b09cbc16cc30b798" name="a592f6d5b18ba8d22b09cbc16cc30b798"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a592f6d5b18ba8d22b09cbc16cc30b798">&#9670;&#160;</a></span>unwrap_ref() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<div class="memtemplate">
+template&lt;satisfies&lt; std::is_lvalue_reference &gt; T&gt; </div>
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">T &amp; mimicpp::util::unwrap_ref </td>
+          <td>(</td>
+          <td class="paramtype">T &amp;&amp;</td>          <td class="paramname"><span class="paramname"><em>ref</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel nodiscard">nodiscard</span><span class="mlabel constexpr">constexpr</span><span class="mlabel noexcept">noexcept</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Overload accepting arbitrary lvalues, simply forwarding the reference. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The (deduced) reference type. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">ref</td><td>The lvalue-reference to forward. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A reference to <span class="tt">ref</span>. </dd></dl>
+<dl class="section note"><dt>Note</dt><dd>This overload is deliberately restricted to lvalue-references, as returning a reference bound to an rvalue-argument would result in a dangling reference. </dd></dl>
 
 </div>
 </div>

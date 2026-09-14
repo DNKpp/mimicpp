@@ -40,6 +40,8 @@ var namespacemimicpp_1_1util =
     [ "StaticString", "d8/da3/namespacemimicpp_1_1util.html#ac4fcfcaa329db378296093c1deff115e", null ],
     [ "to_underlying", "d8/da3/namespacemimicpp_1_1util.html#aa8fe6ff3a0ec4c237cd98f2e295af8a9", null ],
     [ "unreachable", "d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836", null ],
+    [ "unwrap_ref", "d8/da3/namespacemimicpp_1_1util.html#abe75a4f052cd12986b161ae7a3790ea0", null ],
+    [ "unwrap_ref", "d8/da3/namespacemimicpp_1_1util.html#a592f6d5b18ba8d22b09cbc16cc30b798", null ],
     [ "binary_find", "d8/da3/namespacemimicpp_1_1util.html#ae6cea4e9b0f4576bf518112f12bd8e5d", null ],
     [ "contains", "d8/da3/namespacemimicpp_1_1util.html#a6ab229fce64e2c104a052a34d45e626c", null ],
     [ "type_list_index_of_v", "d8/da3/namespacemimicpp_1_1util.html#a2f1e21e537892fb2be0856402d8d217f", null ]
