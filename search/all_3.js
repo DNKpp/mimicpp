@@ -34,7 +34,7 @@ var searchData=
   ['argsrequirement_31',['ArgsRequirement',['../da/d3f/classmimicpp_1_1expectation_1_1policies_1_1_args_requirement.html',1,'mimicpp::expectation::policies::ArgsRequirement&lt; Matcher, MatchesStrategy, DescribeStrategy &gt;'],['../da/d3f/classmimicpp_1_1expectation_1_1policies_1_1_args_requirement.html#a5f1d382392d4eff2c839aa83968cf4ad',1,'mimicpp::expectation::policies::ArgsRequirement::ArgsRequirement()']]],
   ['argsstorage_32',['ArgsStorage',['../d0/db8/classmimicpp_1_1_generic_matcher.html#aea0e7fb22ea37a09bdf744933aace3b6',1,'mimicpp::GenericMatcher']]],
   ['argumentlist_2ehpp_33',['ArgumentList.hpp',['../d2/dfd/_argument_list_8hpp.html',1,'']]],
-  ['arguments_34',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md3',1,'']]],
+  ['arguments_34',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md8',1,'']]],
   ['arithmetic_35',['arithmetic',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a97f5e37f808c4497329b669752f9acba',1,'mimicpp::printing::type::lexing::texts']]],
   ['arraydeclarator_36',['ArrayDeclarator',['../d2/d66/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_array_declarator.html',1,'mimicpp::printing::type::parsing::state']]],
   ['arrays_37',['arrays',['../db/d30/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_abstract_declarator_1_1_layer.html#acd43b126378f4d1dee24abbd76aae041',1,'mimicpp::printing::type::parsing::state::AbstractDeclarator::Layer']]],

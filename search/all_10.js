@@ -22,7 +22,7 @@ var searchData=
   ['operatorfunctionid_19',['OperatorFunctionId',['../dd/d50/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_operator_function_id.html',1,'mimicpp::printing::type::parsing::state']]],
   ['or_20print_20custom_20types_20',['Override existing printings or print custom types',['../d1/d07/group___p_r_i_n_t_i_n_g___s_t_a_t_e.html#autotoc_md17',1,'']]],
   ['origin_21',['origin',['../dd/d68/_c_make_lists_8txt.html#a4421eb9d096b69b442520fd7e3857268',1,'CMakeLists.txt']]],
-  ['other_20character_20types_22',['Strings with other character-types',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md10',1,'']]],
+  ['other_20character_20types_22',['Strings with other character-types',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
   ['otherkeywords_23',['otherKeywords',['../d2/d55/namespacemimicpp_1_1printing_1_1type_1_1lexing_1_1texts.html#a66c7edbd218a0fa8a7a42a8e2959ecd6',1,'mimicpp::printing::type::lexing::texts']]],
   ['out_24',['out',['../de/dd6/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_print_visitor.html#a4ac09342115d25edf507f1b81e9f3136',1,'mimicpp::printing::type::parsing::PrintVisitor']]],
   ['overloaded_25',['Overloaded',['../d7/d96/structmimicpp_1_1util_1_1_overloaded.html',1,'mimicpp::util::Overloaded&lt; Ts &gt;'],['../d8/da3/namespacemimicpp_1_1util.html#a15603f28dd19d50c8d917beb0e31c7ac',1,'mimicpp::util::Overloaded(Ts...) -&gt; Overloaded&lt; Ts... &gt;']]],
