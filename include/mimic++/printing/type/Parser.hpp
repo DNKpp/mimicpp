@@ -1113,6 +1113,28 @@ namespace mimicpp::printing::type::parsing
         return std::move(params).take();
     }
 
+    MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES void ignore_function_attribute(TokenStream& stream)
+    {
+        // 32bit clang-cl adds something like `__attribute__((thiscall))` to certain functions.
+        if (Transaction transaction{stream};
+            expect(stream, lexing::identifier{"__attribute__"})
+            && expect(stream, lexing::operator_or_punctuator{"("})
+            && expect(stream, lexing::operator_or_punctuator{"("}))
+        {
+            while (!peek_if<lexing::operator_or_punctuator>(stream)
+                && !peek_if<lexing::end>(stream))
+            {
+                stream.consume();
+            }
+
+            if (expect(stream, lexing::operator_or_punctuator{")"})
+                && expect(stream, lexing::operator_or_punctuator{")"}))
+            {
+                transaction.commit();
+            }
+        }
+    }
+
     // see: https://eel.is/c++draft/dcl.decl.general#nt:parameters-and-qualifiers
     // `attribute-specifier-seq` is ignored
     [[nodiscard]]
@@ -1135,6 +1157,8 @@ namespace mimicpp::printing::type::parsing
         {
             return std::nullopt;
         }
+
+        ignore_function_attribute(stream);
 
         if (std::optional cv = parse_cv_qualifier_seq(stream))
         {
