@@ -73,7 +73,8 @@
 // clang-format off
 // Prevent number from getting decorated with '.
 #if 201907L <= __cpp_lib_constexpr_vector \
-    && 202106L <= __cpp_lib_optional
+    && 202106L <= __cpp_lib_optional \
+    && (!MIMICPP_DETAIL_USES_LIBCXX || 18 < _LIBCPP_VERSION) // std::optional is not fully constexpr on libc++ < 19
     // clang-format on
     #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES constexpr
 #else
