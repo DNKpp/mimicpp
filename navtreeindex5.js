@@ -1,5 +1,6 @@
 var NAVTREEINDEX5 =
 {
+"dc/d2e/namespacemimicpp_1_1call.html#a904a8502dffb5e669557ce1a8c4b05eb":[3,0,0,0,6],
 "dc/d42/_doctest_8hpp.html":[6,0,2,0,2],
 "dc/d42/_doctest_8hpp_source.html":[6,0,2,0,2],
 "dc/d44/_call_8hpp.html":[6,0,1,7],
@@ -248,6 +249,5 @@ var NAVTREEINDEX5 =
 "de/d56/classmimicpp_1_1reporting_1_1_call_report.html#aed352ed918c40d74c26659c1e221f402":[2,8,0,0,6],
 "de/d62/_state_printer_8hpp.html":[6,0,1,4,5],
 "de/d62/_state_printer_8hpp_source.html":[6,0,1,4,5],
-"de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html":[2,11,24,2],
-"de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3":[2,11,24,2,0]
+"de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html":[2,11,24,2]
 };

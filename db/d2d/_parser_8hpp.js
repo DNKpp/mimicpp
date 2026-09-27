@@ -4,6 +4,7 @@ var _parser_8hpp =
     [ "mimicpp::printing::type::parsing::Transaction", "d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html", "d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction" ],
     [ "mimicpp::printing::type::parsing::StateGuard&lt; State &gt;", "de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html", "de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard" ],
     [ "mimicpp::printing::type::parsing::expect", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439", null ],
+    [ "mimicpp::printing::type::parsing::ignore_function_attribute", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a417702be21bae2468ac5a3240d0d764f", null ],
     [ "mimicpp::printing::type::parsing::make_map", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a0f9cdb8ddc2ab362d3ddcd36274a38ef", null ],
     [ "mimicpp::printing::type::parsing::parse_abstract_declarator", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999", null ],
     [ "mimicpp::printing::type::parsing::parse_array_declarator", "d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aebe38f10638b33485e48811e80de0cc8", null ],

@@ -1325,301 +1325,327 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('db/d2d/_parser
 <div class="line"><a id="l01114" name="l01114"></a><span class="lineno"> 1114</span>    }</div>
 </div>
 <div class="line"><a id="l01115" name="l01115"></a><span class="lineno"> 1115</span> </div>
-<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"> 1116</span>    <span class="comment">// see: https://eel.is/c++draft/dcl.decl.general#nt:parameters-and-qualifiers</span></div>
-<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>    <span class="comment">// `attribute-specifier-seq` is ignored</span></div>
-<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen01119" data-start="{" data-end="}">
-<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c"> 1119</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::FunctionDeclarator&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c">parse_parameters_and_qualifiers</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
-<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>    {</div>
-<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::FunctionDeclarator&gt;</a> declarator{stream};</div>
-<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span> </div>
-<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>        <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;(&quot;</span>}))</div>
-<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>        {</div>
-<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>            <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>        }</div>
-<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span> </div>
-<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>        std::optional clause = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a0af7abfde53bb23f5466f3ed8ce87b12">parse_parameter_declaration_clause</a>(stream);</div>
-<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span>        <span class="keywordflow">if</span> (!clause)</div>
-<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>        {</div>
-<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>            <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>        }</div>
-<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span> </div>
-<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>        <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;)&quot;</span>}))</div>
-<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>        {</div>
-<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>            <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span>        }</div>
-<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span> </div>
-<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>        <span class="keywordflow">if</span> (std::optional cv = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a7ec70afd244c5829e9e9042503cc4c30">parse_cv_qualifier_seq</a>(stream))</div>
-<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>        {</div>
-<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"> 1141</span>            declarator-&gt;qualifiers = *std::move(cv);</div>
-<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>        }</div>
-<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span> </div>
-<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span>        declarator-&gt;refQualifier = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac16ef508e8a2a412ee321a944cd37b31">parse_ref_qualifier</a>(stream);</div>
-<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>        declarator-&gt;isNoexcept = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">lexing::keyword</a>{<span class="stringliteral">&quot;noexcept&quot;</span>}).has_value();</div>
-<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span> </div>
-<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>        declarator-&gt;params.reserve(clause-&gt;size());</div>
-<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>        std::ranges::transform(</div>
-<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span>            *clause,</div>
-<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>            std::back_inserter(declarator-&gt;params),</div>
-<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>            [](<a class="code hl_struct" href="../../dd/dc5/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_type_id.html">state::TypeId</a>&amp; <span class="keywordtype">id</span>) { return state::Recursive{std::move(id)}; });</div>
-<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span> </div>
-<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>        <span class="keywordflow">return</span> {std::move(declarator).take()};</div>
-<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>    }</div>
+<div class="foldopen" id="foldopen01116" data-start="{" data-end="}">
+<div class="line"><a id="l01116" name="l01116"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a417702be21bae2468ac5a3240d0d764f"> 1116</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> <span class="keywordtype">void</span> <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a417702be21bae2468ac5a3240d0d764f">ignore_function_attribute</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
+<div class="line"><a id="l01117" name="l01117"></a><span class="lineno"> 1117</span>    {</div>
+<div class="line"><a id="l01118" name="l01118"></a><span class="lineno"> 1118</span>        <span class="comment">// 32bit clang-cl adds something like `__attribute__((thiscall))` to certain functions.</span></div>
+<div class="line"><a id="l01119" name="l01119"></a><span class="lineno"> 1119</span>        <span class="keywordflow">if</span> (<a class="code hl_class" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html">Transaction</a> transaction{stream};</div>
+<div class="line"><a id="l01120" name="l01120"></a><span class="lineno"> 1120</span>            <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../de/dd6/structmimicpp_1_1printing_1_1type_1_1lexing_1_1identifier.html">lexing::identifier</a>{<span class="stringliteral">&quot;__attribute__&quot;</span>})</div>
+<div class="line"><a id="l01121" name="l01121"></a><span class="lineno"> 1121</span>            &amp;&amp; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;(&quot;</span>})</div>
+<div class="line"><a id="l01122" name="l01122"></a><span class="lineno"> 1122</span>            &amp;&amp; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;(&quot;</span>}))</div>
+<div class="line"><a id="l01123" name="l01123"></a><span class="lineno"> 1123</span>        {</div>
+<div class="line"><a id="l01124" name="l01124"></a><span class="lineno"> 1124</span>            <span class="keywordflow">while</span> (!<a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#af4a0cb34323c99cc2025a110c98bc48f">peek_if&lt;lexing::operator_or_punctuator&gt;</a>(stream)</div>
+<div class="line"><a id="l01125" name="l01125"></a><span class="lineno"> 1125</span>                &amp;&amp; !<a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#af4a0cb34323c99cc2025a110c98bc48f">peek_if&lt;lexing::end&gt;</a>(stream))</div>
+<div class="line"><a id="l01126" name="l01126"></a><span class="lineno"> 1126</span>            {</div>
+<div class="line"><a id="l01127" name="l01127"></a><span class="lineno"> 1127</span>                stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a1a0123fb7ec3f4a090b72ebbc197a14d">consume</a>();</div>
+<div class="line"><a id="l01128" name="l01128"></a><span class="lineno"> 1128</span>            }</div>
+<div class="line"><a id="l01129" name="l01129"></a><span class="lineno"> 1129</span> </div>
+<div class="line"><a id="l01130" name="l01130"></a><span class="lineno"> 1130</span>            <span class="keywordflow">if</span> (<a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;)&quot;</span>})</div>
+<div class="line"><a id="l01131" name="l01131"></a><span class="lineno"> 1131</span>                &amp;&amp; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;)&quot;</span>}))</div>
+<div class="line"><a id="l01132" name="l01132"></a><span class="lineno"> 1132</span>            {</div>
+<div class="line"><a id="l01133" name="l01133"></a><span class="lineno"> 1133</span>                transaction.commit();</div>
+<div class="line"><a id="l01134" name="l01134"></a><span class="lineno"> 1134</span>            }</div>
+<div class="line"><a id="l01135" name="l01135"></a><span class="lineno"> 1135</span>        }</div>
+<div class="line"><a id="l01136" name="l01136"></a><span class="lineno"> 1136</span>    }</div>
 </div>
+<div class="line"><a id="l01137" name="l01137"></a><span class="lineno"> 1137</span> </div>
+<div class="line"><a id="l01138" name="l01138"></a><span class="lineno"> 1138</span>    <span class="comment">// see: https://eel.is/c++draft/dcl.decl.general#nt:parameters-and-qualifiers</span></div>
+<div class="line"><a id="l01139" name="l01139"></a><span class="lineno"> 1139</span>    <span class="comment">// `attribute-specifier-seq` is ignored</span></div>
+<div class="line"><a id="l01140" name="l01140"></a><span class="lineno"> 1140</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen01141" data-start="{" data-end="}">
+<div class="line"><a id="l01141" name="l01141"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c"> 1141</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::FunctionDeclarator&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c">parse_parameters_and_qualifiers</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
+<div class="line"><a id="l01142" name="l01142"></a><span class="lineno"> 1142</span>    {</div>
+<div class="line"><a id="l01143" name="l01143"></a><span class="lineno"> 1143</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::FunctionDeclarator&gt;</a> declarator{stream};</div>
+<div class="line"><a id="l01144" name="l01144"></a><span class="lineno"> 1144</span> </div>
+<div class="line"><a id="l01145" name="l01145"></a><span class="lineno"> 1145</span>        <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;(&quot;</span>}))</div>
+<div class="line"><a id="l01146" name="l01146"></a><span class="lineno"> 1146</span>        {</div>
+<div class="line"><a id="l01147" name="l01147"></a><span class="lineno"> 1147</span>            <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01148" name="l01148"></a><span class="lineno"> 1148</span>        }</div>
+<div class="line"><a id="l01149" name="l01149"></a><span class="lineno"> 1149</span> </div>
+<div class="line"><a id="l01150" name="l01150"></a><span class="lineno"> 1150</span>        std::optional clause = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a0af7abfde53bb23f5466f3ed8ce87b12">parse_parameter_declaration_clause</a>(stream);</div>
+<div class="line"><a id="l01151" name="l01151"></a><span class="lineno"> 1151</span>        <span class="keywordflow">if</span> (!clause)</div>
+<div class="line"><a id="l01152" name="l01152"></a><span class="lineno"> 1152</span>        {</div>
+<div class="line"><a id="l01153" name="l01153"></a><span class="lineno"> 1153</span>            <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01154" name="l01154"></a><span class="lineno"> 1154</span>        }</div>
 <div class="line"><a id="l01155" name="l01155"></a><span class="lineno"> 1155</span> </div>
-<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen01157" data-start="{" data-end="}">
-<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999"> 1157</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::AbstractDeclarator&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999">parse_abstract_declarator</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
-<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>    {</div>
-<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::AbstractDeclarator&gt;</a> declarator{stream};</div>
-<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span>        <span class="keyword">auto</span>&amp; root = declarator-&gt;root;</div>
-<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span> </div>
-<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span>        <span class="keywordflow">while</span> (std::optional op = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aba39b519bd1d177a2ba27f077cc05700">parse_ptr_operator</a>(stream))</div>
-<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>        {</div>
-<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>            root.decorations.emplace_back(*std::move(op));</div>
-<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>        }</div>
-<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span> </div>
-<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span>        <span class="keywordflow">if</span> (<a class="code hl_class" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html">Transaction</a> nestedTransaction{stream};</div>
-<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>            <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;(&quot;</span>}))</div>
-<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>        {</div>
-<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span>            <span class="keywordflow">if</span> (std::optional layer = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999">parse_abstract_declarator</a>(stream);</div>
-<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>                layer</div>
-<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>                &amp;&amp; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;)&quot;</span>}))</div>
-<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>            {</div>
-<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>                root.nested.emplace(std::move(layer-&gt;root));</div>
-<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>                nestedTransaction.commit();</div>
-<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span>            }</div>
-<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>        }</div>
-<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span> </div>
-<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span>        <span class="keywordflow">if</span> (std::optional params = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c">parse_parameters_and_qualifiers</a>(stream))</div>
-<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>        {</div>
-<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"> 1181</span>            root.function.emplace(*std::move(params));</div>
-<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>        }</div>
-<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span> </div>
-<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>        <span class="keywordflow">while</span> (std::optional arrayDecl = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aebe38f10638b33485e48811e80de0cc8">parse_array_declarator</a>(stream))</div>
-<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span>        {</div>
-<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>            root.arrays.emplace_back(*std::move(arrayDecl));</div>
-<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>        }</div>
-<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span> </div>
-<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>        <span class="keywordflow">if</span> (root.decorations.empty()</div>
-<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span>            &amp;&amp; !root.nested</div>
-<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>            &amp;&amp; !root.function</div>
-<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>            &amp;&amp; root.arrays.empty())</div>
-<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>        {</div>
-<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>            <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>        }</div>
-<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span> </div>
-<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>        <span class="keywordflow">return</span> {std::move(declarator).take()};</div>
-<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>    }</div>
+<div class="line"><a id="l01156" name="l01156"></a><span class="lineno"> 1156</span>        <span class="keywordflow">if</span> (!<a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;)&quot;</span>}))</div>
+<div class="line"><a id="l01157" name="l01157"></a><span class="lineno"> 1157</span>        {</div>
+<div class="line"><a id="l01158" name="l01158"></a><span class="lineno"> 1158</span>            <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01159" name="l01159"></a><span class="lineno"> 1159</span>        }</div>
+<div class="line"><a id="l01160" name="l01160"></a><span class="lineno"> 1160</span> </div>
+<div class="line"><a id="l01161" name="l01161"></a><span class="lineno"> 1161</span>        <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a417702be21bae2468ac5a3240d0d764f">ignore_function_attribute</a>(stream);</div>
+<div class="line"><a id="l01162" name="l01162"></a><span class="lineno"> 1162</span> </div>
+<div class="line"><a id="l01163" name="l01163"></a><span class="lineno"> 1163</span>        <span class="keywordflow">if</span> (std::optional cv = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a7ec70afd244c5829e9e9042503cc4c30">parse_cv_qualifier_seq</a>(stream))</div>
+<div class="line"><a id="l01164" name="l01164"></a><span class="lineno"> 1164</span>        {</div>
+<div class="line"><a id="l01165" name="l01165"></a><span class="lineno"> 1165</span>            declarator-&gt;qualifiers = *std::move(cv);</div>
+<div class="line"><a id="l01166" name="l01166"></a><span class="lineno"> 1166</span>        }</div>
+<div class="line"><a id="l01167" name="l01167"></a><span class="lineno"> 1167</span> </div>
+<div class="line"><a id="l01168" name="l01168"></a><span class="lineno"> 1168</span>        declarator-&gt;refQualifier = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac16ef508e8a2a412ee321a944cd37b31">parse_ref_qualifier</a>(stream);</div>
+<div class="line"><a id="l01169" name="l01169"></a><span class="lineno"> 1169</span>        declarator-&gt;isNoexcept = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">lexing::keyword</a>{<span class="stringliteral">&quot;noexcept&quot;</span>}).has_value();</div>
+<div class="line"><a id="l01170" name="l01170"></a><span class="lineno"> 1170</span> </div>
+<div class="line"><a id="l01171" name="l01171"></a><span class="lineno"> 1171</span>        declarator-&gt;params.reserve(clause-&gt;size());</div>
+<div class="line"><a id="l01172" name="l01172"></a><span class="lineno"> 1172</span>        std::ranges::transform(</div>
+<div class="line"><a id="l01173" name="l01173"></a><span class="lineno"> 1173</span>            *clause,</div>
+<div class="line"><a id="l01174" name="l01174"></a><span class="lineno"> 1174</span>            std::back_inserter(declarator-&gt;params),</div>
+<div class="line"><a id="l01175" name="l01175"></a><span class="lineno"> 1175</span>            [](<a class="code hl_struct" href="../../dd/dc5/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_type_id.html">state::TypeId</a>&amp; <span class="keywordtype">id</span>) { return state::Recursive{std::move(id)}; });</div>
+<div class="line"><a id="l01176" name="l01176"></a><span class="lineno"> 1176</span> </div>
+<div class="line"><a id="l01177" name="l01177"></a><span class="lineno"> 1177</span>        <span class="keywordflow">return</span> {std::move(declarator).take()};</div>
+<div class="line"><a id="l01178" name="l01178"></a><span class="lineno"> 1178</span>    }</div>
 </div>
-<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span> </div>
-<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>    <span class="keyword">namespace </span>detail</div>
-<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>    {</div>
-<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span>        [[nodiscard]]</div>
-<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>        <span class="keyword">consteval</span> <span class="keyword">auto</span> make_builtin_type_candidates() noexcept</div>
+<div class="line"><a id="l01179" name="l01179"></a><span class="lineno"> 1179</span> </div>
+<div class="line"><a id="l01180" name="l01180"></a><span class="lineno"> 1180</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen01181" data-start="{" data-end="}">
+<div class="line"><a id="l01181" name="l01181"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999"> 1181</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::AbstractDeclarator&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999">parse_abstract_declarator</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
+<div class="line"><a id="l01182" name="l01182"></a><span class="lineno"> 1182</span>    {</div>
+<div class="line"><a id="l01183" name="l01183"></a><span class="lineno"> 1183</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::AbstractDeclarator&gt;</a> declarator{stream};</div>
+<div class="line"><a id="l01184" name="l01184"></a><span class="lineno"> 1184</span>        <span class="keyword">auto</span>&amp; root = declarator-&gt;root;</div>
+<div class="line"><a id="l01185" name="l01185"></a><span class="lineno"> 1185</span> </div>
+<div class="line"><a id="l01186" name="l01186"></a><span class="lineno"> 1186</span>        <span class="keywordflow">while</span> (std::optional op = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aba39b519bd1d177a2ba27f077cc05700">parse_ptr_operator</a>(stream))</div>
+<div class="line"><a id="l01187" name="l01187"></a><span class="lineno"> 1187</span>        {</div>
+<div class="line"><a id="l01188" name="l01188"></a><span class="lineno"> 1188</span>            root.decorations.emplace_back(*std::move(op));</div>
+<div class="line"><a id="l01189" name="l01189"></a><span class="lineno"> 1189</span>        }</div>
+<div class="line"><a id="l01190" name="l01190"></a><span class="lineno"> 1190</span> </div>
+<div class="line"><a id="l01191" name="l01191"></a><span class="lineno"> 1191</span>        <span class="keywordflow">if</span> (<a class="code hl_class" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html">Transaction</a> nestedTransaction{stream};</div>
+<div class="line"><a id="l01192" name="l01192"></a><span class="lineno"> 1192</span>            <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;(&quot;</span>}))</div>
+<div class="line"><a id="l01193" name="l01193"></a><span class="lineno"> 1193</span>        {</div>
+<div class="line"><a id="l01194" name="l01194"></a><span class="lineno"> 1194</span>            <span class="keywordflow">if</span> (std::optional layer = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999">parse_abstract_declarator</a>(stream);</div>
+<div class="line"><a id="l01195" name="l01195"></a><span class="lineno"> 1195</span>                layer</div>
+<div class="line"><a id="l01196" name="l01196"></a><span class="lineno"> 1196</span>                &amp;&amp; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;)&quot;</span>}))</div>
+<div class="line"><a id="l01197" name="l01197"></a><span class="lineno"> 1197</span>            {</div>
+<div class="line"><a id="l01198" name="l01198"></a><span class="lineno"> 1198</span>                root.nested.emplace(std::move(layer-&gt;root));</div>
+<div class="line"><a id="l01199" name="l01199"></a><span class="lineno"> 1199</span>                nestedTransaction.commit();</div>
+<div class="line"><a id="l01200" name="l01200"></a><span class="lineno"> 1200</span>            }</div>
+<div class="line"><a id="l01201" name="l01201"></a><span class="lineno"> 1201</span>        }</div>
+<div class="line"><a id="l01202" name="l01202"></a><span class="lineno"> 1202</span> </div>
+<div class="line"><a id="l01203" name="l01203"></a><span class="lineno"> 1203</span>        <span class="keywordflow">if</span> (std::optional params = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c">parse_parameters_and_qualifiers</a>(stream))</div>
 <div class="line"><a id="l01204" name="l01204"></a><span class="lineno"> 1204</span>        {</div>
-<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>            std::array types = std::apply(</div>
-<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>                [](<span class="keyword">auto</span>&amp;... keyword) { <span class="keywordflow">return</span> std::array{<a class="code hl_struct" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">lexing::keyword</a>{keyword}...}; },</div>
-<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span>                lexing::texts::typeKeywords);</div>
-<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span>            std::ranges::sort(types, {}, &amp;lexing::keyword::index);</div>
-<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(types.cend() == std::ranges::unique(types).begin(), <span class="stringliteral">&quot;Fix your input!&quot;</span>);</div>
-<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span> </div>
-<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span>            <span class="keywordflow">return</span> types;</div>
-<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span>        }</div>
-<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span> </div>
-<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span>        <span class="keyword">inline</span> <span class="keyword">constexpr</span> std::array builtinTypeCandidates = make_builtin_type_candidates();</div>
-<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span>    }</div>
-<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span> </div>
-<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span>    <span class="comment">// see: https://eel.is/c++draft/dcl.type.general#nt:type-specifier-seq</span></div>
-<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen01219" data-start="{" data-end="}">
-<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac1b1cbd0459901a5fb30983353b39b75"> 1219</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::TypeId&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac1b1cbd0459901a5fb30983353b39b75">parse_type_specifier_seq</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
-<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span>    {</div>
-<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::TypeId&gt;</a> typeId{stream};</div>
-<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span> </div>
-<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span>        std::optional&lt;state::QualifiedId&gt; qualifiedType{};</div>
-<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span>        std::optional&lt;state::BuiltinType&gt; builtinType{};</div>
-<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span>        std::optional&lt;state::TypeKey&gt; typeKey{};</div>
-<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span> </div>
-<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>        <span class="keywordflow">while</span> (!stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a04b46c2a02ed0e3cb17988d91737ab3b">is_eof</a>())</div>
+<div class="line"><a id="l01205" name="l01205"></a><span class="lineno"> 1205</span>            root.function.emplace(*std::move(params));</div>
+<div class="line"><a id="l01206" name="l01206"></a><span class="lineno"> 1206</span>        }</div>
+<div class="line"><a id="l01207" name="l01207"></a><span class="lineno"> 1207</span> </div>
+<div class="line"><a id="l01208" name="l01208"></a><span class="lineno"> 1208</span>        <span class="keywordflow">while</span> (std::optional arrayDecl = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aebe38f10638b33485e48811e80de0cc8">parse_array_declarator</a>(stream))</div>
+<div class="line"><a id="l01209" name="l01209"></a><span class="lineno"> 1209</span>        {</div>
+<div class="line"><a id="l01210" name="l01210"></a><span class="lineno"> 1210</span>            root.arrays.emplace_back(*std::move(arrayDecl));</div>
+<div class="line"><a id="l01211" name="l01211"></a><span class="lineno"> 1211</span>        }</div>
+<div class="line"><a id="l01212" name="l01212"></a><span class="lineno"> 1212</span> </div>
+<div class="line"><a id="l01213" name="l01213"></a><span class="lineno"> 1213</span>        <span class="keywordflow">if</span> (root.decorations.empty()</div>
+<div class="line"><a id="l01214" name="l01214"></a><span class="lineno"> 1214</span>            &amp;&amp; !root.nested</div>
+<div class="line"><a id="l01215" name="l01215"></a><span class="lineno"> 1215</span>            &amp;&amp; !root.function</div>
+<div class="line"><a id="l01216" name="l01216"></a><span class="lineno"> 1216</span>            &amp;&amp; root.arrays.empty())</div>
+<div class="line"><a id="l01217" name="l01217"></a><span class="lineno"> 1217</span>        {</div>
+<div class="line"><a id="l01218" name="l01218"></a><span class="lineno"> 1218</span>            <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01219" name="l01219"></a><span class="lineno"> 1219</span>        }</div>
+<div class="line"><a id="l01220" name="l01220"></a><span class="lineno"> 1220</span> </div>
+<div class="line"><a id="l01221" name="l01221"></a><span class="lineno"> 1221</span>        <span class="keywordflow">return</span> {std::move(declarator).take()};</div>
+<div class="line"><a id="l01222" name="l01222"></a><span class="lineno"> 1222</span>    }</div>
+</div>
+<div class="line"><a id="l01223" name="l01223"></a><span class="lineno"> 1223</span> </div>
+<div class="line"><a id="l01224" name="l01224"></a><span class="lineno"> 1224</span>    <span class="keyword">namespace </span>detail</div>
+<div class="line"><a id="l01225" name="l01225"></a><span class="lineno"> 1225</span>    {</div>
+<div class="line"><a id="l01226" name="l01226"></a><span class="lineno"> 1226</span>        [[nodiscard]]</div>
+<div class="line"><a id="l01227" name="l01227"></a><span class="lineno"> 1227</span>        <span class="keyword">consteval</span> <span class="keyword">auto</span> make_builtin_type_candidates() noexcept</div>
 <div class="line"><a id="l01228" name="l01228"></a><span class="lineno"> 1228</span>        {</div>
-<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span>            <a class="code hl_class" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html">Transaction</a> transaction{stream};</div>
-<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span> </div>
-<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span>            <span class="keywordflow">if</span> (<span class="keyword">auto</span> <span class="keyword">const</span>* <span class="keyword">const</span> keyword = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#af4a0cb34323c99cc2025a110c98bc48f">peek_if&lt;lexing::keyword&gt;</a>(stream))</div>
-<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span>            {</div>
-<div class="line"><a id="l01233" name="l01233"></a><span class="lineno"> 1233</span>                <span class="comment">// just silently ignore any linkage keyword.</span></div>
-<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span>                <span class="keywordflow">if</span> (<a class="code hl_struct" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">lexing::keyword</a>{<span class="stringliteral">&quot;static&quot;</span>} == *keyword</div>
-<div class="line"><a id="l01235" name="l01235"></a><span class="lineno"> 1235</span>                    || <a class="code hl_struct" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">lexing::keyword</a>{<span class="stringliteral">&quot;constexpr&quot;</span>} == *keyword)</div>
-<div class="line"><a id="l01236" name="l01236"></a><span class="lineno"> 1236</span>                {</div>
-<div class="line"><a id="l01237" name="l01237"></a><span class="lineno"> 1237</span>                    stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a1a0123fb7ec3f4a090b72ebbc197a14d">consume</a>();</div>
-<div class="line"><a id="l01238" name="l01238"></a><span class="lineno"> 1238</span>                    transaction.<a class="code hl_function" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#aa0a2b1a8d9250daf04569b3eebea9182">commit</a>();</div>
-<div class="line"><a id="l01239" name="l01239"></a><span class="lineno"> 1239</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l01240" name="l01240"></a><span class="lineno"> 1240</span>                }</div>
-<div class="line"><a id="l01241" name="l01241"></a><span class="lineno"> 1241</span> </div>
-<div class="line"><a id="l01242" name="l01242"></a><span class="lineno"> 1242</span>                <span class="keywordflow">if</span> (std::optional <span class="keyword">const</span> cv = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ad36958cef8535e9a50cb8c43c4bdbac2">parse_cv_qualifier</a>(stream))</div>
-<div class="line"><a id="l01243" name="l01243"></a><span class="lineno"> 1243</span>                {</div>
-<div class="line"><a id="l01244" name="l01244"></a><span class="lineno"> 1244</span>                    <span class="keywordflow">if</span> (!typeId-&gt;qualifications.apply(*cv))</div>
-<div class="line"><a id="l01245" name="l01245"></a><span class="lineno"> 1245</span>                    {</div>
-<div class="line"><a id="l01246" name="l01246"></a><span class="lineno"> 1246</span>                        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01247" name="l01247"></a><span class="lineno"> 1247</span>                    }</div>
-<div class="line"><a id="l01248" name="l01248"></a><span class="lineno"> 1248</span> </div>
-<div class="line"><a id="l01249" name="l01249"></a><span class="lineno"> 1249</span>                    transaction.<a class="code hl_function" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#aa0a2b1a8d9250daf04569b3eebea9182">commit</a>();</div>
-<div class="line"><a id="l01250" name="l01250"></a><span class="lineno"> 1250</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>                }</div>
-<div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span> </div>
-<div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span>                <span class="keywordflow">if</span> (!qualifiedType</div>
-<div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span>                    &amp;&amp; std::ranges::binary_search(detail::builtinTypeCandidates, keyword-&gt;index(), {}, &amp;<a class="code hl_function" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html#a395a5e6ef2194a583f43ea1ffb80000b">lexing::keyword::index</a>))</div>
-<div class="line"><a id="l01255" name="l01255"></a><span class="lineno"> 1255</span>                {</div>
-<div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span>                    <span class="keywordflow">if</span> (!(builtinType ? *builtinType : builtinType.emplace()).try_apply(*keyword))</div>
-<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>                    {</div>
-<div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>                        <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01259" name="l01259"></a><span class="lineno"> 1259</span>                    }</div>
-<div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span> </div>
+<div class="line"><a id="l01229" name="l01229"></a><span class="lineno"> 1229</span>            std::array types = std::apply(</div>
+<div class="line"><a id="l01230" name="l01230"></a><span class="lineno"> 1230</span>                [](<span class="keyword">auto</span>&amp;... keyword) { <span class="keywordflow">return</span> std::array{<a class="code hl_struct" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">lexing::keyword</a>{keyword}...}; },</div>
+<div class="line"><a id="l01231" name="l01231"></a><span class="lineno"> 1231</span>                lexing::texts::typeKeywords);</div>
+<div class="line"><a id="l01232" name="l01232"></a><span class="lineno"> 1232</span>            std::ranges::sort(types, {}, &amp;lexing::keyword::index);</div>
+<div class="line"><a id="l01233" name="l01233"></a><span class="lineno"> 1233</span>            <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a>(types.cend() == std::ranges::unique(types).begin(), <span class="stringliteral">&quot;Fix your input!&quot;</span>);</div>
+<div class="line"><a id="l01234" name="l01234"></a><span class="lineno"> 1234</span> </div>
+<div class="line"><a id="l01235" name="l01235"></a><span class="lineno"> 1235</span>            <span class="keywordflow">return</span> types;</div>
+<div class="line"><a id="l01236" name="l01236"></a><span class="lineno"> 1236</span>        }</div>
+<div class="line"><a id="l01237" name="l01237"></a><span class="lineno"> 1237</span> </div>
+<div class="line"><a id="l01238" name="l01238"></a><span class="lineno"> 1238</span>        <span class="keyword">inline</span> <span class="keyword">constexpr</span> std::array builtinTypeCandidates = make_builtin_type_candidates();</div>
+<div class="line"><a id="l01239" name="l01239"></a><span class="lineno"> 1239</span>    }</div>
+<div class="line"><a id="l01240" name="l01240"></a><span class="lineno"> 1240</span> </div>
+<div class="line"><a id="l01241" name="l01241"></a><span class="lineno"> 1241</span>    <span class="comment">// see: https://eel.is/c++draft/dcl.type.general#nt:type-specifier-seq</span></div>
+<div class="line"><a id="l01242" name="l01242"></a><span class="lineno"> 1242</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen01243" data-start="{" data-end="}">
+<div class="line"><a id="l01243" name="l01243"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac1b1cbd0459901a5fb30983353b39b75"> 1243</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::TypeId&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac1b1cbd0459901a5fb30983353b39b75">parse_type_specifier_seq</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
+<div class="line"><a id="l01244" name="l01244"></a><span class="lineno"> 1244</span>    {</div>
+<div class="line"><a id="l01245" name="l01245"></a><span class="lineno"> 1245</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::TypeId&gt;</a> typeId{stream};</div>
+<div class="line"><a id="l01246" name="l01246"></a><span class="lineno"> 1246</span> </div>
+<div class="line"><a id="l01247" name="l01247"></a><span class="lineno"> 1247</span>        std::optional&lt;state::QualifiedId&gt; qualifiedType{};</div>
+<div class="line"><a id="l01248" name="l01248"></a><span class="lineno"> 1248</span>        std::optional&lt;state::BuiltinType&gt; builtinType{};</div>
+<div class="line"><a id="l01249" name="l01249"></a><span class="lineno"> 1249</span>        std::optional&lt;state::TypeKey&gt; typeKey{};</div>
+<div class="line"><a id="l01250" name="l01250"></a><span class="lineno"> 1250</span> </div>
+<div class="line"><a id="l01251" name="l01251"></a><span class="lineno"> 1251</span>        <span class="keywordflow">while</span> (!stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a04b46c2a02ed0e3cb17988d91737ab3b">is_eof</a>())</div>
+<div class="line"><a id="l01252" name="l01252"></a><span class="lineno"> 1252</span>        {</div>
+<div class="line"><a id="l01253" name="l01253"></a><span class="lineno"> 1253</span>            <a class="code hl_class" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html">Transaction</a> transaction{stream};</div>
+<div class="line"><a id="l01254" name="l01254"></a><span class="lineno"> 1254</span> </div>
+<div class="line"><a id="l01255" name="l01255"></a><span class="lineno"> 1255</span>            <span class="keywordflow">if</span> (<span class="keyword">auto</span> <span class="keyword">const</span>* <span class="keyword">const</span> keyword = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#af4a0cb34323c99cc2025a110c98bc48f">peek_if&lt;lexing::keyword&gt;</a>(stream))</div>
+<div class="line"><a id="l01256" name="l01256"></a><span class="lineno"> 1256</span>            {</div>
+<div class="line"><a id="l01257" name="l01257"></a><span class="lineno"> 1257</span>                <span class="comment">// just silently ignore any linkage keyword.</span></div>
+<div class="line"><a id="l01258" name="l01258"></a><span class="lineno"> 1258</span>                <span class="keywordflow">if</span> (<a class="code hl_struct" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">lexing::keyword</a>{<span class="stringliteral">&quot;static&quot;</span>} == *keyword</div>
+<div class="line"><a id="l01259" name="l01259"></a><span class="lineno"> 1259</span>                    || <a class="code hl_struct" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">lexing::keyword</a>{<span class="stringliteral">&quot;constexpr&quot;</span>} == *keyword)</div>
+<div class="line"><a id="l01260" name="l01260"></a><span class="lineno"> 1260</span>                {</div>
 <div class="line"><a id="l01261" name="l01261"></a><span class="lineno"> 1261</span>                    stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a1a0123fb7ec3f4a090b72ebbc197a14d">consume</a>();</div>
 <div class="line"><a id="l01262" name="l01262"></a><span class="lineno"> 1262</span>                    transaction.<a class="code hl_function" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#aa0a2b1a8d9250daf04569b3eebea9182">commit</a>();</div>
 <div class="line"><a id="l01263" name="l01263"></a><span class="lineno"> 1263</span>                    <span class="keywordflow">continue</span>;</div>
 <div class="line"><a id="l01264" name="l01264"></a><span class="lineno"> 1264</span>                }</div>
-<div class="line"><a id="l01265" name="l01265"></a><span class="lineno"> 1265</span>            }</div>
-<div class="line"><a id="l01266" name="l01266"></a><span class="lineno"> 1266</span> </div>
-<div class="line"><a id="l01267" name="l01267"></a><span class="lineno"> 1267</span>            <span class="keywordflow">if</span> (!qualifiedType &amp;&amp; !builtinType)</div>
-<div class="line"><a id="l01268" name="l01268"></a><span class="lineno"> 1268</span>            {</div>
-<div class="line"><a id="l01269" name="l01269"></a><span class="lineno"> 1269</span>                <span class="comment">// msvc often prefixes types with e.g. `class`.</span></div>
-<div class="line"><a id="l01270" name="l01270"></a><span class="lineno"> 1270</span>                typeKey = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ab398335432673b231542d4b40e3f640c">parse_type_key</a>(stream);</div>
-<div class="line"><a id="l01271" name="l01271"></a><span class="lineno"> 1271</span>                <span class="keywordflow">if</span> (std::optional qualifiedId = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ab6afd31ef794455d99bb2c0e5dfe1071">parse_qualified_id</a>(stream))</div>
-<div class="line"><a id="l01272" name="l01272"></a><span class="lineno"> 1272</span>                {</div>
-<div class="line"><a id="l01273" name="l01273"></a><span class="lineno"> 1273</span>                    qualifiedType = std::move(qualifiedId);</div>
-<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span>                    transaction.<a class="code hl_function" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#aa0a2b1a8d9250daf04569b3eebea9182">commit</a>();</div>
-<div class="line"><a id="l01275" name="l01275"></a><span class="lineno"> 1275</span>                    <span class="keywordflow">continue</span>;</div>
-<div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span>                }</div>
-<div class="line"><a id="l01277" name="l01277"></a><span class="lineno"> 1277</span>            }</div>
-<div class="line"><a id="l01278" name="l01278"></a><span class="lineno"> 1278</span> </div>
-<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"> 1279</span>            <span class="keywordflow">break</span>;</div>
-<div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span>        }</div>
-<div class="line"><a id="l01281" name="l01281"></a><span class="lineno"> 1281</span> </div>
-<div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span>        <span class="keywordflow">if</span> (qualifiedType</div>
-<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"> 1283</span>            &amp;&amp; !builtinType)</div>
-<div class="line"><a id="l01284" name="l01284"></a><span class="lineno"> 1284</span>        {</div>
-<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span>            qualifiedType-&gt;typeKey = std::move(typeKey);</div>
-<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span>            typeId-&gt;base = *std::move(qualifiedType);</div>
-<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"> 1287</span>            <span class="keywordflow">return</span> std::move(typeId).take();</div>
-<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span>        }</div>
-<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span> </div>
-<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span>        <span class="keywordflow">if</span> (builtinType</div>
-<div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>            &amp;&amp; !qualifiedType</div>
-<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span>            &amp;&amp; !typeKey)</div>
-<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>        {</div>
-<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>            typeId-&gt;base = *std::move(builtinType);</div>
-<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span>            <span class="keywordflow">return</span> std::move(typeId).take();</div>
-<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>        }</div>
-<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span> </div>
-<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>    }</div>
-</div>
-<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span> </div>
-<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span>    <span class="comment">// see: https://eel.is/c++draft/dcl.name#nt:type-id</span></div>
-<div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen01303" data-start="{" data-end="}">
-<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653"> 1303</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::TypeId&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653">parse_type_id</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
-<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span>    {</div>
-<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::TypeId&gt;</a> <span class="keywordtype">id</span>{stream};</div>
-<div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>        std::optional base = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac1b1cbd0459901a5fb30983353b39b75">parse_type_specifier_seq</a>(stream);</div>
-<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>        <span class="keywordflow">if</span> (!base)</div>
+<div class="line"><a id="l01265" name="l01265"></a><span class="lineno"> 1265</span> </div>
+<div class="line"><a id="l01266" name="l01266"></a><span class="lineno"> 1266</span>                <span class="keywordflow">if</span> (std::optional <span class="keyword">const</span> cv = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ad36958cef8535e9a50cb8c43c4bdbac2">parse_cv_qualifier</a>(stream))</div>
+<div class="line"><a id="l01267" name="l01267"></a><span class="lineno"> 1267</span>                {</div>
+<div class="line"><a id="l01268" name="l01268"></a><span class="lineno"> 1268</span>                    <span class="keywordflow">if</span> (!typeId-&gt;qualifications.apply(*cv))</div>
+<div class="line"><a id="l01269" name="l01269"></a><span class="lineno"> 1269</span>                    {</div>
+<div class="line"><a id="l01270" name="l01270"></a><span class="lineno"> 1270</span>                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01271" name="l01271"></a><span class="lineno"> 1271</span>                    }</div>
+<div class="line"><a id="l01272" name="l01272"></a><span class="lineno"> 1272</span> </div>
+<div class="line"><a id="l01273" name="l01273"></a><span class="lineno"> 1273</span>                    transaction.<a class="code hl_function" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#aa0a2b1a8d9250daf04569b3eebea9182">commit</a>();</div>
+<div class="line"><a id="l01274" name="l01274"></a><span class="lineno"> 1274</span>                    <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l01275" name="l01275"></a><span class="lineno"> 1275</span>                }</div>
+<div class="line"><a id="l01276" name="l01276"></a><span class="lineno"> 1276</span> </div>
+<div class="line"><a id="l01277" name="l01277"></a><span class="lineno"> 1277</span>                <span class="keywordflow">if</span> (!qualifiedType</div>
+<div class="line"><a id="l01278" name="l01278"></a><span class="lineno"> 1278</span>                    &amp;&amp; std::ranges::binary_search(detail::builtinTypeCandidates, keyword-&gt;index(), {}, &amp;<a class="code hl_function" href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html#a395a5e6ef2194a583f43ea1ffb80000b">lexing::keyword::index</a>))</div>
+<div class="line"><a id="l01279" name="l01279"></a><span class="lineno"> 1279</span>                {</div>
+<div class="line"><a id="l01280" name="l01280"></a><span class="lineno"> 1280</span>                    <span class="keywordflow">if</span> (!(builtinType ? *builtinType : builtinType.emplace()).try_apply(*keyword))</div>
+<div class="line"><a id="l01281" name="l01281"></a><span class="lineno"> 1281</span>                    {</div>
+<div class="line"><a id="l01282" name="l01282"></a><span class="lineno"> 1282</span>                        <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01283" name="l01283"></a><span class="lineno"> 1283</span>                    }</div>
+<div class="line"><a id="l01284" name="l01284"></a><span class="lineno"> 1284</span> </div>
+<div class="line"><a id="l01285" name="l01285"></a><span class="lineno"> 1285</span>                    stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a1a0123fb7ec3f4a090b72ebbc197a14d">consume</a>();</div>
+<div class="line"><a id="l01286" name="l01286"></a><span class="lineno"> 1286</span>                    transaction.<a class="code hl_function" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#aa0a2b1a8d9250daf04569b3eebea9182">commit</a>();</div>
+<div class="line"><a id="l01287" name="l01287"></a><span class="lineno"> 1287</span>                    <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l01288" name="l01288"></a><span class="lineno"> 1288</span>                }</div>
+<div class="line"><a id="l01289" name="l01289"></a><span class="lineno"> 1289</span>            }</div>
+<div class="line"><a id="l01290" name="l01290"></a><span class="lineno"> 1290</span> </div>
+<div class="line"><a id="l01291" name="l01291"></a><span class="lineno"> 1291</span>            <span class="keywordflow">if</span> (!qualifiedType &amp;&amp; !builtinType)</div>
+<div class="line"><a id="l01292" name="l01292"></a><span class="lineno"> 1292</span>            {</div>
+<div class="line"><a id="l01293" name="l01293"></a><span class="lineno"> 1293</span>                <span class="comment">// msvc often prefixes types with e.g. `class`.</span></div>
+<div class="line"><a id="l01294" name="l01294"></a><span class="lineno"> 1294</span>                typeKey = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ab398335432673b231542d4b40e3f640c">parse_type_key</a>(stream);</div>
+<div class="line"><a id="l01295" name="l01295"></a><span class="lineno"> 1295</span>                <span class="keywordflow">if</span> (std::optional qualifiedId = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ab6afd31ef794455d99bb2c0e5dfe1071">parse_qualified_id</a>(stream))</div>
+<div class="line"><a id="l01296" name="l01296"></a><span class="lineno"> 1296</span>                {</div>
+<div class="line"><a id="l01297" name="l01297"></a><span class="lineno"> 1297</span>                    qualifiedType = std::move(qualifiedId);</div>
+<div class="line"><a id="l01298" name="l01298"></a><span class="lineno"> 1298</span>                    transaction.<a class="code hl_function" href="../../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#aa0a2b1a8d9250daf04569b3eebea9182">commit</a>();</div>
+<div class="line"><a id="l01299" name="l01299"></a><span class="lineno"> 1299</span>                    <span class="keywordflow">continue</span>;</div>
+<div class="line"><a id="l01300" name="l01300"></a><span class="lineno"> 1300</span>                }</div>
+<div class="line"><a id="l01301" name="l01301"></a><span class="lineno"> 1301</span>            }</div>
+<div class="line"><a id="l01302" name="l01302"></a><span class="lineno"> 1302</span> </div>
+<div class="line"><a id="l01303" name="l01303"></a><span class="lineno"> 1303</span>            <span class="keywordflow">break</span>;</div>
+<div class="line"><a id="l01304" name="l01304"></a><span class="lineno"> 1304</span>        }</div>
+<div class="line"><a id="l01305" name="l01305"></a><span class="lineno"> 1305</span> </div>
+<div class="line"><a id="l01306" name="l01306"></a><span class="lineno"> 1306</span>        <span class="keywordflow">if</span> (qualifiedType</div>
+<div class="line"><a id="l01307" name="l01307"></a><span class="lineno"> 1307</span>            &amp;&amp; !builtinType)</div>
 <div class="line"><a id="l01308" name="l01308"></a><span class="lineno"> 1308</span>        {</div>
-<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span>            <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span>        }</div>
-<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span> </div>
-<div class="line"><a id="l01312" name="l01312"></a><span class="lineno"> 1312</span>        *<span class="keywordtype">id</span> = *std::move(base);</div>
+<div class="line"><a id="l01309" name="l01309"></a><span class="lineno"> 1309</span>            qualifiedType-&gt;typeKey = std::move(typeKey);</div>
+<div class="line"><a id="l01310" name="l01310"></a><span class="lineno"> 1310</span>            typeId-&gt;base = *std::move(qualifiedType);</div>
+<div class="line"><a id="l01311" name="l01311"></a><span class="lineno"> 1311</span>            <span class="keywordflow">return</span> std::move(typeId).take();</div>
+<div class="line"><a id="l01312" name="l01312"></a><span class="lineno"> 1312</span>        }</div>
 <div class="line"><a id="l01313" name="l01313"></a><span class="lineno"> 1313</span> </div>
-<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>        <span class="keywordflow">if</span> (std::optional declarator = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999">parse_abstract_declarator</a>(stream))</div>
-<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"> 1315</span>        {</div>
-<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>            <span class="keywordtype">id</span>-&gt;declarator = *std::move(declarator);</div>
-<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>        }</div>
-<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span> </div>
-<div class="line"><a id="l01319" name="l01319"></a><span class="lineno"> 1319</span>        <span class="keywordflow">return</span> std::move(<span class="keywordtype">id</span>).take();</div>
-<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span>    }</div>
-</div>
+<div class="line"><a id="l01314" name="l01314"></a><span class="lineno"> 1314</span>        <span class="keywordflow">if</span> (builtinType</div>
+<div class="line"><a id="l01315" name="l01315"></a><span class="lineno"> 1315</span>            &amp;&amp; !qualifiedType</div>
+<div class="line"><a id="l01316" name="l01316"></a><span class="lineno"> 1316</span>            &amp;&amp; !typeKey)</div>
+<div class="line"><a id="l01317" name="l01317"></a><span class="lineno"> 1317</span>        {</div>
+<div class="line"><a id="l01318" name="l01318"></a><span class="lineno"> 1318</span>            typeId-&gt;base = *std::move(builtinType);</div>
+<div class="line"><a id="l01319" name="l01319"></a><span class="lineno"> 1319</span>            <span class="keywordflow">return</span> std::move(typeId).take();</div>
+<div class="line"><a id="l01320" name="l01320"></a><span class="lineno"> 1320</span>        }</div>
 <div class="line"><a id="l01321" name="l01321"></a><span class="lineno"> 1321</span> </div>
-<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>    [[nodiscard]]</div>
-<div class="foldopen" id="foldopen01323" data-start="{" data-end="}">
-<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a538ca6b18fa4d794965c133642fc93ac"> 1323</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::FunctionId&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a538ca6b18fa4d794965c133642fc93ac">parse_function</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
-<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"> 1324</span>    {</div>
-<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::FunctionId&gt;</a> <span class="keywordtype">id</span>{stream};</div>
-<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"> 1326</span>        <span class="keywordflow">if</span> (std::optional returnType = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653">parse_type_id</a>(stream))</div>
-<div class="line"><a id="l01327" name="l01327"></a><span class="lineno"> 1327</span>        {</div>
-<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span>            <span class="keywordtype">id</span>-&gt;callConvention = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#abdbcb04bedf2b1396b93d5081b3b01de">parse_call_convention</a>(stream);</div>
-<div class="line"><a id="l01329" name="l01329"></a><span class="lineno"> 1329</span> </div>
-<div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span>            <span class="keywordflow">if</span> (std::optional identifier = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ab6afd31ef794455d99bb2c0e5dfe1071">parse_qualified_id</a>(stream))</div>
-<div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span>            {</div>
-<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>                <span class="keywordflow">if</span> (std::optional declarator = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c">parse_parameters_and_qualifiers</a>(stream))</div>
-<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span>                {</div>
-<div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>                    <span class="keywordtype">id</span>-&gt;returnType = std::move(returnType);</div>
-<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span>                    <span class="keywordtype">id</span>-&gt;identifier = *std::move(identifier);</div>
-<div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span>                    <span class="keywordtype">id</span>-&gt;identifier.identifier.functionDeclarator = *std::move(declarator);</div>
+<div class="line"><a id="l01322" name="l01322"></a><span class="lineno"> 1322</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01323" name="l01323"></a><span class="lineno"> 1323</span>    }</div>
+</div>
+<div class="line"><a id="l01324" name="l01324"></a><span class="lineno"> 1324</span> </div>
+<div class="line"><a id="l01325" name="l01325"></a><span class="lineno"> 1325</span>    <span class="comment">// see: https://eel.is/c++draft/dcl.name#nt:type-id</span></div>
+<div class="line"><a id="l01326" name="l01326"></a><span class="lineno"> 1326</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen01327" data-start="{" data-end="}">
+<div class="line"><a id="l01327" name="l01327"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653"> 1327</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::TypeId&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653">parse_type_id</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
+<div class="line"><a id="l01328" name="l01328"></a><span class="lineno"> 1328</span>    {</div>
+<div class="line"><a id="l01329" name="l01329"></a><span class="lineno"> 1329</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::TypeId&gt;</a> <span class="keywordtype">id</span>{stream};</div>
+<div class="line"><a id="l01330" name="l01330"></a><span class="lineno"> 1330</span>        std::optional base = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac1b1cbd0459901a5fb30983353b39b75">parse_type_specifier_seq</a>(stream);</div>
+<div class="line"><a id="l01331" name="l01331"></a><span class="lineno"> 1331</span>        <span class="keywordflow">if</span> (!base)</div>
+<div class="line"><a id="l01332" name="l01332"></a><span class="lineno"> 1332</span>        {</div>
+<div class="line"><a id="l01333" name="l01333"></a><span class="lineno"> 1333</span>            <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01334" name="l01334"></a><span class="lineno"> 1334</span>        }</div>
+<div class="line"><a id="l01335" name="l01335"></a><span class="lineno"> 1335</span> </div>
+<div class="line"><a id="l01336" name="l01336"></a><span class="lineno"> 1336</span>        *<span class="keywordtype">id</span> = *std::move(base);</div>
 <div class="line"><a id="l01337" name="l01337"></a><span class="lineno"> 1337</span> </div>
-<div class="line"><a id="l01338" name="l01338"></a><span class="lineno"> 1338</span>                    <span class="keywordflow">return</span> std::move(<span class="keywordtype">id</span>).take();</div>
-<div class="line"><a id="l01339" name="l01339"></a><span class="lineno"> 1339</span>                }</div>
-<div class="line"><a id="l01340" name="l01340"></a><span class="lineno"> 1340</span>            }</div>
-<div class="line"><a id="l01341" name="l01341"></a><span class="lineno"> 1341</span>            <span class="comment">// Well, sometimes there is no return-type given, but the parsed identifier actually is the function-id.</span></div>
-<div class="line"><a id="l01342" name="l01342"></a><span class="lineno"> 1342</span>            <span class="comment">// E.g., `&lt;lambda()&gt;`</span></div>
-<div class="line"><a id="l01343" name="l01343"></a><span class="lineno"> 1343</span>            <span class="comment">// This is a workaround!</span></div>
-<div class="line"><a id="l01344" name="l01344"></a><span class="lineno"> 1344</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="keyword">auto</span>* <span class="keyword">const</span> qualifiedId = std::get_if&lt;state::QualifiedId&gt;(&amp;returnType-&gt;base))</div>
-<div class="line"><a id="l01345" name="l01345"></a><span class="lineno"> 1345</span>            {</div>
-<div class="line"><a id="l01346" name="l01346"></a><span class="lineno"> 1346</span>                <span class="keywordtype">id</span>-&gt;identifier = std::move(*qualifiedId);</div>
-<div class="line"><a id="l01347" name="l01347"></a><span class="lineno"> 1347</span>                <span class="keywordtype">id</span>-&gt;identifier.identifier.functionDeclarator = std::move(returnType-&gt;declarator.root.function);</div>
-<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span> </div>
-<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"> 1349</span>                <span class="keywordflow">return</span> std::move(<span class="keywordtype">id</span>).take();</div>
-<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>            }</div>
-<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span>        }</div>
-<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span> </div>
-<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>    }</div>
+<div class="line"><a id="l01338" name="l01338"></a><span class="lineno"> 1338</span>        <span class="keywordflow">if</span> (std::optional declarator = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999">parse_abstract_declarator</a>(stream))</div>
+<div class="line"><a id="l01339" name="l01339"></a><span class="lineno"> 1339</span>        {</div>
+<div class="line"><a id="l01340" name="l01340"></a><span class="lineno"> 1340</span>            <span class="keywordtype">id</span>-&gt;declarator = *std::move(declarator);</div>
+<div class="line"><a id="l01341" name="l01341"></a><span class="lineno"> 1341</span>        }</div>
+<div class="line"><a id="l01342" name="l01342"></a><span class="lineno"> 1342</span> </div>
+<div class="line"><a id="l01343" name="l01343"></a><span class="lineno"> 1343</span>        <span class="keywordflow">return</span> std::move(<span class="keywordtype">id</span>).take();</div>
+<div class="line"><a id="l01344" name="l01344"></a><span class="lineno"> 1344</span>    }</div>
 </div>
-<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span>}</div>
-</div>
-<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span> </div>
-<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html">mimicpp::printing::type</a></div>
-<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span>{</div>
-<div class="foldopen" id="foldopen01359" data-start="{" data-end="}">
-<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"><a class="line" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a97aae9e35316df7a7590ccadee52a403"> 1359</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;parsing::state::TypeId&gt; <a class="code hl_function" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a97aae9e35316df7a7590ccadee52a403">parse_type</a>(std::string_view <span class="keyword">const</span> text)</div>
-<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>    {</div>
-<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span>        <a class="code hl_class" href="../../de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html">lexing::NameLexer</a> lexer{text};</div>
-<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>        <a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">parsing::TokenStream</a> stream{lexer};</div>
-<div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span>        <span class="keywordflow">if</span> (std::optional typeId = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653">parsing::parse_type_id</a>(stream);</div>
-<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span>            typeId</div>
-<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span>            &amp;&amp; stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a04b46c2a02ed0e3cb17988d91737ab3b">is_eof</a>())</div>
-<div class="line"><a id="l01366" name="l01366"></a><span class="lineno"> 1366</span>        {</div>
-<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>            <span class="keywordflow">return</span> typeId;</div>
-<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"> 1368</span>        }</div>
-<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span> </div>
-<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>    }</div>
-</div>
+<div class="line"><a id="l01345" name="l01345"></a><span class="lineno"> 1345</span> </div>
+<div class="line"><a id="l01346" name="l01346"></a><span class="lineno"> 1346</span>    [[nodiscard]]</div>
+<div class="foldopen" id="foldopen01347" data-start="{" data-end="}">
+<div class="line"><a id="l01347" name="l01347"></a><span class="lineno"><a class="line" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a538ca6b18fa4d794965c133642fc93ac"> 1347</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;state::FunctionId&gt; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a538ca6b18fa4d794965c133642fc93ac">parse_function</a>(<a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">TokenStream</a>&amp; stream)</div>
+<div class="line"><a id="l01348" name="l01348"></a><span class="lineno"> 1348</span>    {</div>
+<div class="line"><a id="l01349" name="l01349"></a><span class="lineno"> 1349</span>        <a class="code hl_class" href="../../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html">StateGuard&lt;state::FunctionId&gt;</a> <span class="keywordtype">id</span>{stream};</div>
+<div class="line"><a id="l01350" name="l01350"></a><span class="lineno"> 1350</span>        <span class="keywordflow">if</span> (std::optional returnType = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653">parse_type_id</a>(stream))</div>
+<div class="line"><a id="l01351" name="l01351"></a><span class="lineno"> 1351</span>        {</div>
+<div class="line"><a id="l01352" name="l01352"></a><span class="lineno"> 1352</span>            <span class="keywordtype">id</span>-&gt;callConvention = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#abdbcb04bedf2b1396b93d5081b3b01de">parse_call_convention</a>(stream);</div>
+<div class="line"><a id="l01353" name="l01353"></a><span class="lineno"> 1353</span> </div>
+<div class="line"><a id="l01354" name="l01354"></a><span class="lineno"> 1354</span>            <span class="keywordflow">if</span> (std::optional identifier = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ab6afd31ef794455d99bb2c0e5dfe1071">parse_qualified_id</a>(stream))</div>
+<div class="line"><a id="l01355" name="l01355"></a><span class="lineno"> 1355</span>            {</div>
+<div class="line"><a id="l01356" name="l01356"></a><span class="lineno"> 1356</span>                <span class="keywordflow">if</span> (std::optional declarator = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c">parse_parameters_and_qualifiers</a>(stream))</div>
+<div class="line"><a id="l01357" name="l01357"></a><span class="lineno"> 1357</span>                {</div>
+<div class="line"><a id="l01358" name="l01358"></a><span class="lineno"> 1358</span>                    <span class="keywordtype">id</span>-&gt;returnType = std::move(returnType);</div>
+<div class="line"><a id="l01359" name="l01359"></a><span class="lineno"> 1359</span>                    <span class="keywordtype">id</span>-&gt;identifier = *std::move(identifier);</div>
+<div class="line"><a id="l01360" name="l01360"></a><span class="lineno"> 1360</span>                    <span class="keywordtype">id</span>-&gt;identifier.identifier.functionDeclarator = *std::move(declarator);</div>
+<div class="line"><a id="l01361" name="l01361"></a><span class="lineno"> 1361</span> </div>
+<div class="line"><a id="l01362" name="l01362"></a><span class="lineno"> 1362</span>                    <span class="keywordflow">return</span> std::move(<span class="keywordtype">id</span>).take();</div>
+<div class="line"><a id="l01363" name="l01363"></a><span class="lineno"> 1363</span>                }</div>
+<div class="line"><a id="l01364" name="l01364"></a><span class="lineno"> 1364</span>            }</div>
+<div class="line"><a id="l01365" name="l01365"></a><span class="lineno"> 1365</span>            <span class="comment">// Well, sometimes there is no return-type given, but the parsed identifier actually is the function-id.</span></div>
+<div class="line"><a id="l01366" name="l01366"></a><span class="lineno"> 1366</span>            <span class="comment">// E.g., `&lt;lambda()&gt;`</span></div>
+<div class="line"><a id="l01367" name="l01367"></a><span class="lineno"> 1367</span>            <span class="comment">// This is a workaround!</span></div>
+<div class="line"><a id="l01368" name="l01368"></a><span class="lineno"> 1368</span>            <span class="keywordflow">else</span> <span class="keywordflow">if</span> (<span class="keyword">auto</span>* <span class="keyword">const</span> qualifiedId = std::get_if&lt;state::QualifiedId&gt;(&amp;returnType-&gt;base))</div>
+<div class="line"><a id="l01369" name="l01369"></a><span class="lineno"> 1369</span>            {</div>
+<div class="line"><a id="l01370" name="l01370"></a><span class="lineno"> 1370</span>                <span class="keywordtype">id</span>-&gt;identifier = std::move(*qualifiedId);</div>
+<div class="line"><a id="l01371" name="l01371"></a><span class="lineno"> 1371</span>                <span class="keywordtype">id</span>-&gt;identifier.identifier.functionDeclarator = std::move(returnType-&gt;declarator.root.function);</div>
 <div class="line"><a id="l01372" name="l01372"></a><span class="lineno"> 1372</span> </div>
-<div class="foldopen" id="foldopen01373" data-start="{" data-end="}">
-<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"><a class="line" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a32fdeb737d1e94e0bc0e7c7e0d418711"> 1373</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;parsing::state::FunctionId&gt; <a class="code hl_function" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a32fdeb737d1e94e0bc0e7c7e0d418711">parse_function</a>(std::string_view <span class="keyword">const</span> text)</div>
-<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>    {</div>
-<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>        <a class="code hl_class" href="../../de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html">lexing::NameLexer</a> lexer{text};</div>
-<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span>        <a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">parsing::TokenStream</a> stream{lexer};</div>
-<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>        <span class="keywordflow">if</span> (std::optional functionId = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a538ca6b18fa4d794965c133642fc93ac">parsing::parse_function</a>(stream))</div>
-<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>        {</div>
-<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>            <span class="keywordflow">if</span> (stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a04b46c2a02ed0e3cb17988d91737ab3b">is_eof</a>()</div>
-<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span>                <span class="comment">// Sometimes certain template details are added in separate square-brackets</span></div>
-<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span>                || (text.ends_with(<span class="charliteral">&#39;]&#39;</span>)</div>
-<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>                    &amp;&amp; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">parsing::expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;[&quot;</span>})))</div>
-<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"> 1383</span>            {</div>
-<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>                <span class="keywordflow">return</span> functionId;</div>
-<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>            }</div>
-<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>        }</div>
-<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span> </div>
-<div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span>        <span class="keywordflow">return</span> std::nullopt;</div>
-<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span>    }</div>
+<div class="line"><a id="l01373" name="l01373"></a><span class="lineno"> 1373</span>                <span class="keywordflow">return</span> std::move(<span class="keywordtype">id</span>).take();</div>
+<div class="line"><a id="l01374" name="l01374"></a><span class="lineno"> 1374</span>            }</div>
+<div class="line"><a id="l01375" name="l01375"></a><span class="lineno"> 1375</span>        }</div>
+<div class="line"><a id="l01376" name="l01376"></a><span class="lineno"> 1376</span> </div>
+<div class="line"><a id="l01377" name="l01377"></a><span class="lineno"> 1377</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01378" name="l01378"></a><span class="lineno"> 1378</span>    }</div>
 </div>
-<div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span>}</div>
-<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span> </div>
-<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l01379" name="l01379"></a><span class="lineno"> 1379</span>}</div>
+</div>
+<div class="line"><a id="l01380" name="l01380"></a><span class="lineno"> 1380</span> </div>
+<div class="line"><a id="l01381" name="l01381"></a><span class="lineno"> 1381</span><span class="keyword">namespace </span><a class="code hl_namespace" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html">mimicpp::printing::type</a></div>
+<div class="line"><a id="l01382" name="l01382"></a><span class="lineno"> 1382</span>{</div>
+<div class="foldopen" id="foldopen01383" data-start="{" data-end="}">
+<div class="line"><a id="l01383" name="l01383"></a><span class="lineno"><a class="line" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a97aae9e35316df7a7590ccadee52a403"> 1383</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;parsing::state::TypeId&gt; <a class="code hl_function" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a97aae9e35316df7a7590ccadee52a403">parse_type</a>(std::string_view <span class="keyword">const</span> text)</div>
+<div class="line"><a id="l01384" name="l01384"></a><span class="lineno"> 1384</span>    {</div>
+<div class="line"><a id="l01385" name="l01385"></a><span class="lineno"> 1385</span>        <a class="code hl_class" href="../../de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html">lexing::NameLexer</a> lexer{text};</div>
+<div class="line"><a id="l01386" name="l01386"></a><span class="lineno"> 1386</span>        <a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">parsing::TokenStream</a> stream{lexer};</div>
+<div class="line"><a id="l01387" name="l01387"></a><span class="lineno"> 1387</span>        <span class="keywordflow">if</span> (std::optional typeId = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653">parsing::parse_type_id</a>(stream);</div>
+<div class="line"><a id="l01388" name="l01388"></a><span class="lineno"> 1388</span>            typeId</div>
+<div class="line"><a id="l01389" name="l01389"></a><span class="lineno"> 1389</span>            &amp;&amp; stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a04b46c2a02ed0e3cb17988d91737ab3b">is_eof</a>())</div>
+<div class="line"><a id="l01390" name="l01390"></a><span class="lineno"> 1390</span>        {</div>
+<div class="line"><a id="l01391" name="l01391"></a><span class="lineno"> 1391</span>            <span class="keywordflow">return</span> typeId;</div>
+<div class="line"><a id="l01392" name="l01392"></a><span class="lineno"> 1392</span>        }</div>
+<div class="line"><a id="l01393" name="l01393"></a><span class="lineno"> 1393</span> </div>
+<div class="line"><a id="l01394" name="l01394"></a><span class="lineno"> 1394</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01395" name="l01395"></a><span class="lineno"> 1395</span>    }</div>
+</div>
+<div class="line"><a id="l01396" name="l01396"></a><span class="lineno"> 1396</span> </div>
+<div class="foldopen" id="foldopen01397" data-start="{" data-end="}">
+<div class="line"><a id="l01397" name="l01397"></a><span class="lineno"><a class="line" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a32fdeb737d1e94e0bc0e7c7e0d418711"> 1397</a></span>    <a class="code hl_define" href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a> std::optional&lt;parsing::state::FunctionId&gt; <a class="code hl_function" href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a32fdeb737d1e94e0bc0e7c7e0d418711">parse_function</a>(std::string_view <span class="keyword">const</span> text)</div>
+<div class="line"><a id="l01398" name="l01398"></a><span class="lineno"> 1398</span>    {</div>
+<div class="line"><a id="l01399" name="l01399"></a><span class="lineno"> 1399</span>        <a class="code hl_class" href="../../de/de6/classmimicpp_1_1printing_1_1type_1_1lexing_1_1_name_lexer.html">lexing::NameLexer</a> lexer{text};</div>
+<div class="line"><a id="l01400" name="l01400"></a><span class="lineno"> 1400</span>        <a class="code hl_class" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html">parsing::TokenStream</a> stream{lexer};</div>
+<div class="line"><a id="l01401" name="l01401"></a><span class="lineno"> 1401</span>        <span class="keywordflow">if</span> (std::optional functionId = <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a538ca6b18fa4d794965c133642fc93ac">parsing::parse_function</a>(stream))</div>
+<div class="line"><a id="l01402" name="l01402"></a><span class="lineno"> 1402</span>        {</div>
+<div class="line"><a id="l01403" name="l01403"></a><span class="lineno"> 1403</span>            <span class="keywordflow">if</span> (stream.<a class="code hl_function" href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a04b46c2a02ed0e3cb17988d91737ab3b">is_eof</a>()</div>
+<div class="line"><a id="l01404" name="l01404"></a><span class="lineno"> 1404</span>                <span class="comment">// Sometimes certain template details are added in separate square-brackets</span></div>
+<div class="line"><a id="l01405" name="l01405"></a><span class="lineno"> 1405</span>                || (text.ends_with(<span class="charliteral">&#39;]&#39;</span>)</div>
+<div class="line"><a id="l01406" name="l01406"></a><span class="lineno"> 1406</span>                    &amp;&amp; <a class="code hl_function" href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aeb627e2ef26531543f1e217395c22439">parsing::expect</a>(stream, <a class="code hl_struct" href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">lexing::operator_or_punctuator</a>{<span class="stringliteral">&quot;[&quot;</span>})))</div>
+<div class="line"><a id="l01407" name="l01407"></a><span class="lineno"> 1407</span>            {</div>
+<div class="line"><a id="l01408" name="l01408"></a><span class="lineno"> 1408</span>                <span class="keywordflow">return</span> functionId;</div>
+<div class="line"><a id="l01409" name="l01409"></a><span class="lineno"> 1409</span>            }</div>
+<div class="line"><a id="l01410" name="l01410"></a><span class="lineno"> 1410</span>        }</div>
+<div class="line"><a id="l01411" name="l01411"></a><span class="lineno"> 1411</span> </div>
+<div class="line"><a id="l01412" name="l01412"></a><span class="lineno"> 1412</span>        <span class="keywordflow">return</span> std::nullopt;</div>
+<div class="line"><a id="l01413" name="l01413"></a><span class="lineno"> 1413</span>    }</div>
+</div>
+<div class="line"><a id="l01414" name="l01414"></a><span class="lineno"> 1414</span>}</div>
+<div class="line"><a id="l01415" name="l01415"></a><span class="lineno"> 1415</span> </div>
+<div class="line"><a id="l01416" name="l01416"></a><span class="lineno"> 1416</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="a_algorithm_8hpp_html"><div class="ttname"><a href="../../dc/d83/_algorithm_8hpp.html">Algorithm.hpp</a></div></div>
 <div class="ttc" id="a_config_8hpp_html"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html">Config.hpp</a></div></div>
-<div class="ttc" id="a_config_8hpp_html_a8ac32e6256341038cc744e063a054711"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a></div><div class="ttdeci">#define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</div><div class="ttdef"><b>Definition</b> Config.hpp:80</div></div>
+<div class="ttc" id="a_config_8hpp_html_a8ac32e6256341038cc744e063a054711"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a8ac32e6256341038cc744e063a054711">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</a></div><div class="ttdeci">#define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES</div><div class="ttdef"><b>Definition</b> Config.hpp:81</div></div>
 <div class="ttc" id="a_config_8hpp_html_a97ed0cb4a7de0573de2b684047cadc9f"><div class="ttname"><a href="../../d8/dd2/_config_8hpp.html#a97ed0cb4a7de0573de2b684047cadc9f">MIMICPP_ASSERT</a></div><div class="ttdeci">#define MIMICPP_ASSERT(condition, msg)</div><div class="ttdef"><b>Definition</b> Config.hpp:51</div></div>
 <div class="ttc" id="a_lexer_8hpp_html"><div class="ttname"><a href="../../d5/d24/_lexer_8hpp.html">Lexer.hpp</a></div></div>
 <div class="ttc" id="a_parser_state_8hpp_html"><div class="ttname"><a href="../../d6/dcc/_parser_state_8hpp.html">ParserState.hpp</a></div></div>
@@ -1674,14 +1700,15 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('db/d2d/_parser
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a0f9cdb8ddc2ab362d3ddcd36274a38ef"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a0f9cdb8ddc2ab362d3ddcd36274a38ef">mimicpp::printing::type::parsing::make_map</a></div><div class="ttdeci">constexpr auto make_map(std::pair&lt; Key, Value &gt; const (&amp;mappings)[length])</div><div class="ttdef"><b>Definition</b> Parser.hpp:171</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a11bdcd14419974cf912034e77bffdb90"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a11bdcd14419974cf912034e77bffdb90">mimicpp::printing::type::parsing::parse_constant_expression</a></div><div class="ttdeci">constexpr std::optional&lt; state::ConstantExpression &gt; parse_constant_expression(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:325</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a23ea167fac20f23ad5b6f9c73e1ef454"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a23ea167fac20f23ad5b6f9c73e1ef454">mimicpp::printing::type::parsing::parse_lambda_function_id</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::LambdaFunctionId &gt; parse_lambda_function_id(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:713</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a417702be21bae2468ac5a3240d0d764f"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a417702be21bae2468ac5a3240d0d764f">mimicpp::printing::type::parsing::ignore_function_attribute</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES void ignore_function_attribute(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1116</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a50f29e69158edb0d06f57a7574a50866"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a50f29e69158edb0d06f57a7574a50866">mimicpp::printing::type::parsing::parse_destructor_function_id</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::DestructorFunctionId &gt; parse_destructor_function_id(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:766</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a538ca6b18fa4d794965c133642fc93ac"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a538ca6b18fa4d794965c133642fc93ac">mimicpp::printing::type::parsing::parse_function</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::FunctionId &gt; parse_function(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1323</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a567b4022ea8718c5733fb1cc4b992999"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999">mimicpp::printing::type::parsing::parse_abstract_declarator</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::AbstractDeclarator &gt; parse_abstract_declarator(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1157</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a538ca6b18fa4d794965c133642fc93ac"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a538ca6b18fa4d794965c133642fc93ac">mimicpp::printing::type::parsing::parse_function</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::FunctionId &gt; parse_function(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1347</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a567b4022ea8718c5733fb1cc4b992999"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a567b4022ea8718c5733fb1cc4b992999">mimicpp::printing::type::parsing::parse_abstract_declarator</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::AbstractDeclarator &gt; parse_abstract_declarator(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1181</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a58e66d5ac7250ef31031c5e8adbd87f5"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a58e66d5ac7250ef31031c5e8adbd87f5">mimicpp::printing::type::parsing::parse_template_argument_list</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::TemplateArgumentList &gt; parse_template_argument_list(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:465</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a5a32c8b62ba01ab8cdb4a4117c986653"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653">mimicpp::printing::type::parsing::parse_type_id</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::TypeId &gt; parse_type_id(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1303</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a5a32c8b62ba01ab8cdb4a4117c986653"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a5a32c8b62ba01ab8cdb4a4117c986653">mimicpp::printing::type::parsing::parse_type_id</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::TypeId &gt; parse_type_id(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1327</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a64b5e61b2251d5ca5759c76e2e778b95"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a64b5e61b2251d5ca5759c76e2e778b95">mimicpp::printing::type::parsing::parse_conversion_function_id</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::ConversionFunctionId &gt; parse_conversion_function_id(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:687</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a6d7e3f0d7d549e46e489d2f6e0ad5ec5"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d7e3f0d7d549e46e489d2f6e0ad5ec5">mimicpp::printing::type::parsing::parse_nested_id</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::UnqualifiedId &gt; parse_nested_id(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:853</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a6d8c863947ea01dd50653712c39c8b4c"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c">mimicpp::printing::type::parsing::parse_parameters_and_qualifiers</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::FunctionDeclarator &gt; parse_parameters_and_qualifiers(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1119</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a6d8c863947ea01dd50653712c39c8b4c"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a6d8c863947ea01dd50653712c39c8b4c">mimicpp::printing::type::parsing::parse_parameters_and_qualifiers</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::FunctionDeclarator &gt; parse_parameters_and_qualifiers(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1141</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a781b28b269e99f057e0a1bc4f3d4dde7"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a781b28b269e99f057e0a1bc4f3d4dde7">mimicpp::printing::type::parsing::parse_enum_key</a></div><div class="ttdeci">constexpr std::optional&lt; state::EnumKey &gt; parse_enum_key(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:261</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a7ec70afd244c5829e9e9042503cc4c30"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a7ec70afd244c5829e9e9042503cc4c30">mimicpp::printing::type::parsing::parse_cv_qualifier_seq</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::CVQualifierSeq &gt; parse_cv_qualifier_seq(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:544</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_a908740edf9bfcfc086be7d771e4abe3a"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#a908740edf9bfcfc086be7d771e4abe3a">mimicpp::printing::type::parsing::parse_template_argument</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::TemplateArgument &gt; parse_template_argument(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:447</div></div>
@@ -1692,7 +1719,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('db/d2d/_parser
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_aba39b519bd1d177a2ba27f077cc05700"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#aba39b519bd1d177a2ba27f077cc05700">mimicpp::printing::type::parsing::parse_ptr_operator</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::PtrOperator &gt; parse_ptr_operator(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1035</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_abdbcb04bedf2b1396b93d5081b3b01de"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#abdbcb04bedf2b1396b93d5081b3b01de">mimicpp::printing::type::parsing::parse_call_convention</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::CallConvention &gt; parse_call_convention(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1017</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_ac16ef508e8a2a412ee321a944cd37b31"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac16ef508e8a2a412ee321a944cd37b31">mimicpp::printing::type::parsing::parse_ref_qualifier</a></div><div class="ttdeci">constexpr std::optional&lt; state::RefQualifier &gt; parse_ref_qualifier(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:299</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_ac1b1cbd0459901a5fb30983353b39b75"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac1b1cbd0459901a5fb30983353b39b75">mimicpp::printing::type::parsing::parse_type_specifier_seq</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::TypeId &gt; parse_type_specifier_seq(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1219</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_ac1b1cbd0459901a5fb30983353b39b75"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ac1b1cbd0459901a5fb30983353b39b75">mimicpp::printing::type::parsing::parse_type_specifier_seq</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::TypeId &gt; parse_type_specifier_seq(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1243</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_acf2839bb1381a62fed1b7dbbf3485265"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#acf2839bb1381a62fed1b7dbbf3485265">mimicpp::printing::type::parsing::parse_identifier</a></div><div class="ttdeci">constexpr std::optional&lt; state::Identifier &gt; parse_identifier(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:433</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_ad36958cef8535e9a50cb8c43c4bdbac2"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ad36958cef8535e9a50cb8c43c4bdbac2">mimicpp::printing::type::parsing::parse_cv_qualifier</a></div><div class="ttdeci">constexpr std::optional&lt; state::CVQualifier &gt; parse_cv_qualifier(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:522</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_ad4c6863e7c3a9e64f420fd1f2e509c0d"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#ad4c6863e7c3a9e64f420fd1f2e509c0d">mimicpp::printing::type::parsing::parse_synthetic_id</a></div><div class="ttdeci">constexpr std::optional&lt; state::Identifier &gt; parse_synthetic_id(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:397</div></div>
@@ -1703,11 +1730,12 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('db/d2d/_parser
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_af4a0cb34323c99cc2025a110c98bc48f"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#af4a0cb34323c99cc2025a110c98bc48f">mimicpp::printing::type::parsing::peek_if</a></div><div class="ttdeci">constexpr LexerTokenClass const * peek_if(TokenStream const &amp;stream) noexcept</div><div class="ttdef"><b>Definition</b> Parser.hpp:203</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_1_1parsing_html_af4fa2a1381a13dad99944a919d002bb3"><div class="ttname"><a href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#af4fa2a1381a13dad99944a919d002bb3">mimicpp::printing::type::parsing::parse_template_clause</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; state::TemplateArgumentList &gt; parse_template_clause(TokenStream &amp;stream)</div><div class="ttdef"><b>Definition</b> Parser.hpp:498</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_html"><div class="ttname"><a href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html">mimicpp::printing::type</a></div><div class="ttdef"><b>Definition</b> Fwd.hpp:54</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_html_a32fdeb737d1e94e0bc0e7c7e0d418711"><div class="ttname"><a href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a32fdeb737d1e94e0bc0e7c7e0d418711">mimicpp::printing::type::parse_function</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; parsing::state::FunctionId &gt; parse_function(std::string_view const text)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1373</div></div>
-<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_html_a97aae9e35316df7a7590ccadee52a403"><div class="ttname"><a href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a97aae9e35316df7a7590ccadee52a403">mimicpp::printing::type::parse_type</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; parsing::state::TypeId &gt; parse_type(std::string_view const text)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1359</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_html_a32fdeb737d1e94e0bc0e7c7e0d418711"><div class="ttname"><a href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a32fdeb737d1e94e0bc0e7c7e0d418711">mimicpp::printing::type::parse_function</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; parsing::state::FunctionId &gt; parse_function(std::string_view const text)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1397</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1printing_1_1type_html_a97aae9e35316df7a7590ccadee52a403"><div class="ttname"><a href="../../d9/d41/namespacemimicpp_1_1printing_1_1type.html#a97aae9e35316df7a7590ccadee52a403">mimicpp::printing::type::parse_type</a></div><div class="ttdeci">MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES std::optional&lt; parsing::state::TypeId &gt; parse_type(std::string_view const text)</div><div class="ttdef"><b>Definition</b> Parser.hpp:1383</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1util_html_a226566adae6e502d71ebf49c3a47e165"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#a226566adae6e502d71ebf49c3a47e165">mimicpp::util::concat_arrays</a></div><div class="ttdeci">constexpr std::array&lt; T, firstN+secondN &gt; concat_arrays(std::array&lt; T, firstN &gt; const &amp;first, std::array&lt; T, secondN &gt; const &amp;second)</div><div class="ttdoc">Concatenates the given arrays by copying all elements into a new array.</div><div class="ttdef"><b>Definition</b> Algorithm.hpp:218</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1util_html_ac58fced4701bdff093838ed1807e8836"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#ac58fced4701bdff093838ed1807e8836">mimicpp::util::unreachable</a></div><div class="ttdeci">void unreachable()</div><div class="ttdoc">Invokes undefined behavior.</div><div class="ttdef"><b>Definition</b> C++23Backports.hpp:40</div></div>
 <div class="ttc" id="anamespacemimicpp_1_1util_html_ae6cea4e9b0f4576bf518112f12bd8e5d"><div class="ttname"><a href="../../d8/da3/namespacemimicpp_1_1util.html#ae6cea4e9b0f4576bf518112f12bd8e5d">mimicpp::util::binary_find</a></div><div class="ttdeci">constexpr detail::binary_find_fn binary_find</div><div class="ttdoc">Finds the specified value within the container and returns an iterator pointing to it....</div><div class="ttdef"><b>Definition</b> Algorithm.hpp:361</div></div>
+<div class="ttc" id="astructmimicpp_1_1printing_1_1type_1_1lexing_1_1identifier_html"><div class="ttname"><a href="../../de/dd6/structmimicpp_1_1printing_1_1type_1_1lexing_1_1identifier.html">mimicpp::printing::type::lexing::identifier</a></div><div class="ttdef"><b>Definition</b> Lexer.hpp:200</div></div>
 <div class="ttc" id="astructmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword_html"><div class="ttname"><a href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html">mimicpp::printing::type::lexing::keyword</a></div><div class="ttdef"><b>Definition</b> Lexer.hpp:120</div></div>
 <div class="ttc" id="astructmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword_html_a395a5e6ef2194a583f43ea1ffb80000b"><div class="ttname"><a href="../../d5/db4/structmimicpp_1_1printing_1_1type_1_1lexing_1_1keyword.html#a395a5e6ef2194a583f43ea1ffb80000b">mimicpp::printing::type::lexing::keyword::index</a></div><div class="ttdeci">constexpr std::ptrdiff_t index() const noexcept</div><div class="ttdef"><b>Definition</b> Lexer.hpp:147</div></div>
 <div class="ttc" id="astructmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator_html"><div class="ttname"><a href="../../d3/da0/structmimicpp_1_1printing_1_1type_1_1lexing_1_1operator__or__punctuator.html">mimicpp::printing::type::lexing::operator_or_punctuator</a></div><div class="ttdef"><b>Definition</b> Lexer.hpp:160</div></div>
