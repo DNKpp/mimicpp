@@ -622,7 +622,9 @@ namespace mimicpp::printing::type::parsing
         {
             if (std::ranges::binary_search(detail::simpleOpCandidates, op->index(), {}, &lexing::operator_or_punctuator::index))
             {
-                state::OperatorFunctionId id{.symbol = *op};
+                // This two-step construction resolves a bogus "maybe-uninitialized" warning on certain gcc versions.
+                state::OperatorFunctionId::Symbol symbol{*op};
+                state::OperatorFunctionId id{.symbol = std::move(symbol)};
                 stream.consume();
                 transaction.commit();
                 return id;
