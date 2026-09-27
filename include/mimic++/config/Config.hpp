@@ -80,15 +80,11 @@
     // clang-format on
 
     // std::optional is not fully constexpr on libc++ < 19.
-
-    // AppleClang's version is not in line with the underlying clang version,
-    // and the `_LIBCPP_VERSION` has a very different format.
-    #if MIMICPP_DETAIL_IS_APPLE_CLANG
-        #if 16 < __clang_major__
-            #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES constexpr
-        #endif
-    #elif !MIMICPP_DETAIL_USES_LIBCXX \
-        || 18 < _LIBCPP_VERSION
+    // clang-format off
+    // Prevent number from getting decorated with '.
+    #if !MIMICPP_DETAIL_USES_LIBCXX \
+        || 190000 <= _LIBCPP_VERSION
+        // clang-format on
         #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES constexpr
     #endif
 #endif
