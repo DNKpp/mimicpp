@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -216,16 +216,17 @@ namespace mimicpp::expectation
 
             [[nodiscard]]
             std::any finalize(call::info_for_signature_t<Signature> const& call)
+                requires std::is_void_v<Return>
             {
-                if constexpr (std::is_void_v<Return>)
-                {
-                    m_Finalizer.finalize_call(call);
-                    return std::make_any<call::ResultStorage<void>>();
-                }
-                else
-                {
-                    return std::make_any<call::ResultStorage<Return>>(m_Finalizer.finalize_call(call));
-                }
+                m_Finalizer.finalize_call(call);
+                return std::make_any<call::ResultStorage<void>>();
+            }
+
+            [[nodiscard]]
+            std::any finalize(call::info_for_signature_t<Signature> const& call)
+                requires(!std::is_void_v<Return>)
+            {
+                return std::make_any<call::ResultStorage<Return>>(m_Finalizer.finalize_call(call));
             }
         };
 
