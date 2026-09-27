@@ -86,7 +86,7 @@ namespace
 }
 
 TEST_CASE(
-    "mimicpp::PredicateMatcher is very flexible.",
+    "mimicpp::GenericMatcher is very flexible.",
     "[example][example::matcher]")
 {
     //! [matcher custom regex usage]
@@ -127,7 +127,7 @@ namespace
 }
 
 TEST_CASE(
-    "mimicpp::PredicateMatcher supports multi-arguments.",
+    "mimicpp::GenericMatcher supports multi-arguments.",
     "[example][example::matcher]")
 {
     //! [matcher custom variadic usage]
