@@ -4,7 +4,7 @@ var searchData=
   ['call_20conventions_1',['Call-Conventions',['../index.html#autotoc_md63',1,'']]],
   ['case_20folding_2',['Case-Folding',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md5',1,'']]],
   ['case_20insensitive_20matchers_3',['Case-Insensitive Matchers',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md4',1,'']]],
-  ['case_20insensitive_20matching_4',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
+  ['case_20insensitive_20matching_4',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['catch2_20matcher_20integration_5',['Enable experimental catch2-matcher integration',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md36',1,'']]],
   ['char_20type_6',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md20',1,'']]],
   ['char_20types_7',['Bring your own string- and char-types',['../index.html#autotoc_md62',1,'']]],

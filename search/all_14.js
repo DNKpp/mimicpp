@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['safety_0',['Thread-Safety',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md23',1,'']]],
+  ['safety_0',['Thread-Safety',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#autotoc_md24',1,'']]],
   ['same_5fas_5fany_1',['same_as_any',['../d6/d88/conceptmimicpp_1_1util_1_1same__as__any.html',1,'mimicpp::util']]],
   ['satisfies_2',['satisfies',['../dc/d18/conceptmimicpp_1_1util_1_1satisfies.html',1,'mimicpp::util']]],
   ['scoped_5fexp_3',['SCOPED_EXP',['../d8/d12/group___m_o_c_k.html#ga7e7d68eefb8f3cba28422f62bcf2f90a',1,'ScopedExpectation.hpp']]],
@@ -150,7 +150,7 @@ var searchData=
   ['stringviewt_147',['StringViewT',['../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6',1,'mimicpp']]],
   ['strip_5fparens_148',['strip_parens',['../d7/d0f/group___m_a_c_r_o___d_e_t_a_i_l___s_t_r_i_p___p_a_r_e_n_s.html',1,'']]],
   ['support_149',['support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Enable experimental stacktrace support'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'Enable experimental string-matcher unicode support']]],
-  ['support_20for_20case_20insensitive_20matching_150',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
+  ['support_20for_20case_20insensitive_20matching_150',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['support_20for_20printing_151',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['symbol_152',['Symbol',['../dd/d50/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_operator_function_id.html#aa3ca84dca9a3c4445880127a4f660256',1,'mimicpp::printing::type::parsing::state::OperatorFunctionId']]],
   ['symbol_153',['symbol',['../dd/d50/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_operator_function_id.html#ab4c99f1fd76bc98addad70d4da3cf13a',1,'mimicpp::printing::type::parsing::state::OperatorFunctionId']]]

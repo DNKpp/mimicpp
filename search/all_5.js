@@ -18,7 +18,7 @@ var searchData=
   ['capture_15',['capture',['../d4/da8/classmimicpp_1_1_match_evaluation_context.html#a7520452757719c05e9b3ccc7e2d811b9',1,'mimicpp::MatchEvaluationContext::capture(T &amp;&amp;value)'],['../d4/da8/classmimicpp_1_1_match_evaluation_context.html#adac93b0a693850746204ec8be1cbc10d',1,'mimicpp::MatchEvaluationContext::capture(T &amp;&amp;value, format::format_string&lt; format::fallback_formattable_t&lt; T &gt; &gt; fmt)']]],
   ['case_20folding_16',['Case-Folding',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md5',1,'']]],
   ['case_20insensitive_20matchers_17',['Case-Insensitive Matchers',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md4',1,'']]],
-  ['case_20insensitive_20matching_18',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]],
+  ['case_20insensitive_20matching_18',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['case_5ffoldable_5fstring_19',['case_foldable_string',['../d0/d48/conceptmimicpp_1_1case__foldable__string.html',1,'mimicpp']]],
   ['case_5finsensitive_20',['case_insensitive',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#ga7211982f3a8ff2ab2165d7803edc9ac8',1,'mimicpp']]],
   ['case_5finsensitive_5ft_21',['case_insensitive_t',['../d2/dd4/structmimicpp_1_1case__insensitive__t.html',1,'mimicpp']]],
