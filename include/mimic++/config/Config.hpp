@@ -23,16 +23,19 @@
     #define MIMICPP_DETAIL_IS_32BIT 1
 #endif
 
-#ifdef _LIBCPP_VERSION
-    #define MIMICPP_DETAIL_USES_LIBCXX 1
-#endif
-
 #ifdef __GNUC__
     #ifdef __clang__
         #define MIMICPP_DETAIL_IS_CLANG 1
+        #ifdef __apple_build_version__
+            #define MIMICPP_DETAIL_IS_APPLE_CLANG 1
+        #endif
     #else
         #define MIMICPP_DETAIL_IS_GCC 1
     #endif
+#endif
+
+#ifdef _LIBCPP_VERSION
+    #define MIMICPP_DETAIL_USES_LIBCXX 1
 #endif
 
 #ifdef _WIN32
@@ -73,11 +76,24 @@
 // clang-format off
 // Prevent number from getting decorated with '.
 #if 201907L <= __cpp_lib_constexpr_vector \
-    && 202106L <= __cpp_lib_optional \
-    && (!MIMICPP_DETAIL_USES_LIBCXX || 18 < _LIBCPP_VERSION) // std::optional is not fully constexpr on libc++ < 19
+    && 202106L <= __cpp_lib_optional
     // clang-format on
-    #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES constexpr
-#else
+
+    // std::optional is not fully constexpr on libc++ < 19.
+
+    // AppleClang's version is not in line with the underlying clang version,
+    // and the `_LIBCPP_VERSION` has a very different format.
+    #if MIMICPP_DETAIL_IS_APPLE_CLANG
+        #if 16 < __clang_major__
+            #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES constexpr
+        #endif
+    #elif !MIMICPP_DETAIL_USES_LIBCXX \
+        || 18 < _LIBCPP_VERSION
+        #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES constexpr
+    #endif
+#endif
+
+#ifndef MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES
     #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES inline
 #endif
 
