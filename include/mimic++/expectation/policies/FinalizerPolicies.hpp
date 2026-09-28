@@ -68,8 +68,8 @@ namespace mimicpp::expectation::policies
         }
 
         template <typename Return, typename... Args>
-        constexpr Return finalize_call(
-            [[maybe_unused]] call::Info<Return, Args...> const& call)
+        [[noreturn]]
+        constexpr Return finalize_call(call::Info<Return, Args...> const& /*call*/)
         {
             throw m_Exception; // NOLINT(hicpp-exception-baseclass)
         }

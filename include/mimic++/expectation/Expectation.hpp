@@ -216,17 +216,23 @@ namespace mimicpp::expectation
 
             [[nodiscard]]
             std::any finalize(call::info_for_signature_t<Signature> const& call)
-                requires std::is_void_v<Return>
             {
-                m_Finalizer.finalize_call(call);
-                return std::make_any<call::ResultStorage<void>>();
-            }
+                // Workaround: MSVC (x86, Release) emits C4702 "unreachable code" here when the finalizer always throws (e.g. finally::throws),
+                // because the optimizer inlines it.
+                // By constructing the `result` first empty and then re-assigning it, seems to please it.
+                std::any result{};
 
-            [[nodiscard]]
-            std::any finalize(call::info_for_signature_t<Signature> const& call)
-                requires(!std::is_void_v<Return>)
-            {
-                return std::make_any<call::ResultStorage<Return>>(m_Finalizer.finalize_call(call));
+                if constexpr (std::is_void_v<Return>)
+                {
+                    m_Finalizer.finalize_call(call);
+                    result = std::make_any<call::ResultStorage<void>>();
+                }
+                else
+                {
+                    result = std::make_any<call::ResultStorage<Return>>(m_Finalizer.finalize_call(call));
+                }
+
+                return result;
             }
         };
 
