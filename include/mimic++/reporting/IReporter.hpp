@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -68,14 +68,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
          * Failing to do so will result in undefined behavior.
          */
         [[noreturn]]
-        virtual void report_no_matches(
-            CallReport call,
-            std::vector<NoMatchReport> noMatchReports) = 0;
+        virtual void report_no_matches(CallReport call, std::vector<MatchReport> noMatchReports) = 0;
 
         /**
          * \brief Handles reports for all *inapplicable* but otherwise matching expectations. This function is called only when no better options are available.
          * \param call The call report.
-         * \param expectationReports Reports of all *inapplicable* expectations.
+         * \param reports Reports of all *inapplicable* expectations.
          * \details This function is called when no applicable match has been found, but the call expectations are actually fulfilled.
          * This occurs when the "times" policy is already saturated (e.g., it was expected once and has already been matched once)
          * or is otherwise not applicable (e.g., a sequence element is not the current element).
@@ -85,21 +83,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
          * Failing to do so will result in undefined behavior.
          */
         [[noreturn]]
-        virtual void report_inapplicable_matches(
-            CallReport call,
-            std::vector<ExpectationReport> expectationReports) = 0;
+        virtual void report_inapplicable_matches(CallReport call, std::vector<MatchReport> reports) = 0;
 
         /**
          * \brief Handles the report for a fully matching expectation.
          * \param call The call report.
-         * \param expectationReport Report of the fully matched expectation.
+         * \param match Report of the fully matched expectation.
          * \details This function is called when a match has been found.
          * There are no other expectations for the behavior of this function, except for the ``noexcept`` guarantee.
          * Implementations should simply return to the caller.
          */
-        virtual void report_full_match(
-            CallReport call,
-            ExpectationReport expectationReport) noexcept = 0;
+        virtual void report_full_match(CallReport call, MatchReport match) noexcept = 0;
 
         /**
          * \brief Handles the report of an unfulfilled expectation.
@@ -113,8 +107,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
          * before throwing their own exception.
          * \see ``DefaultReporter::report_unfulfilled_expectation`` for an example.
          */
-        virtual void report_unfulfilled_expectation(
-            ExpectationReport expectationReport) = 0;
+        virtual void report_unfulfilled_expectation(ExpectationReport expectationReport) = 0;
 
         /**
          * \brief Handles general or unspecified errors.

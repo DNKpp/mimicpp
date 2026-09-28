@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -249,7 +249,6 @@ TEST_CASE(
         .target = {"Mock-Name", reporting::TypeReport::make<void()>()},
         .controlReport = reporting::state_applicable{0, 1, 0},
         .finalizerDescription = "finalizer description",
-        .requirementDescriptions = {"first expectation description"}
     };
 
     SECTION("When all members are equal, reports compare equal.")
@@ -311,62 +310,5 @@ TEST_CASE(
         CHECK_FALSE(second == first);
         CHECK(first != second);
         CHECK(second != first);
-    }
-
-    SECTION("When expectation descriptions differ, reports do not compare equal.")
-    {
-        reporting::ExpectationReport second{first};
-        second.requirementDescriptions = GENERATE(
-            (std::vector<std::optional<StringT>>{}),
-            (std::vector<std::optional<StringT>>{"other expectation description"}),
-            (std::vector<std::optional<StringT>>{"expectation description", "other expectation description"}));
-
-        CHECK_FALSE(first == second);
-        CHECK_FALSE(second == first);
-        CHECK(first != second);
-        CHECK(second != first);
-    }
-}
-
-TEST_CASE(
-    "reporting::RequirementOutcomes is equality-comparable.",
-    "[reporting]")
-{
-    reporting::RequirementOutcomes const outcomes{
-        .outcomes = {true}};
-
-    SECTION("Compares equal, when both sides are equal.")
-    {
-        reporting::RequirementOutcomes const other = outcomes;
-
-        CHECK(other == outcomes);
-        CHECK(outcomes == other);
-        CHECK_FALSE(other != outcomes);
-        CHECK_FALSE(outcomes != other);
-    }
-
-    SECTION("Compares unequal, when both sides have different sizes.")
-    {
-        reporting::RequirementOutcomes other{
-            .outcomes = GENERATE(
-                std::vector<bool>{},
-                std::vector{true, false},
-                std::vector{false, true})};
-
-        CHECK_FALSE(other == outcomes);
-        CHECK_FALSE(outcomes == other);
-        CHECK(other != outcomes);
-        CHECK(outcomes != other);
-    }
-
-    SECTION("Compares unequal, when both sides have same sizes but different elements.")
-    {
-        reporting::RequirementOutcomes other{
-            .outcomes = {false}};
-
-        CHECK_FALSE(other == outcomes);
-        CHECK_FALSE(outcomes == other);
-        CHECK(other != outcomes);
-        CHECK(outcomes != other);
     }
 }

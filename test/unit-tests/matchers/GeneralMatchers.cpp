@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -32,7 +32,7 @@ namespace
 }
 
 TEST_CASE(
-    "matcher::PredicateMatcher is a generic matcher.",
+    "matcher::PredicateMatcher is a generic legacy matcher.",
     "[matcher]")
 {
     MatcherPredicateMock<int> predicate{};
@@ -195,10 +195,7 @@ TEST_CASE(
     STATIC_REQUIRE(matcher_for<AnyT, std::string const&>);
 
     constexpr int value{42};
-    REQUIRE(matches::_.matches(value));
-
-    std::optional<StringT> const description = matches::_.describe();
-    REQUIRE_FALSE(description);
+    CHECK_THAT(matches::_.matches(value), variant_equals(expectation::MatchSuccess{}));
 }
 
 TEST_CASE(
@@ -609,38 +606,50 @@ TEST_CASE(
     int instance{42};
     const auto matcher = matches::instance(instance);
 
-    REQUIRE_THAT(
-        matcher.describe(),
-        Catch::Matchers::Matches("is instance at 0x[\\dAaBbCcDdEeFf]{1,16}"));
+    auto withDescription = [](StringT regex) {
+        return [regex = std::move(regex)](auto const& value) {
+            UNSCOPED_CAPTURE(value.description);
+            REQUIRE(value.description);
+            CHECK_THAT(*value.description, Catch::Matchers::Matches(regex));
+            return true;
+        };
+    };
 
     SECTION("When target is the instance.")
     {
-        REQUIRE(matcher.matches(instance));
+        CHECK_THAT(
+            matcher.matches(instance),
+            variant_matches<expectation::MatchSuccess>(withDescription("is instance at 0x[\\dAaBbCcDdEeFf]{1,16}")));
     }
 
     SECTION("When target is not the instance.")
     {
         constexpr int target{};
-        REQUIRE(!matcher.matches(target));
+        CHECK_THAT(
+            matcher.matches(target),
+            variant_matches<expectation::MatchFailure>(
+                withDescription("is instance at 0x[\\dAaBbCcDdEeFf]{1,16}, but actually 0x[\\dAaBbCcDdEeFf]{1,16}")));
     }
 
     SECTION("Matcher can be inverted.")
     {
         const auto invertedMatcher = !matches::instance(instance);
 
-        REQUIRE_THAT(
-            invertedMatcher.describe(),
-            Catch::Matchers::Matches("is not instance at 0x[\\dAaBbCcDdEeFf]{1,16}"));
-
         SECTION("When target is not the instance.")
         {
             constexpr int target{};
-            REQUIRE(!matcher.matches(target));
+            CHECK_THAT(
+                invertedMatcher.matches(target),
+                variant_matches<expectation::MatchSuccess>(
+                    withDescription(R"(not \(is instance at 0x[\dAaBbCcDdEeFf]{1,16}\))")));
         }
 
         SECTION("When target is the instance.")
         {
-            REQUIRE(matcher.matches(instance));
+            CHECK_THAT(
+                invertedMatcher.matches(instance),
+                variant_matches<expectation::MatchFailure>(
+                    withDescription(R"(not \(is instance at 0x[\dAaBbCcDdEeFf]{1,16}\), but actually 0x[\dAaBbCcDdEeFf]{1,16})")));
         }
     }
 }
@@ -658,18 +667,22 @@ TEST_CASE(
     {
     };
 
-    derived constexpr object{};
+    constexpr derived object{};
     auto const matcher = matches::instance(object);
 
     SECTION("Matches, when same instance is provided.")
     {
-        CHECK(matcher.matches(static_cast<base const&>(object)));
+        CHECK_THAT(
+            matcher.matches(static_cast<base const&>(object)),
+            variant_holds_alternative<expectation::MatchSuccess>());
     }
 
     SECTION("Does not match, when other instance is provided.")
     {
-        derived constexpr other{};
-        CHECK(!matcher.matches(static_cast<base const&>(other)));
+        constexpr derived other{};
+        CHECK_THAT(
+            matcher.matches(static_cast<base const&>(other)),
+            variant_holds_alternative<expectation::MatchFailure>());
     }
 }
 
@@ -685,8 +698,7 @@ TEST_CASE(
         STATIC_CHECK(matcher_for<Matcher, int&>);
 
         int i{42};
-        CHECK(matcher.matches(i));
-        CHECK_FALSE(std::optional<StringT>{matcher.describe()});
+        CHECK_THAT(matcher.matches(i), variant_holds_alternative<expectation::MatchSuccess>());
     }
 
     SECTION("When argument is not an exact match.")
@@ -696,4 +708,159 @@ TEST_CASE(
         STATIC_CHECK_FALSE(matcher_for<Matcher, int&&>);
         STATIC_CHECK_FALSE(matcher_for<Matcher, int const&&>);
     }
+}
+
+TEST_CASE(
+    "matcher::GenericMatcher is a matcher with a custom predicate.",
+    "[matcher]")
+{
+    using trompeloeil::_;
+    InvocableMock<bool, MatchEvaluationContext<>&, int> predicate{};
+
+    auto matcher = make_generic_matcher(std::ref(predicate), "my matcher!");
+
+    SECTION("When matches() is called, argument is forwarded to the predicate.")
+    {
+        auto const [expected, result] = GENERATE((table<expectation::MatchResult, bool>)({
+            {expectation::MatchSuccess{.description = "my matcher!"}, true },
+            {expectation::MatchFailure{.description = "my matcher!"}, false},
+        }));
+        CAPTURE(result);
+
+        REQUIRE_CALL(predicate, Invoke(_, 42))
+            .RETURN(result);
+
+        constexpr int value{42};
+
+        SECTION("When the matcher is used as-is.")
+        {
+            CHECK(expected == matcher.matches(value));
+        }
+
+        SECTION("When the matcher is used via double inversion.")
+        {
+            CHECK(expected == (!!matcher).matches(value));
+        }
+    }
+
+    SECTION("When matches() on the inverted matcher is called.")
+    {
+        auto const [expected, result] = GENERATE((table<expectation::MatchResult, bool>)({
+            {expectation::MatchFailure{.description = "not (my matcher!)"}, true },
+            {expectation::MatchSuccess{.description = "not (my matcher!)"}, false},
+        }));
+        CAPTURE(result);
+
+        REQUIRE_CALL(predicate, Invoke(_, 42))
+            .RETURN(result);
+
+        constexpr int value{42};
+
+        SECTION("When the matcher is used inverted.")
+        {
+            CHECK(expected == (!matcher).matches(value));
+        }
+
+        SECTION("When the matcher is used via triple inversion.")
+        {
+            CHECK(expected == (!!!matcher).matches(value));
+        }
+    }
+
+    SECTION("The predicate can capture arbitrary values.")
+    {
+        constexpr int value{1337};
+
+        SECTION("The captured values will be printed when the predicate fails.")
+        {
+            SECTION("When the matcher is not inverted.")
+            {
+                REQUIRE_CALL(predicate, Invoke(_, value))
+                    .SIDE_EFFECT(_1.capture(42))
+                    .SIDE_EFFECT(_1.capture(std::string_view{"Hello, World!"}))
+                    .RETURN(false);
+
+                CHECK_THAT(
+                    matcher.matches(value),
+                    variant_equals(expectation::MatchFailure{.description = R"(my matcher!, but actually 42, Hello, World!)"}));
+            }
+
+            SECTION("When the matcher is inverted.")
+            {
+                REQUIRE_CALL(predicate, Invoke(_, value))
+                    .SIDE_EFFECT(_1.capture(42))
+                    .SIDE_EFFECT(_1.capture(std::string_view{"Hello, World!"}))
+                    .RETURN(true);
+
+                CHECK_THAT(
+                    (!matcher).matches(value),
+                    variant_equals(expectation::MatchFailure{.description = R"(not (my matcher!), but actually 42, Hello, World!)"}));
+            }
+        }
+
+        SECTION("But not printed when the predicate succeeds.")
+        {
+            SECTION("When the matcher is not inverted.")
+            {
+                REQUIRE_CALL(predicate, Invoke(_, value))
+                    .SIDE_EFFECT(_1.capture(42))
+                    .SIDE_EFFECT(_1.capture(std::string_view{"Hello, World!"}))
+                    .RETURN(true);
+
+                CHECK_THAT(
+                    matcher.matches(value),
+                    variant_equals(expectation::MatchSuccess{.description = "my matcher!"}));
+            }
+
+            SECTION("When the matcher is inverted.")
+            {
+                REQUIRE_CALL(predicate, Invoke(_, value))
+                    .SIDE_EFFECT(_1.capture(42))
+                    .SIDE_EFFECT(_1.capture(std::string_view{"Hello, World!"}))
+                    .RETURN(false);
+
+                CHECK_THAT(
+                    (!matcher).matches(value),
+                    variant_equals(expectation::MatchSuccess{.description = "not (my matcher!)"}));
+            }
+        }
+    }
+}
+
+TEST_CASE(
+    "matcher::GenericMatcher can be instantiated with additional args.",
+    "[matcher]")
+{
+    using trompeloeil::_;
+    InvocableMock<bool, MatchEvaluationContext<int, std::string>&, int> predicate{};
+
+    auto matcher = make_generic_matcher(std::ref(predicate), "my matcher with {}, {}!", 42, std::string{"Hello, World!"});
+
+    auto const [expected, result] = GENERATE((table<expectation::MatchResult, bool>)({
+        {expectation::MatchSuccess{R"(my matcher with 42, Hello, World!!)"}, true},
+        {expectation::MatchFailure{R"(my matcher with 42, Hello, World!!)"}, false},
+    }));
+
+    constexpr int value{1337};
+    REQUIRE_CALL(predicate, Invoke(_, value))
+        .RETURN(result);
+
+    CHECK(expected == matcher.matches(value));
+}
+
+TEST_CASE(
+    "matcher::GenericMatcher can capture values with a custom format-string.",
+    "[matcher]")
+{
+    auto const matcher = make_generic_matcher(
+        [](auto& ctx, int const /*v*/) {
+            ctx.capture(1337, "my value={}");
+            return false;
+        },
+        "my matcher");
+
+    constexpr int value{56};
+    CHECK_THAT(
+        matcher.matches(value),
+        variant_equals(expectation::MatchFailure{.description = "my matcher, but actually my value=1337"}));
 }

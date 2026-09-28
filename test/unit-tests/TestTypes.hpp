@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -6,6 +6,7 @@
 #pragma once
 
 #include "mimic++/Call.hpp"
+#include "mimic++/expectation/Common.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 
 #include "TrompeloeilExt.hpp"
@@ -46,23 +47,15 @@ public:
         return isSatisfied;
     }
 
-    bool matchResult{};
+    mimicpp::expectation::MatchResult matchResult{};
 
     [[nodiscard]]
-    constexpr bool matches([[maybe_unused]] const CallInfoT& call) const noexcept
+    mimicpp::expectation::MatchResult matches(CallInfoT const& /*call*/) const noexcept
     {
         return matchResult;
     }
 
-    mimicpp::StringT description{};
-
-    [[nodiscard]]
-    mimicpp::StringT describe() const
-    {
-        return description;
-    }
-
-    static constexpr void consume([[maybe_unused]] const CallInfoT& call) noexcept
+    static constexpr void consume(CallInfoT const& /*call*/) noexcept
     {
     }
 };
@@ -98,20 +91,13 @@ public:
     }
 
     [[nodiscard]]
-    constexpr bool matches(const CallT& call) const noexcept
+    mimicpp::expectation::MatchResult matches(CallT const& call) const
     {
         return std::invoke(projection, policy)
             .matches(call);
     }
 
-    [[nodiscard]]
-    mimicpp::StringT describe() const
-    {
-        return std::invoke(projection, policy)
-            .describe();
-    }
-
-    constexpr void consume(const CallT& call) noexcept
+    constexpr void consume(const CallT& call)
     {
         std::invoke(projection, policy)
             .consume(call);
@@ -122,16 +108,42 @@ template <typename Signature>
 class FinalizerFake
 {
 public:
-    using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
-    using ReturnT = mimicpp::signature_return_type_t<Signature>;
+    using CallInfo = mimicpp::call::info_for_signature_t<Signature>;
+    using Return = mimicpp::signature_return_type_t<Signature>;
+    using Result = std::conditional_t<
+        std::is_void_v<Return>,
+        std::monostate,
+        std::remove_cvref_t<Return>>;
 
     class Exception
+        : public std::runtime_error
     {
+    public:
+        [[nodiscard]]
+        Exception()
+            : std::runtime_error{"FinalizerFake exception."}
+        {
+        }
     };
 
-    static ReturnT finalize_call([[maybe_unused]] const CallInfoT& call)
+    std::variant<Result, Exception> result{};
+
+    [[nodiscard]]
+    Return finalize_call([[maybe_unused]] CallInfo const& call)
     {
-        throw Exception{};
+        if (auto const* const exception = std::get_if<Exception>(&result))
+        {
+            throw *exception;
+        }
+
+        if constexpr (!std::is_void_v<Return>)
+        {
+            return std::forward<Return>(std::get<0>(result));
+        }
+        else
+        {
+            return;
+        }
     }
 };
 
@@ -139,14 +151,13 @@ template <typename Signature>
 class PolicyMock
 {
 public:
-    using CallInfoT = mimicpp::call::info_for_signature_t<Signature>;
+    using CallInfo = mimicpp::call::info_for_signature_t<Signature>;
 
     static constexpr bool trompeloeil_movable_mock = true;
 
     MAKE_CONST_MOCK0(is_satisfied, bool(), noexcept);
-    MAKE_CONST_MOCK1(matches, bool(const CallInfoT&), noexcept);
-    MAKE_CONST_MOCK0(describe, mimicpp::StringT());
-    MAKE_MOCK1(consume, void(const CallInfoT&), noexcept);
+    MAKE_CONST_MOCK1(matches, mimicpp::expectation::MatchResult(CallInfo const&));
+    MAKE_MOCK1(consume, void(CallInfo const&));
 };
 
 template <typename Signature, typename Policy, typename Projection>
@@ -232,12 +243,17 @@ public:
     }
 };
 
+template <typename Policy>
+ControlPolicyFacade(std::reference_wrapper<Policy>) -> ControlPolicyFacade<std::reference_wrapper<Policy>, UnwrapReferenceWrapper>;
+
+template <typename Policy, typename Projection>
+ControlPolicyFacade(std::reference_wrapper<Policy>, Projection) -> ControlPolicyFacade<std::reference_wrapper<Policy>, Projection>;
+
 template <typename T>
 class MatcherMock
 {
 public:
-    MAKE_CONST_MOCK1(matches, bool(T));
-    MAKE_CONST_MOCK0(describe, mimicpp::StringT());
+    MAKE_CONST_MOCK1(matches, mimicpp::expectation::MatchResult(T));
 };
 
 template <typename Matcher, typename Projection>
@@ -253,17 +269,10 @@ public:
 
     template <typename... Args>
     [[nodiscard]]
-    constexpr bool matches(Args&&... args) const
+    mimicpp::expectation::MatchResult matches(Args&&... args) const
     {
         return std::invoke(m_Projection, m_Matcher)
             .matches(std::forward<Args>(args)...);
-    }
-
-    [[nodiscard]]
-    constexpr mimicpp::StringT describe() const
-    {
-        return std::invoke(m_Projection, m_Matcher)
-            .describe();
     }
 
 private:
@@ -271,45 +280,67 @@ private:
     Projection m_Projection;
 };
 
-template <std::equality_comparable Value>
-class VariantEqualsMatcher final
+template <typename Value, std::predicate<Value const&> Comparator>
+class VariantMatchesMatcher final
     : public Catch::Matchers::MatcherGenericBase
 {
 public:
     [[nodiscard]]
-    explicit constexpr VariantEqualsMatcher(Value value)
-        : m_Value{std::move(value)}
+    explicit constexpr VariantMatchesMatcher(std::string description, Comparator comparer = Comparator{})
+        : m_Description{std::move(description)},
+          m_Compare{std::move(comparer)}
     {
     }
 
     template <typename... Alternatives>
     [[nodiscard]]
-    constexpr bool match(const std::variant<Alternatives...>& other) const
+    bool match(std::variant<Alternatives...> const& other) const
         requires requires { { std::holds_alternative<Value>(other) } -> std::convertible_to<bool>; }
     {
+        UNSCOPED_CAPTURE(other.index(), other);
         return std::holds_alternative<Value>(other)
-            && m_Value == std::get<Value>(other);
+            && std::invoke(m_Compare, std::get<Value>(other));
     }
 
     [[nodiscard]]
     std::string describe() const override
     {
-        return std::string{"Variant state equals: "}
-             + mimicpp::print_type<Value>()
-             + ": "
-             + Catch::Detail::stringify(m_Value);
+        return m_Description;
     }
 
 private:
-    Value m_Value;
+    std::string m_Description;
+    Comparator m_Compare;
 };
+
+template <typename Alternative, std::predicate<Alternative const&> Comparator>
+[[nodiscard]]
+constexpr auto variant_matches(Comparator compare, std::string description = "Variant matches predicate")
+{
+    return VariantMatchesMatcher<Alternative, Comparator>{std::move(description), std::move(compare)};
+}
+
+template <typename Alternative>
+[[nodiscard]]
+constexpr auto variant_holds_alternative()
+{
+    return variant_matches<Alternative>(
+        [](Alternative const& /*value*/) { return true; },
+        std::string{"Variant holds alternative "}
+            + mimicpp::print_type<Alternative>());
+}
 
 template <typename Value>
 [[nodiscard]]
 constexpr auto variant_equals(Value&& value)
 {
-    return VariantEqualsMatcher<std::remove_cvref_t<Value>>{
-        std::forward<Value>(value)};
+    auto description = std::string{"Variant state equals: "}
+                     + mimicpp::print_type<Value>()
+                     + ": "
+                     + Catch::Detail::stringify(value);
+    return variant_matches<std::remove_cvref_t<Value>>(
+        std::bind_front(std::equal_to<>{}, std::forward<Value>(value)),
+        std::move(description));
 }
 
 class FakeSequenceStrategy

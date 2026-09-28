@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -53,11 +53,11 @@ module;
     #include <format>
 #endif
 
-#if MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
+#if MIMICPP_CONFIG_STACKTRACE
 
-    #if MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+    #if MIMICPP_CONFIG_USE_CPPTRACE
 
-        #if !MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE
+        #if !MIMICPP_CONFIG_IMPORT_CPPTRACE
             #if __has_include(<cpptrace/basic.hpp>)
                 #include <cpptrace/basic.hpp>
             #elif __has_include(<cpptrace/cpptrace.hpp>)

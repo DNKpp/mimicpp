@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -14,9 +14,12 @@
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/printing/Fwd.hpp"
 #include "mimic++/printing/StatePrinter.hpp"
+#include "mimic++/printing/TypePrinter.hpp"
 #include "mimic++/utilities/Concepts.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <array>
+    #include <any>
     #include <functional>
     #include <tuple>
     #include <type_traits>
@@ -127,14 +130,14 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         constexpr StringT describe() const
         {
             return std::apply(
-                [&, this](auto&... additionalArgs) {
-                    return format::vformat(
-                        m_FormatString,
-                        format::make_format_args(
-                            std::invoke(
-                                // std::make_format_args requires lvalue-refs, so let's transform rvalue-refs to const lvalue-refs
-                                [](auto&& val) noexcept -> const auto& { return val; },
-                                additionalArgs.as_describe_arg())...));
+                [&](auto&... additionalArgs) {
+                    std::array<StringT, sizeof...(additionalArgs)> const descriptions{additionalArgs.as_describe_arg()...};
+
+                    return std::invoke(
+                        [&]<std::size_t... indices>(std::index_sequence<indices...> const /*seq*/) {
+                            return format::vformat(m_FormatString, format::make_format_args(descriptions[indices]...));
+                        },
+                        std::index_sequence_for<AdditionalArgs...>{});
                 },
                 m_AdditionalArgs);
         }
@@ -184,6 +187,190 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         }
     };
 
+    namespace detail
+    {
+        class CapturedValue
+        {
+        public:
+            template <typename T>
+            explicit constexpr CapturedValue(std::in_place_t const /*tag*/, T&& value, format::format_string<format::fallback_formattable_t<T>> fmt = "{}")
+                : m_Value{std::forward<T>(value)},
+                  m_Fmt{fmt.get()},
+                  m_PrintStrategy{&CapturedValue::print_to<std::remove_cvref_t<T>>}
+            {
+            }
+
+            using OutIter = std::ostreambuf_iterator<char>;
+            OutIter print_to(OutIter out) const // NOLINT(*-use-nodiscard)
+            {
+                MIMICPP_ASSERT(m_PrintStrategy, "Null print strategy.");
+                MIMICPP_ASSERT(m_Value.has_value(), "Null capture.");
+
+                return m_PrintStrategy(std::move(out), m_Fmt, m_Value);
+            }
+
+        private:
+            std::any m_Value;
+            format::vformat_string m_Fmt;
+            using PrintStrategy = OutIter(*)(OutIter, format::vformat_string const&, std::any const&);
+            PrintStrategy m_PrintStrategy;
+
+            template <typename T>
+            static OutIter print_to(OutIter out, format::vformat_string const& fmt, std::any const& capture)
+            {
+                auto formatter = format::fallback_formattable(std::any_cast<std::remove_cvref_t<T>>(capture));
+                return format::vformat_to(std::move(out), fmt, format::make_format_args(formatter));
+            }
+        };
+    }
+
+    template <util::unqualified... Args>
+    class MatchEvaluationContext
+    {
+        using CapturedValue = detail::CapturedValue;
+        using CaptureSink = std::back_insert_iterator<std::vector<CapturedValue>>;
+
+    public:
+        using expectation_refs = std::tuple<std::unwrap_reference_t<Args> const&...>;
+
+        [[nodiscard]]
+        explicit constexpr MatchEvaluationContext(expectation_refs expectations, CaptureSink captureSink)
+            : m_Expectations{std::move(expectations)},
+              m_captureSink{std::move(captureSink)}
+        {
+        }
+
+        [[nodiscard]]
+        constexpr expectation_refs expectations() const noexcept
+        {
+            return m_Expectations;
+        }
+
+        template <typename T>
+        void capture(T&& value)
+        {
+            *m_captureSink++ = CapturedValue{std::in_place, std::forward<T>(value)};
+        }
+
+        template <typename T>
+        void capture(T&& value, format::format_string<format::fallback_formattable_t<T>> fmt)
+        {
+            *m_captureSink++ = CapturedValue{std::in_place, std::forward<T>(value), std::move(fmt)};
+        }
+
+    private:
+        expectation_refs m_Expectations;
+        CaptureSink m_captureSink;
+    };
+
+    template <bool isInverted, util::unqualified Predicate, util::unqualified... Args>
+        requires std::is_move_constructible_v<Predicate>
+              && (... && std::is_move_constructible_v<Args>)
+    class GenericMatcher
+    {
+    public:
+        using Context = MatchEvaluationContext<Args...>;
+        using ArgsStorage = std::tuple<Args...>;
+
+        [[nodiscard]]
+        explicit constexpr GenericMatcher(Predicate predicate, format::vformat_string fmt, ArgsStorage args)
+            noexcept(
+                std::is_nothrow_move_constructible_v<Predicate>
+                && std::is_nothrow_move_constructible_v<ArgsStorage>)
+            : m_Predicate{std::move(predicate)},
+              m_FormatString{std::move(fmt)},
+              m_Args{std::move(args)}
+        {
+        }
+
+        template <typename First, typename... Others>
+            requires std::predicate<Predicate const&, Context&, First&, Others&...>
+        [[nodiscard]]
+        expectation::MatchResult matches(First& first, Others&... others) const
+        {
+            std::vector<detail::CapturedValue> captures{};
+
+            StringStreamT ss{};
+            describe_to(std::ostreambuf_iterator{ss});
+
+            if (Context ctx{m_Args, std::back_inserter(captures)};
+                !isInverted == std::invoke(m_Predicate, ctx, first, others...))
+            {
+                return expectation::MatchSuccess{.description = std::move(ss).str()};
+            }
+
+            if (!std::ranges::empty(captures))
+            {
+                ss << ", but actually ";
+                auto iter = captures.cbegin();
+                iter->print_to(std::ostreambuf_iterator{ss});
+
+                for (++iter; iter != captures.cend(); ++iter)
+                {
+                    ss << ", ";
+                    iter->print_to(std::ostreambuf_iterator{ss});
+                }
+            }
+
+            return expectation::MatchFailure{.description = std::move(ss).str()};
+        }
+
+        [[nodiscard]]
+        constexpr auto operator!() const&
+            requires std::is_copy_constructible_v<Predicate>
+                  && std::is_copy_constructible_v<ArgsStorage>
+        {
+            return GenericMatcher<!isInverted, Predicate, Args...>{m_Predicate, m_FormatString, m_Args};
+        }
+
+        [[nodiscard]]
+        constexpr auto operator!() &&
+        {
+            return GenericMatcher<!isInverted, Predicate, Args...>{std::move(m_Predicate), std::move(m_FormatString), std::move(m_Args)};
+        }
+
+    private:
+        Predicate m_Predicate;
+        format::vformat_string m_FormatString;
+        ArgsStorage m_Args;
+
+        template <print_iterator OutIter>
+        OutIter describe_to(OutIter out) const
+        {
+            if constexpr (isInverted)
+            {
+                out = format::format_to(std::move(out), "not (");
+            }
+
+            out = std::apply(
+                [&](auto&&... args) {
+                    return format::vformat_to(std::move(out), m_FormatString, format::make_format_args(args...));
+                },
+                std::tuple<format::fallback_formattable_t<Args const&>...>{m_Args});
+
+            if constexpr (isInverted)
+            {
+                out = format::format_to(std::move(out), ")");
+            }
+
+            return out;
+        }
+    };
+
+    template <typename Predicate, typename... Args>
+    [[nodiscard]]
+    constexpr auto make_generic_matcher(
+        Predicate && predicate,
+        format::format_string<format::fallback_formattable_t<Args>...> const formatString,
+        Args && ... args)
+    {
+        using Matcher = GenericMatcher<false, std::remove_cvref_t<Predicate>, std::remove_cvref_t<Args>...>;
+        return Matcher{
+            std::forward<Predicate>(predicate),
+            formatString.get(),
+            std::forward_as_tuple(std::forward<Args>(args)...)};
+    }
+
     /**
      * \brief Matcher, which never fails.
      * \ingroup MATCHERS
@@ -193,15 +380,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     {
     public:
         [[nodiscard]]
-        static constexpr bool matches([[maybe_unused]] auto&& target) noexcept
+        static expectation::MatchResult matches(auto&& /*target*/) noexcept
         {
-            return true;
-        }
-
-        [[nodiscard]]
-        static constexpr std::nullopt_t describe() noexcept
-        {
-            return std::nullopt;
+            return expectation::MatchSuccess{};
         }
     };
 
@@ -218,15 +399,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
         using is_accepting = std::is_same<T, U>;
 
         [[nodiscard]]
-        static constexpr bool matches([[maybe_unused]] auto&& target) noexcept
+        static expectation::MatchResult matches(auto&& /*target*/) noexcept
         {
-            return true;
-        }
-
-        [[nodiscard]]
-        static constexpr std::nullopt_t describe() noexcept
-        {
-            return std::nullopt;
+            return expectation::MatchSuccess{};
         }
     };
 }
@@ -251,20 +426,20 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
      * \details For equality testing, there exists an even shorter syntax.
      * \snippet Requirements.cpp expect arg equal short
      *
-     * \details Most of the built-in matchers support the inversion operator (``operator !``), which then tests for the opposite
+     * \details Most of the built-in matchers support the inversion operator (`operator !`), which then tests for the opposite
      * condition.
      * \snippet Requirements.cpp matcher inverted
      *
      * ### Custom Matcher
-     * Matchers are highly customizable. In fact, any type which satisfies ``matcher_for`` concept can be used.
-     * There exists no base or interface type, but the ``PredicateMatcher`` servers as a convenient generic type, which
-     * simply contains a predicate, a format string and optional additional arguments.
+     * Matchers are highly customizable. In fact, any type which satisfies `matcher_for` concept can be used.
+     * There exists no base or interface type, but the `GenericMatcher` servers as a convenient generic type,
+     * which simply contains a predicate, a format string and optional additional arguments.
      *
      * A very straight-forward custom matcher may look like this:
      * \snippet CustomMatcher.cpp matcher custom contains definition
      * \snippet CustomMatcher.cpp matcher custom contains usage
      *
-     * In fact, the `PredicateMatcher` is very flexible and can most likely tailored to your needs.
+     * In fact, the `GenericMatcher` is very flexible and can most likely tailored to your needs.
      * For example, you can store any additional data.
      * In this case the internal formatter requires the raw-pattern string, but the actual predicate needs a `std::regex`.
      * \snippet CustomMatcher.cpp matcher custom regex definition
@@ -276,8 +451,16 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
      * \snippet CustomMatcher.cpp matcher custom variadic usage
      *
      * When there are very special needs, users can also just define their own matcher type without any base-class.
+     * The only requirement is a single `matches` function, returning a `mimicpp::expectation::MatchResult`.
      * \snippet CustomMatcher.cpp matcher custom standalone definition
      * \snippet CustomMatcher.cpp matcher custom standalone usage
+     *
+     * #### Legacy matchers
+     * Older versions of *mimic++* required matchers to provide a separate `matches` (returning a plain `bool`) and `describe` function.
+     * This interface is still fully supported for backwards-compatibility,
+     * but its use is discouraged in favor of the single-`matches`-function interface shown above.
+     * \snippet CustomMatcher.cpp matcher custom legacy definition
+     * \snippet CustomMatcher.cpp matcher custom legacy usage
      *
      *\{
      */
@@ -415,7 +598,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
     }
 
     /**
-     * \brief Tests, whether the target is the expected instance.
+     * \brief Tests whether the target is the expected instance.
      * \tparam T Instance type.
      * \param instance The instance to be compared to.
      * \snippet Requirements.cpp matcher instance
@@ -424,15 +607,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
     [[nodiscard]]
     constexpr auto instance(T&& instance) // NOLINT(cppcoreguidelines-missing-std-forward)
     {
-        return PredicateMatcher{
-            []<typename Other>(Other const& target, auto const* instancePtr) noexcept
+        return make_generic_matcher(
+            []<typename Other>(auto& ctx, Other const& target) noexcept
                 requires std::is_convertible_v<std::remove_cvref_t<T> const volatile*, Other const volatile*>
             {
-                return std::addressof(target) == instancePtr;
+                auto const& [expected] = ctx.expectations();
+                auto* const targetPtr = std::addressof(target);
+                ctx.capture(targetPtr);
+                return expected == targetPtr;
             },
             "is instance at {}",
-            "is not instance at {}",
-            std::make_tuple(std::addressof(instance))};
+            std::addressof(instance));
     }
 
     /**

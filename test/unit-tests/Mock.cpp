@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Mock.hpp"
-#include "mimic++/policies/FinalizerPolicies.hpp"
+#include "mimic++/expectation/policies/FinalizerPolicies.hpp"
 
 #include "TestReporter.hpp"
 #include "TestTypes.hpp"
@@ -420,11 +420,11 @@ namespace
         }
 
         [[nodiscard, maybe_unused]]
-        bool match(std::tuple<reporting::CallReport, reporting::ExpectationReport> const& entry) const
+        bool match(std::tuple<reporting::CallReport, reporting::MatchReport> const& entry) const
         {
-            auto const& [callReport, expectationReport] = entry;
+            auto const& [callReport, matchReport] = entry;
             return callReport.target.overloadReport == m_SignatureReport
-                && expectationReport.target.overloadReport == m_SignatureReport;
+                && matchReport.expectationReport.target.overloadReport == m_SignatureReport;
         }
 
         [[nodiscard]]

@@ -86,6 +86,7 @@ namespace mimicpp::printing::detail::state
     };
 
     template <tuple_like T>
+        requires(!std::ranges::forward_range<T>)
     struct cxx23_backport_printer<T>
     {
         template <print_iterator OutIter>

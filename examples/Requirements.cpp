@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -6,6 +6,7 @@
 #include "mimic++/Mock.hpp"
 #include "mimic++/matchers/RangeMatchers.hpp"
 
+#include <functional>
 #include <string>
 
 TEST_CASE(
@@ -143,10 +144,48 @@ TEST_CASE(
     mimicpp::Mock<void(const char*, std::size_t)> mock{};
 
     SCOPED_EXP mock.expect_call(_, _)
-        and expect::all_args(matches::predicate(
-            [&](const char* data, std::size_t length) { return str == std::string_view{data, length}; }));
+        and expect::all_args(
+            matches::predicate([&](const char* data, std::size_t length) { return str == std::string_view{data, length}; }));
     mock(str.data(), str.size());
     //! [expect::all_args]
+}
+
+TEST_CASE(
+    "expect::that captures its target by value by default.",
+    "[example][example::requirements]")
+{
+    //! [expect::that copy]
+    namespace matches = mimicpp::matches;
+    namespace expect = mimicpp::expect;
+
+    mimicpp::Mock<void()> mock{};
+
+    int external{42};
+    SCOPED_EXP mock.expect_call()
+        and expect::that(external, matches::eq(42)); // the current value of `external` is copied into the requirement
+
+    external = 1337; // later changes have no effect on the already captured value
+    mock();
+    //! [expect::that copy]
+}
+
+TEST_CASE(
+    "expect::that evaluates its target on the fly, when wrapped as std::reference_wrapper.",
+    "[example][example::requirements]")
+{
+    //! [expect::that ref]
+    namespace matches = mimicpp::matches;
+    namespace expect = mimicpp::expect;
+
+    mimicpp::Mock<void()> mock{};
+
+    int external{42};
+    SCOPED_EXP mock.expect_call()
+        and expect::that(std::ref(external), matches::eq(1337)); // only a reference to `external` is stored
+
+    external = 1337; // must be updated before the call, as the reference always yields the up-to-date value
+    mock();
+    //! [expect::that ref]
 }
 
 TEST_CASE(

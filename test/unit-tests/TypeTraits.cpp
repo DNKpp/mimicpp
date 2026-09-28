@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -9,7 +9,7 @@
 TEMPLATE_TEST_CASE_SIG(
     "signature_call_convention infers default call-convention tag for general function types.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename T>(std::type_identity<T> const) {
@@ -58,7 +58,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_remove_call_convention does nothing for signatures with default call-conv..",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename T>(std::type_identity<T> const) {
@@ -106,7 +106,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_add_noexcept adds noexcept qualifier if not already present.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<bool expectAdded, typename Expected, typename Input>(
@@ -156,7 +156,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_remove_noexcept removes noexcept qualifier if present.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<bool expectRemoved, typename Expected, typename Input>(
@@ -206,7 +206,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_remove_ref_qualifier removes the ref-qualification.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<bool expectRemoved, typename Expected, typename Input>(
@@ -256,7 +256,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_add_const_qualifier adds const if not already present.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename ExpectAdded, typename Expected, typename Input>(
@@ -306,7 +306,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_remove_const_qualifier removes the const-qualification if present.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename ExpectRemoved, typename Expected, typename Input>(
@@ -356,10 +356,10 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_decay removes all modifiers.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
-static constexpr auto check = []<typename Expected, typename Input>(std::type_identity<Expected> const, std::type_identity<Input> const) {
+    static constexpr auto check = []<typename Expected, typename Input>(std::type_identity<Expected> const, std::type_identity<Input> const) {
         STATIC_CHECK(std::same_as<Expected, typename mimicpp::signature_decay<Input>::type>);
         STATIC_CHECK(std::same_as<Expected, mimicpp::signature_decay_t<Input>>);
     };
@@ -402,54 +402,54 @@ static constexpr auto check = []<typename Expected, typename Input>(std::type_id
 TEMPLATE_TEST_CASE_SIG(
     "signature_return_type extracts the return type from the given signature.",
     "[type_traits]",
-    ((bool dummy, typename Expected, typename Signature), dummy, Expected, Signature),
-    (true, void, void()),
-    (true, void, void(int)),
-    (true, void, void(...)),
-    (true, void, void(float, int)),
-    (true, void, void(float, ...)),
+    ((typename Expected, typename Signature), Expected, Signature),
+    (void, void()),
+    (void, void(int)),
+    (void, void(...)),
+    (void, void(float, int)),
+    (void, void(float, ...)),
 
-    (true, double, double()),
-    (true, double, double(int)),
-    (true, double, double(...)),
-    (true, double, double(float, int)),
-    (true, double, double(float, ...)),
+    (double, double()),
+    (double, double(int)),
+    (double, double(...)),
+    (double, double(float, int)),
+    (double, double(float, ...)),
 
-    (true, double&, double&()),
-    (true, double&, double&(int)),
-    (true, double&, double&(...)),
-    (true, double&, double&(float, int)),
-    (true, double&, double&(float, ...)),
+    (double&, double&()),
+    (double&, double&(int)),
+    (double&, double&(...)),
+    (double&, double&(float, int)),
+    (double&, double&(float, ...)),
 
-    (true, const double&, const double&()),
-    (true, const double&, const double&(int)),
-    (true, const double&, const double&(...)),
-    (true, const double&, const double&(float, int)),
-    (true, const double&, const double&(float, ...)),
+    (const double&, const double&()),
+    (const double&, const double&(int)),
+    (const double&, const double&(...)),
+    (const double&, const double&(float, int)),
+    (const double&, const double&(float, ...)),
 
-    (true, double&&, double && ()),
-    (true, double&&, double && (int)),
-    (true, double&&, double && (...)),
-    (true, double&&, double && (float, int)),
-    (true, double&&, double && (float, ...)),
+    (double&&, double && ()),
+    (double&&, double && (int)),
+    (double&&, double && (...)),
+    (double&&, double && (float, int)),
+    (double&&, double && (float, ...)),
 
-    (true, const double&&, const double && ()),
-    (true, const double&&, const double && (int)),
-    (true, const double&&, const double && (...)),
-    (true, const double&&, const double && (float, int)),
-    (true, const double&&, const double && (float, ...)),
+    (const double&&, const double && ()),
+    (const double&&, const double && (int)),
+    (const double&&, const double && (...)),
+    (const double&&, const double && (float, int)),
+    (const double&&, const double && (float, ...)),
 
-    (true, void*, void*()),
-    (true, void*, void*(int)),
-    (true, void*, void*(...)),
-    (true, void*, void*(float, int)),
-    (true, void*, void*(float, ...)),
+    (void*, void*()),
+    (void*, void*(int)),
+    (void*, void*(...)),
+    (void*, void*(float, int)),
+    (void*, void*(float, ...)),
 
-    (true, const void*, const void*()),
-    (true, const void*, const void*(int)),
-    (true, const void*, const void*(...)),
-    (true, const void*, const void*(float, int)),
-    (true, const void*, const void*(float, ...)))
+    (const void*, const void*()),
+    (const void*, const void*(int)),
+    (const void*, const void*(...)),
+    (const void*, const void*(float, int)),
+    (const void*, const void*(float, ...)))
 {
     STATIC_REQUIRE(
         std::same_as<
@@ -473,7 +473,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_const_qualification extracts the const-qualifier from the given signature.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     using mimicpp::Constness;
@@ -561,7 +561,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_ref_qualification extracts the ref-qualifier from the given signature.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     using mimicpp::signature_ref_qualification;
@@ -649,7 +649,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_is_noexcept determines, whether the given signature is noexcept.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     using mimicpp::signature_is_noexcept;
@@ -870,7 +870,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_prepend_param adds the given param to the front of the param-list.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     using mimicpp::signature_prepend_param;

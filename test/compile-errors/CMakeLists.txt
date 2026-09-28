@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+#          Copyright Dominic (DNKpp) Koepke 2024-2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -50,16 +50,9 @@ function(check_compile_error SOURCE_FILE)
 
     set_tests_properties(${TEST_NAME} PROPERTIES
         PASS_REGULAR_EXPRESSION "${EXPECTED_COMPILE_ERRORS}"
+        # Ensure that the build-processes do not interfere with each other.
+        RESOURCE_LOCK compile-error-test-lock
     )
-
-    # On msvc, these manual compiled tests should not run in parallel, because they seem to create some lock-files.
-    # error MSB3491: Could not write lines to file "[...]/ZERO_CHECK/ZERO_CHECK.tlog/ZERO_CHECK.lastbuildstate".
-    # The process cannot access the file '...' because it is being used by another process.
-    if (MSVC)
-        set_tests_properties(${TEST_NAME} PROPERTIES
-            RESOURCE_LOCK compile-error-test-lock
-        )
-    endif ()
 endfunction()
 
 check_compile_error("missing-finalizer-for-non-void.cpp")

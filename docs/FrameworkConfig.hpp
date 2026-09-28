@@ -42,6 +42,26 @@
  *
  * ---
  *
+ * \anchor MIMICPP_CONFIG_STACKTRACE
+ * ## Enable experimental stacktrace support
+ * **Name:** ``MIMICPP_CONFIG_STACKTRACE``
+ *
+ * When enabled, *mimic++* uses stacktrace information to provide more helpful diagnostics.
+ * Users can choose between the C++23 `std::stacktrace` (`c++23`),
+ * the third-party `cpptrace` (`cpptrace`) or `boost` (`boost`),
+ * or a custom stacktrace backend (`custom`).
+ * \see \ref UTIL_STACKTRACE "stacktrace" documentation
+ *
+ * ### Non-cmake usage
+ * In cases where *mimic++* is not configured via cmake,
+ * users can manually define the following macros (set them to `1`) before the inclusion of any *mimic++* header.
+ * - `MIMICPP_CONFIG_USE_CXX23_STACKTRACE`
+ * - `MIMICPP_CONFIG_USE_CPPTRACE`
+ * - `MIMICPP_CONFIG_USE_BOOST_STACKTRACE`
+ * - `MIMICPP_CONFIG_USE_CUSTOM_STACKTRACE`
+ *
+ * ---
+ *
  * \anchor MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION
  * ## Enable experimental catch2-matcher integration
  * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_CATCH2_MATCHER_INTEGRATION``
@@ -79,35 +99,6 @@
  * 
  * I recently switched from ``cpp-unicodelib``, which I didn't like very much for several reasons. ``uni-algo`` seems more mature, but I would like
  * to get some feedback, before I'll declare this as a stable feature.
- *
- * ---
- *
- * \anchor MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE
- * ## Enable experimental stacktrace support
- * **Name:** ``MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE``
- *
- * When enabled, ``mimic++`` uses stacktrace information to provide more helpful diagnostics.
- * Users can choose between the C++23 `std::stacktrace` (`c++23`),
- * the third-party `cpptrace` (`cpptrace`) or `boost` (`boost`),
- * or a custom stacktrace backend (`custom`).
- * \see \ref UTIL_STACKTRACE "stacktrace" documentation
- *
- * ### Non-cmake usage
- * In cases where *mimic++* is not configured via cmake,
- * users can manually define the following macros (set them to `1`) before the inclusion of any *mimic++* header.
- * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE`
- * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE`
- * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_BOOST_STACKTRACE`
- * - `MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE`
- *
- * \attention This is an experimental feature, which may be removed during any release.
- *
- * ### Why is this feature experimental?
- *
- * The stacktrace integration has recently been reworked.
- * Stacktraces are now collected only when a violation is detected (or `settings::report_success` is enabled).
- * Previously, they were gathered on every mock call, which introduced significant overhead.
- * With this change, the implementation is close to its intended design and may become stable soon.
  *
  * ---
  *

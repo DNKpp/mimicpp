@@ -411,10 +411,9 @@ the ``mimic++`` codebase.
 Matchers are used to check whether arguments satisfy specific requirements. While there are many existing matchers
 available, users often have unique needs.
 
-``mimic++`` provides a very generic ``mimicpp::PredicateMatcher``, which is often sufficient for most cases.
+*mimic++* provides the very generic `mimicpp::GenericMatcher`, which is often sufficient for most cases.
 However, if you need full control, you can start with a fresh type (without any inheritance) and build your own.
-Custom matchers simply need to conform to the ``mimicpp::matcher_for`` concept.
-For more information, please refer to the documentation.
+Custom matchers simply need to conform to the `mimicpp::matcher_for` concept.
 
 <a name="policies"></a>
 ### Policies
@@ -548,8 +547,8 @@ For more details, please refer to the reporting section in the documentation.
 The following official adapters exist and can be included from the `mimic++_ext/adapters` include directory:
 
 * [Boost.Test](https://github.com/boostorg/test) (tested with v1.89.0)
-* [Catch2](https://github.com/catchorg) (tested with v3.10.0)
-* [Doctest](https://github.com/doctest/doctest) (tested with v2.4.12)
+* [Catch2](https://github.com/catchorg) (tested with v3.15.0)
+* [Doctest](https://github.com/doctest/doctest) (tested with v2.5.2)
 * [GTest](https://github.com/google/googletest) (tested with v1.15.2)
 
 <a name="documentation"></a>
@@ -576,7 +575,8 @@ The results of these test cases are consistently tracked by an extensive CI syst
 test case outcomes,
 and coverage across dozens of different operating systems, compilers, and build configurations.
 
-For the test builds, the flags `-Wall -Wextra -Wpedantic -Werror` (or `/W4 /WX /permissive-` on MSVC) are set.
+For the test builds, the flags `-Wall -Wextra -Werror -pedantic -pedantic-errors`
+(or `/W4 /WX /permissive-` on MSVC) are set.
 This ensures that `mimic++` won't flood your build output with endless warnings - or, even worse, break your builds —
 if you enable these flags in your own projects.
 
@@ -629,6 +629,7 @@ version.
 | clang-19 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 | clang-20 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 | clang-21 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| clang-22 |   x    |   x    |     x     |   x    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 | gcc-10   |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace/boost    |
 | gcc-10.2 |   *    |   *    |     *     |   ?    |   *    |   *    |    fmt     |   cpptrace/boost    |
 | gcc-11   |   x    |   x    |     x     |   ?    |   x    |   x    |    fmt     |   cpptrace/boost    |
@@ -636,6 +637,7 @@ version.
 | gcc-13   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 | gcc-14   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 | gcc-15   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
+| gcc-16   |   x    |   x    |     x     |   ?    |   x    |   x    |  std/fmt   | std*/cpptrace/boost |
 
 Note:
 

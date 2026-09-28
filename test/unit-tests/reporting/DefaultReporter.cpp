@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -10,7 +10,7 @@
 using namespace mimicpp;
 using reporting::CallReport;
 using reporting::ExpectationReport;
-using reporting::NoMatchReport;
+using reporting::MatchReport;
 using reporting::RequirementOutcomes;
 using reporting::TypeReport;
 
@@ -56,20 +56,20 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
         .target = make_common_target_report<void()>(),
         .returnTypeInfo = TypeReport::make<void>(),
         .fromCategory = ValueCategory::any,
-        .fromConstness = Constness::any};
+        .fromConstness = Constness::any,
+    };
 
     SECTION("When no-match is reported, UnmatchedCallT is thrown.")
     {
-        ExpectationReport const expectationReport{
-            .target = make_common_target_report<void()>(),
-            .controlReport = reporting::state_applicable{1, 1, 0},
-            .requirementDescriptions = {{"expect: Invalid"}}
+        MatchReport const matchReport{
+            .expectationReport = {
+                                  .target = make_common_target_report<void()>(),
+                                  .controlReport = reporting::state_applicable{.min = 1, .max = 1, .count = 0},
+                                  .finalizerDescription = std::nullopt,
+                                  },
+            .matchResults = {expectation::MatchFailure{.description = "expect: Invalid"}},
         };
-        RequirementOutcomes const requirementOutcomes{
-            .outcomes = {false}};
-        std::vector noMatchReports{
-            NoMatchReport{expectationReport, requirementOutcomes}
-        };
+        std::vector noMatchReports{matchReport};
 
         REQUIRE_THROWS_AS(
             reporter.report_no_matches(callReport, noMatchReports),
@@ -90,19 +90,24 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     SECTION("When inapplicable matches are reported, UnmatchedCallT is thrown.")
     {
-        ExpectationReport const expectationReport{
-            .target = make_common_target_report<void()>(),
-            .controlReport = reporting::state_inapplicable{
-                                                           1,
-                                                           1,
-                                                           1,
-                                                           {},
-                                                           {{sequence::Tag{1337}, {}, {util::SourceLocation{}}}}},
-            .requirementDescriptions = {{"expect: Valid"}}
+        MatchReport const matchReport{
+            .expectationReport = {
+                                  .target = make_common_target_report<void()>(),
+                                  .controlReport = reporting::state_inapplicable{
+                    .min = 1,
+                    .max = 1,
+                    .count = 1,
+                    .sequences = {},
+                    .inapplicableSequences = {
+                        {.tag = sequence::Tag{1337}, .from = {}, .headFrom = {util::SourceLocation{}}},
+                    },
+                },
+                                  },
+            .matchResults = {expectation::MatchSuccess{.description = "expect: Valid"}                                            },
         };
 
         REQUIRE_THROWS_AS(
-            reporter.report_inapplicable_matches(callReport, {expectationReport}),
+            reporter.report_inapplicable_matches(callReport, {matchReport}),
             reporting::UnmatchedCallT);
 
         CHECKED_IF(out)
@@ -120,13 +125,16 @@ SUPPRESS_UNREACHABLE_CODE // on msvc, that must be set before the actual test-ca
 
     SECTION("When match is reported, nothing is done.")
     {
-        ExpectationReport const expectationReport{
-            .target = make_common_target_report<void()>(),
-            .controlReport = reporting::state_applicable{1, 1, 0},
-            .requirementDescriptions = {{"expect: Valid"}}
+        MatchReport const matchReport{
+            .expectationReport = {
+                                  .target = make_common_target_report<void()>(),
+                                  .controlReport = reporting::state_applicable{1, 1, 0},
+                                  .finalizerDescription = std::nullopt,
+                                  },
+            .matchResults = {expectation::MatchFailure{.description = "expect: Valid"}},
         };
 
-        REQUIRE_NOTHROW(reporter.report_full_match(callReport, expectationReport));
+        REQUIRE_NOTHROW(reporter.report_full_match(callReport, matchReport));
 
         CHECKED_IF(out)
         {

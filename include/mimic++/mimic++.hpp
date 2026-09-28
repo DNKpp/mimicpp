@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -16,8 +16,6 @@
 
 #include "mimic++/Call.hpp"
 #include "mimic++/CallConvention.hpp"
-#include "mimic++/Expectation.hpp"
-#include "mimic++/ExpectationBuilder.hpp"
 #include "mimic++/Facade.hpp"
 #include "mimic++/Mock.hpp"
 #include "mimic++/ObjectWatcher.hpp"
@@ -29,6 +27,19 @@
 #include "mimic++/TypeTraits.hpp"
 #include "mimic++/Utilities.hpp"
 
+#include "mimic++/expectation/Builder.hpp"
+#include "mimic++/expectation/Collector.hpp"
+#include "mimic++/expectation/Common.hpp"
+#include "mimic++/expectation/Expectation.hpp"
+#include "mimic++/expectation/Owner.hpp"
+#include "mimic++/expectation/Registry.hpp"
+#include "mimic++/expectation/policies/ArgumentList.hpp"
+#include "mimic++/expectation/policies/ControlPolicies.hpp"
+#include "mimic++/expectation/policies/FinalizerPolicies.hpp"
+#include "mimic++/expectation/policies/GeneralPolicies.hpp"
+#include "mimic++/expectation/policies/RequirementPolicies.hpp"
+#include "mimic++/expectation/policies/SideEffectPolicies.hpp"
+
 #include "mimic++/macros/Common.hpp"
 #include "mimic++/macros/Facade.hpp"
 #include "mimic++/macros/InterfaceMocking.hpp"
@@ -39,12 +50,5 @@
 #include "mimic++/matchers/GeneralMatchers.hpp"
 #include "mimic++/matchers/RangeMatchers.hpp"
 #include "mimic++/matchers/StringMatchers.hpp"
-
-#include "mimic++/policies/ArgRequirementPolicies.hpp"
-#include "mimic++/policies/ArgumentList.hpp"
-#include "mimic++/policies/ControlPolicies.hpp"
-#include "mimic++/policies/FinalizerPolicies.hpp"
-#include "mimic++/policies/GeneralPolicies.hpp"
-#include "mimic++/policies/SideEffectPolicies.hpp"
 
 #endif

@@ -1,0 +1,348 @@
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          https://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef MIMICPP_EXPECTATION_POLICIES_ARG_REQUIREMENT_POLICIES_HPP
+#define MIMICPP_EXPECTATION_POLICIES_ARG_REQUIREMENT_POLICIES_HPP
+
+#pragma once
+
+#include "mimic++/config/Config.hpp"
+#include "mimic++/expectation/Common.hpp"
+#include "mimic++/expectation/policies/ArgumentList.hpp"
+#include "mimic++/matchers/Common.hpp"
+#include "mimic++/utilities/Concepts.hpp"
+#include "mimic++/utilities/TypeList.hpp"
+#include "mimic++/utilities/UnwrapRef.hpp"
+
+#ifndef MIMICPP_DETAIL_IS_MODULE
+    #include <concepts>
+    #include <cstddef>
+    // ReSharper disable once CppUnusedIncludeDirective
+    #include <functional> // std::invoke
+    #include <tuple>
+    #include <type_traits>
+    #include <utility>
+#endif
+
+namespace mimicpp::expectation::policies
+{
+    template <typename Matcher>
+    struct matcher_matches_fn
+    {
+        using matches_fn = mimicpp::detail::matches_hook::matches_fn;
+
+    public:
+        Matcher const& matcher;
+
+        template <typename... Args>
+            requires std::invocable<matches_fn, Matcher const&, Args&...>
+        [[nodiscard]]
+        // projected arguments may come as value, so Args& won't work in all cases
+        // just forward them as lvalue-ref
+        MatchResult operator()(Args&&... args) const
+            noexcept(std::is_nothrow_invocable_v<matches_fn, Matcher const&, Args&...>)
+        {
+            return mimicpp::detail::matches_hook::matches(matcher, args...);
+        }
+    };
+
+    template <typename Matcher, typename MatchesStrategy, typename DescribeStrategy>
+    class ArgsRequirement
+    {
+    public:
+        [[nodiscard]]
+        explicit constexpr ArgsRequirement(Matcher matcher, MatchesStrategy matchesStrategy, DescribeStrategy describeStrategy)
+            noexcept(
+                std::is_nothrow_move_constructible_v<Matcher>
+                && std::is_nothrow_move_constructible_v<MatchesStrategy>
+                && std::is_nothrow_move_constructible_v<DescribeStrategy>)
+            : m_Matcher{std::move(matcher)},
+              m_MatchesStrategy{std::move(matchesStrategy)},
+              m_DescribeStrategy{std::move(describeStrategy)}
+        {
+        }
+
+        [[nodiscard]]
+        static constexpr bool is_satisfied() noexcept
+        {
+            return true;
+        }
+
+        template <typename Return, typename... Args>
+            requires std::is_invocable_r_v<MatchResult, MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>
+        [[nodiscard]]
+        MatchResult matches(call::Info<Return, Args...> const& info) const
+            noexcept(std::is_nothrow_invocable_v<MatchesStrategy const&, matcher_matches_fn<Matcher>, call::Info<Return, Args...> const&>)
+        {
+            matcher_matches_fn<Matcher> const matches{m_Matcher};
+            auto result = std::invoke(m_MatchesStrategy, matches, info);
+            std::visit(
+                [&](auto& inner) {
+                    if (auto& description = inner.description)
+                    {
+                        description = std::invoke(m_DescribeStrategy, *description);
+                    }
+                },
+                result);
+
+            return result;
+        }
+
+        template <typename Return, typename... Args>
+        static constexpr void consume([[maybe_unused]] call::Info<Return, Args...> const& info) noexcept
+        {
+        }
+
+    private:
+        Matcher m_Matcher;
+        [[no_unique_address]] MatchesStrategy m_MatchesStrategy;
+        [[no_unique_address]] DescribeStrategy m_DescribeStrategy;
+    };
+
+    template <typename Target, typename Matcher>
+        requires matcher_for<Matcher, Target>
+    class ThatRequirement
+    {
+    public:
+        ThatRequirement(ThatRequirement const&) = delete;
+        ThatRequirement& operator=(ThatRequirement const&) = delete;
+
+        ~ThatRequirement() = default;
+
+        [[nodiscard]]
+        ThatRequirement(ThatRequirement&&) = default;
+        ThatRequirement& operator=(ThatRequirement&&) = default;
+
+        [[nodiscard]]
+        explicit constexpr ThatRequirement(Target target, Matcher condition)
+            noexcept(std::is_nothrow_move_constructible_v<Target> && std::is_nothrow_move_constructible_v<Matcher>)
+            : m_Target{std::move(target)},
+              m_Matcher{std::move(condition)}
+        {
+        }
+
+        [[nodiscard]]
+        static constexpr bool is_satisfied() noexcept
+        {
+            return true;
+        }
+
+        template <typename Return, typename... Args>
+        [[nodiscard]]
+        MatchResult matches(call::Info<Return, Args...> const& /*call*/) const
+        {
+            return mimicpp::detail::matches_hook::matches(m_Matcher, util::unwrap_ref(m_Target));
+        }
+
+        template <typename Return, typename... Args>
+        static constexpr void consume(call::Info<Return, Args...> const& /*call*/) noexcept
+        {
+        }
+
+    private:
+        Target m_Target;
+        Matcher m_Matcher;
+    };
+}
+
+namespace mimicpp::expectation::policies::detail
+{
+    template <std::size_t index, std::size_t... others>
+    struct arg_requirement_describer
+    {
+        [[nodiscard]]
+        StringT operator()(StringViewT const matcherDescription) const
+        {
+            StringStreamT out{};
+            out << "expect: arg[" << index;
+            ((out << ", " << others), ...);
+            out << "] " << matcherDescription;
+            return std::move(out).str();
+        }
+    };
+
+    struct all_args_requirement_describer
+    {
+        [[nodiscard]]
+        StringT operator()(StringViewT const matcherDescription) const
+        {
+            StringStreamT out{};
+            out << "expect: arg[all] " << matcherDescription;
+            return std::move(out).str();
+        }
+    };
+
+    template <
+        std::size_t... indices,
+        typename Matcher,
+        typename... Projections>
+    [[nodiscard]]
+    constexpr auto make_args_policy(
+        Matcher&& matcher,
+        std::tuple<Projections...>&& projections)
+    {
+        static_assert(
+            sizeof...(indices) == sizeof...(Projections),
+            "Indices and projections size mismatch.");
+
+        using arg_selector_t = args_selector_fn<
+            std::add_lvalue_reference_t,
+            std::index_sequence<indices...>>;
+        using apply_strategy_t = arg_list_indirect_apply_fn<std::remove_cvref_t<Projections>...>;
+        using describe_strategy_t = arg_requirement_describer<indices...>;
+
+        return ArgsRequirement{
+            std::forward<Matcher>(matcher),
+            apply_args_fn(
+                arg_selector_t{},
+                apply_strategy_t{std::move(projections)}),
+            describe_strategy_t{}};
+    }
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expect
+{
+    /**
+     * \defgroup EXPECTATION_REQUIREMENT requirement
+     * \ingroup EXPECTATION
+     * \brief Requirements determine, whether an expectation matches an incoming call.
+     * \details Requirements are the building blocks, which determine whether a call satisfies the expectation. If any of the specified
+     * requirements fail, there is no match.
+     * \note An expectation without requirements matches any call.
+     *
+     *\{
+     */
+
+    /**
+     * \brief Checks whether the selected argument satisfies the given matcher.
+     * \tparam index The index of the selected argument.
+     * \tparam Matcher The matcher type.
+     * \param matcher The matcher.
+     * \param projection Projection to apply to the argument.
+     *
+     * \details This requirement checks, whether the selected argument matches the given matcher. One argument can be checked multiple times
+     * in different requirements and all results will be combined as conjunction.
+     *
+     * For a list of built-in matchers, see \ref MATCHERS "matcher" section.
+     * \snippet Requirements.cpp expect::arg
+     */
+    template <std::size_t index, typename Matcher, typename Projection = std::identity>
+    [[nodiscard]]
+    constexpr auto arg(Matcher&& matcher, Projection&& projection = {}) //
+        noexcept(
+            std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>
+            && std::is_nothrow_constructible_v<std::remove_cvref_t<Projection>, Projection>)
+    {
+        return expectation::policies::detail::make_args_policy<index>(
+            std::forward<Matcher>(matcher),
+            std::forward_as_tuple(std::forward<Projection>(projection)));
+    }
+
+    /**
+     * \brief Checks whether the selected arguments satisfy the given matcher.
+     * \tparam first The index of the first selected argument.
+     * \tparam others The indices of other selected arguments.
+     * \tparam Matcher The matcher type.
+     * \param matcher The matcher.
+     * \param projections Projections, the arguments will be applied on.
+     *
+     * \details This requirement checks, whether the selected arguments match the given matcher.
+     * It's useful, when multiple arguments must be checked together, because they have some kind of relationship.
+     * When ``n`` indices are provided the matcher must accept ``n`` arguments.
+     *
+     * The projections will be applied from the beginning: E.g. if ``n`` arguments and ``p`` projections are given
+     * (with ``0 <= p <= n``), then the first ``p`` arguments will be applied on these projections (the ``i``-th argument
+     * on the ``i``-th projection).
+     * \note ``std::identity`` can be used to skip arguments, which shall not be projected.
+     * \see https://en.cppreference.com/w/cpp/utility/functional/identity
+     *
+     * \details For a list of built-in matchers, see \ref MATCHERS "matcher" section.
+     * \snippet Requirements.cpp expect::args
+     */
+    template <
+        std::size_t first,
+        std::size_t... others,
+        typename Matcher,
+        typename... Projections>
+    [[nodiscard]]
+    constexpr auto args(Matcher&& matcher, Projections&&... projections) //
+        noexcept(
+            std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>
+            && (... && std::is_nothrow_move_constructible_v<std::remove_cvref_t<Projections>>))
+    {
+        static_assert(
+            sizeof...(projections) <= 1u + sizeof...(others),
+            "The projection count exceeds the amount of indices.");
+
+        return expectation::policies::detail::make_args_policy<first, others...>(
+            std::forward<Matcher>(matcher),
+            util::detail::expand_tuple<std::identity, 1u + sizeof...(others)>(
+                std::forward_as_tuple(std::forward<Projections>(projections)...)));
+    }
+
+    /**
+     * \brief Checks whether the all arguments satisfy the given matcher.
+     * \tparam Matcher The matcher type.
+     * \param matcher The matcher.
+     *
+     * \details This requirement checks, whether the all arguments satisfy the given matcher.
+     * It's useful, when all arguments must be checked together, because they have some kind of relationship.
+     * When ``n`` arguments are provided the matcher must accept ``n`` arguments.
+     *
+     * \details For a list of built-in matchers, see \ref MATCHERS "matcher" section.
+     * \snippet Requirements.cpp expect::all_args
+     */
+    template <typename Matcher>
+    [[nodiscard]]
+    constexpr auto all_args(Matcher&& matcher) //
+        noexcept(std::is_nothrow_constructible_v<std::remove_cvref_t<Matcher>, Matcher>)
+    {
+        using arg_selector_t = expectation::policies::detail::all_args_selector_fn<std::add_lvalue_reference_t>;
+        using apply_strategy_t = expectation::policies::detail::arg_list_forward_apply_fn;
+        using describe_strategy_t = expectation::policies::detail::all_args_requirement_describer;
+
+        return expectation::policies::ArgsRequirement{
+            std::forward<Matcher>(matcher),
+            expectation::policies::detail::apply_args_fn(arg_selector_t{}, apply_strategy_t{}),
+            describe_strategy_t{}};
+    }
+
+    /**
+     * \brief Checks whether the given target satisfies the given matcher.
+     * \tparam Target The target's type.
+     * \tparam Matcher The matcher type.
+     * \param target The target, which shall be checked.
+     * \param matcher The matcher.
+     *
+     * \details
+     * Unlike `expect::arg` (and its relatives `expect::args` and `expect::all_args`), which check one or more of the call's arguments,
+     * this requirement checks an arbitrary, user-provided `target` and is thus completely independent of the actual call and its arguments.
+     * This is useful whenever some external state (e.g. a member variable, a global variable or any other object) shall be part of the requirements,
+     * instead of (or in addition to) the call's arguments.
+     *
+     * By default, `target` is captured by value, i.e. a copy is stored inside the resulting requirement at the point of the `expect::that` call.
+     * Later changes to the original object therefore have no effect on subsequent matches.
+     * \snippet Requirements.cpp expect::that copy
+     *
+     * If `target` shall instead be evaluated at matching-time (e.g. because its value is expected to change between the `expect_call` and the actual invocation),
+     * it can be wrapped into a `std::reference_wrapper`.
+     * In that case, the requirement just stores the reference and queries the referenced object's current value on every match attempt.
+     * \snippet Requirements.cpp expect::that ref
+     *
+     * For a list of built-in matchers, see \ref MATCHERS "matcher" section.
+     */
+    template <typename Target, matcher_for<Target> Matcher>
+    [[nodiscard]]
+    constexpr auto that(Target&& target, Matcher&& matcher)
+    {
+        return expectation::policies::ThatRequirement{std::forward<Target>(target), std::forward<Matcher>(matcher)};
+    }
+
+    /**
+     * \}
+     */
+}
+
+#endif
