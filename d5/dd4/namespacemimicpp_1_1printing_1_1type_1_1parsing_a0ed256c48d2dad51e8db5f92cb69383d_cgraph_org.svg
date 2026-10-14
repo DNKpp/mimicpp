@@ -19,6 +19,15 @@
 </a>
 </g>
 </g>
+<!-- Node1&#45;&gt;Node1 -->
+<g id="edge10_Node000001_Node000001" class="edge">
+<title>Node1&#45;&gt;Node1</title>
+<g id="a_edge10_Node000001_Node000001"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M26.21,-134.07C23.52,-143.55 32.95,-151.75 54.5,-151.75 66.96,-151.75 75.37,-149.01 79.72,-144.86"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="83.01,-146.1 82.37,-135.52 76.28,-144.19 83.01,-146.1"/>
+</a>
+</g>
+</g>
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
@@ -43,10 +52,10 @@
 <g id="Node000003" class="node">
 <title>Node3</title>
 <g id="a_Node000003"><a xlink:href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a1a0123fb7ec3f4a090b72ebbc197a14d" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="439.5,-179.75 306.5,-179.75 306.5,-138 439.5,-138 439.5,-179.75"/>
-<text text-anchor="start" x="314.5" y="-166.25" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::printing::</text>
-<text text-anchor="start" x="314.5" y="-155" font-family="Helvetica,sans-Serif" font-size="10.00">type::parsing::TokenStream</text>
-<text text-anchor="middle" x="373" y="-143.75" font-family="Helvetica,sans-Serif" font-size="10.00">::consume</text>
+<polygon fill="white" stroke="#666666" points="439.5,-186.75 306.5,-186.75 306.5,-145 439.5,-145 439.5,-186.75"/>
+<text text-anchor="start" x="314.5" y="-173.25" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::printing::</text>
+<text text-anchor="start" x="314.5" y="-162" font-family="Helvetica,sans-Serif" font-size="10.00">type::parsing::TokenStream</text>
+<text text-anchor="middle" x="373" y="-150.75" font-family="Helvetica,sans-Serif" font-size="10.00">::consume</text>
 </a>
 </g>
 </g>
@@ -54,8 +63,8 @@
 <g id="edge2_Node000001_Node000003" class="edge">
 <title>Node1&#45;&gt;Node3</title>
 <g id="a_edge2_Node000001_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M91.68,-134.11C107.5,-142.25 126.61,-150.6 145,-154.88 193.92,-166.24 250.37,-167.28 294.74,-165.46"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="294.71,-168.97 304.53,-165 294.38,-161.97 294.71,-168.97"/>
+<path fill="none" stroke="#63b8ff" d="M92.18,-134.05C107.92,-142.08 126.84,-150.36 145,-154.88 193.96,-167.04 250.65,-169.8 295.12,-169.51"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="294.98,-173.01 304.93,-169.39 294.89,-166.01 294.98,-173.01"/>
 </a>
 </g>
 </g>
@@ -82,18 +91,18 @@
 <g id="Node000006" class="node">
 <title>Node6</title>
 <g id="a_Node000006"><a xlink:href="../../d5/dd4/namespacemimicpp_1_1printing_1_1type_1_1parsing.html#af4a0cb34323c99cc2025a110c98bc48f" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="426,-106.12 320,-106.12 320,-75.62 426,-75.62 426,-106.12"/>
-<text text-anchor="start" x="328" y="-92.62" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::printing::</text>
-<text text-anchor="middle" x="373" y="-81.38" font-family="Helvetica,sans-Serif" font-size="10.00">type::parsing::peek_if</text>
+<polygon fill="white" stroke="#666666" points="426,-101.12 320,-101.12 320,-70.62 426,-70.62 426,-101.12"/>
+<text text-anchor="start" x="328" y="-87.62" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::printing::</text>
+<text text-anchor="middle" x="373" y="-76.38" font-family="Helvetica,sans-Serif" font-size="10.00">type::parsing::peek_if</text>
 </a>
 </g>
 </g>
 <!-- Node1&#45;&gt;Node6 -->
-<g id="edge9_Node000001_Node000006" class="edge">
+<g id="edge11_Node000001_Node000006" class="edge">
 <title>Node1&#45;&gt;Node6</title>
-<g id="a_edge9_Node000001_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M109.47,-95.97C121.08,-93.02 133.36,-90.41 145,-88.88 199.93,-81.64 262.99,-82.95 308.68,-85.61"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="308.2,-89.09 318.4,-86.21 308.64,-82.1 308.2,-89.09"/>
+<g id="a_edge11_Node000001_Node000006"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M109.48,-96.09C121.09,-93.13 133.37,-90.49 145,-88.88 199.89,-81.27 262.95,-81.12 308.65,-82.52"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="308.26,-86.01 318.37,-82.85 308.5,-79.01 308.26,-86.01"/>
 </a>
 </g>
 </g>
@@ -109,9 +118,9 @@
 </g>
 </g>
 <!-- Node1&#45;&gt;Node7 -->
-<g id="edge8_Node000001_Node000007" class="edge">
+<g id="edge9_Node000001_Node000007" class="edge">
 <title>Node1&#45;&gt;Node7</title>
-<g id="a_edge8_Node000001_Node000007"><a xlink:title=" ">
+<g id="a_edge9_Node000001_Node000007"><a xlink:title=" ">
 <path fill="none" stroke="#63b8ff" d="M87.98,-91.62C104.86,-80.72 125.9,-67.36 145,-55.88 149.33,-53.27 153.87,-50.6 158.42,-47.95"/>
 <polygon fill="#63b8ff" stroke="#63b8ff" points="160.13,-51.01 167.05,-42.98 156.64,-44.94 160.13,-51.01"/>
 </a>
@@ -121,10 +130,10 @@
 <g id="Node000004" class="node">
 <title>Node4</title>
 <g id="a_Node000004"><a xlink:href="../../d8/df4/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_token_stream.html#a04b46c2a02ed0e3cb17988d91737ab3b" target="_top" xlink:title=" ">
-<polygon fill="white" stroke="#666666" points="608.5,-179.75 475.5,-179.75 475.5,-138 608.5,-138 608.5,-179.75"/>
-<text text-anchor="start" x="483.5" y="-166.25" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::printing::</text>
-<text text-anchor="start" x="483.5" y="-155" font-family="Helvetica,sans-Serif" font-size="10.00">type::parsing::TokenStream</text>
-<text text-anchor="middle" x="542" y="-143.75" font-family="Helvetica,sans-Serif" font-size="10.00">::is_eof</text>
+<polygon fill="white" stroke="#666666" points="608.5,-186.75 475.5,-186.75 475.5,-145 608.5,-145 608.5,-186.75"/>
+<text text-anchor="start" x="483.5" y="-173.25" font-family="Helvetica,sans-Serif" font-size="10.00">mimicpp::printing::</text>
+<text text-anchor="start" x="483.5" y="-162" font-family="Helvetica,sans-Serif" font-size="10.00">type::parsing::TokenStream</text>
+<text text-anchor="middle" x="542" y="-150.75" font-family="Helvetica,sans-Serif" font-size="10.00">::is_eof</text>
 </a>
 </g>
 </g>
@@ -132,8 +141,8 @@
 <g id="edge3_Node000003_Node000004" class="edge">
 <title>Node3&#45;&gt;Node4</title>
 <g id="a_edge3_Node000003_Node000004"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M439.52,-158.88C447.47,-158.88 455.65,-158.88 463.75,-158.88"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="463.6,-162.38 473.6,-158.88 463.6,-155.38 463.6,-162.38"/>
+<path fill="none" stroke="#63b8ff" d="M439.52,-165.88C447.47,-165.88 455.65,-165.88 463.75,-165.88"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="463.6,-169.38 473.6,-165.88 463.6,-162.38 463.6,-169.38"/>
 </a>
 </g>
 </g>
@@ -141,8 +150,8 @@
 <g id="edge5_Node000005_Node000003" class="edge">
 <title>Node5&#45;&gt;Node3</title>
 <g id="a_edge5_Node000005_Node000003"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M259.51,-127.18C270.83,-130.37 283.08,-133.82 295.19,-137.23"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="294.21,-140.59 304.79,-139.94 296.11,-133.85 294.21,-140.59"/>
+<path fill="none" stroke="#63b8ff" d="M256.85,-128.49C269.09,-132.47 282.56,-136.84 295.83,-141.14"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="294.37,-144.35 304.96,-144.11 296.53,-137.69 294.37,-144.35"/>
 </a>
 </g>
 </g>
@@ -159,8 +168,17 @@
 <g id="edge7_Node000005_Node000006" class="edge">
 <title>Node5&#45;&gt;Node6</title>
 <g id="a_edge7_Node000005_Node000006"><a xlink:title=" ">
-<path fill="none" stroke="#63b8ff" d="M259.51,-106.03C275.02,-103.94 292.28,-101.62 308.53,-99.43"/>
-<polygon fill="#63b8ff" stroke="#63b8ff" points="308.64,-102.95 318.08,-98.14 307.7,-96.01 308.64,-102.95"/>
+<path fill="none" stroke="#63b8ff" d="M259.51,-104.48C275.02,-101.91 292.28,-99.06 308.53,-96.37"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="308.79,-99.88 318.09,-94.79 307.65,-92.97 308.79,-99.88"/>
+</a>
+</g>
+</g>
+<!-- Node6&#45;&gt;Node6 -->
+<g id="edge8_Node000006_Node000006" class="edge">
+<title>Node6&#45;&gt;Node6</title>
+<g id="a_edge8_Node000006_Node000006"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M343.72,-101.61C337.74,-110.68 347.5,-119.12 373,-119.12 386.94,-119.12 396.18,-116.6 400.71,-112.83"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="404.15,-113.5 402.07,-103.11 397.22,-112.53 404.15,-113.5"/>
 </a>
 </g>
 </g>

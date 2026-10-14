@@ -29,6 +29,15 @@
 </a>
 </g>
 </g>
+<!-- Node1&#45;&gt;Node1 -->
+<g id="edge2_Node000001_Node000001" class="edge">
+<title>Node1&#45;&gt;Node1</title>
+<g id="a_edge2_Node000001_Node000001"><a xlink:title=" ">
+<path fill="none" stroke="#63b8ff" d="M262.65,-64.7C258.21,-68.47 249.16,-71 235.5,-71 210.52,-71 200.96,-62.56 206.82,-53.49"/>
+<polygon fill="#63b8ff" stroke="#63b8ff" points="266.09,-65.37 263.98,-54.99 259.15,-64.42 266.09,-65.37"/>
+</a>
+</g>
+</g>
 <!-- Node2 -->
 <g id="Node000002" class="node">
 <title>Node2</title>
@@ -62,10 +71,4 @@
 [data-mouse-over-selected='true']  { opacity: 1.0; }
 ]]>
 </style>
-<script type="application/ecmascript"><![CDATA[
-document.addEventListener('DOMContentLoaded', (event) => {
-  highlightEdges();
-  highlightAdjacentNodes();
-});
-]]></script>
 </svg>
