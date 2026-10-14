@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+#          Copyright Dominic (DNKpp) Koepke 2024-2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -11,15 +11,11 @@ add_executable(${TARGET_NAME}
 include(Mimic++-EnableSanitizers)
 enable_sanitizers(${TARGET_NAME})
 
-CPMAddPackage("gh:doctest/doctest@2.4.12")
+CPMAddPackage("gh:doctest/doctest@2.5.2")
 target_link_libraries(${TARGET_NAME} PRIVATE
 	mimicpp::header-only
 	mimicpp::test::basics
 	doctest::doctest
-)
-
-target_compile_options(${TARGET_NAME} PRIVATE
-	"$<$<CXX_COMPILER_ID:Clang>:-Wno-#warnings>"
 )
 
 target_precompile_headers(${TARGET_NAME} PRIVATE

@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -13,7 +13,6 @@
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
-#include "mimic++/reporting/NoMatchReport.hpp"
 #include "mimic++/reporting/StringifyReports.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
 
@@ -40,23 +39,23 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
     {
     public:
         [[noreturn]]
-        void report_no_matches(CallReport call, std::vector<NoMatchReport> noMatchReports) override
+        void report_no_matches(CallReport call, std::vector<MatchReport> noMatchReports) override
         {
             send_fail(stringify_no_matches(std::move(call), noMatchReports));
         }
 
         [[noreturn]]
-        void report_inapplicable_matches(CallReport call, std::vector<ExpectationReport> expectationReports) override
+        void report_inapplicable_matches(CallReport call, std::vector<MatchReport> reports) override
         {
-            send_fail(stringify_inapplicable_matches(std::move(call), expectationReports));
+            send_fail(stringify_inapplicable_matches(std::move(call), reports));
         }
 
-        void report_full_match(CallReport call, ExpectationReport expectationReport) noexcept override
+        void report_full_match(CallReport call, MatchReport report) noexcept override
         {
-            send_success(stringify_full_match(std::move(call), std::move(expectationReport)));
+            send_success(stringify_full_match(std::move(call), std::move(report)));
         }
 
-        void report_unfulfilled_expectation(const ExpectationReport expectationReport) override
+        void report_unfulfilled_expectation(ExpectationReport const expectationReport) override
         {
             if (0 == std::uncaught_exceptions())
             {

@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -13,7 +13,7 @@
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
 #include "mimic++/reporting/IReporter.hpp"
-#include "mimic++/reporting/NoMatchReport.hpp"
+#include "mimic++/reporting/MatchReport.hpp"
 #include "mimic++/reporting/StringifyReports.hpp"
 #include "mimic++/utilities/SourceLocation.hpp"
 
@@ -80,9 +80,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         }
 
         [[noreturn]]
-        void report_no_matches(
-            CallReport call,
-            std::vector<NoMatchReport> noMatchReports) override
+        void report_no_matches(CallReport call, std::vector<MatchReport> noMatchReports) override
         {
             auto const msg = stringify_no_matches(call, noMatchReports);
             if (m_Out)
@@ -94,12 +92,10 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         }
 
         [[noreturn]]
-        void report_inapplicable_matches(
-            CallReport call,
-            std::vector<ExpectationReport> expectationReports) override
+        void report_inapplicable_matches(CallReport call, std::vector<MatchReport> reports) override
 
         {
-            const auto msg = stringify_inapplicable_matches(call, expectationReports);
+            const auto msg = stringify_inapplicable_matches(call, reports);
             if (m_Out)
             {
                 *m_Out << msg << '\n';
@@ -110,9 +106,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 
         void report_full_match(
             [[maybe_unused]] CallReport const call,
-            [[maybe_unused]] ExpectationReport const expectationReport) noexcept override
+            [[maybe_unused]] MatchReport const match) noexcept override
         {
-            MIMICPP_ASSERT(std::holds_alternative<state_applicable>(expectationReport.controlReport), "Report denotes inapplicable expectation.");
+            MIMICPP_ASSERT(std::holds_alternative<state_applicable>(match.expectationReport.controlReport), "Report denotes inapplicable expectation.");
         }
 
         void report_unfulfilled_expectation(ExpectationReport expectationReport) override

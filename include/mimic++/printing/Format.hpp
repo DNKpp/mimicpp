@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -10,9 +10,12 @@
 
 #include "mimic++/Fwd.hpp"
 #include "mimic++/config/Config.hpp"
+#include "mimic++/printing/Fwd.hpp"
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <concepts>
+    #include <functional>
+    #include <iterator>
     #include <sstream>
     #include <type_traits>
     #include <utility>
@@ -34,8 +37,39 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 {
     using StringStreamT = std::basic_ostringstream<CharT, CharTraitsT>;
 
+#if MIMICPP_DETAIL_IS_GCC \
+    && __GNUC__ <= 10
+    namespace detail
+    {
+        /**
+         * \brief Equivalent of `std::output_iterator`, as relaxed by P2325R3.
+         * \tparam Iter The iterator type.
+         * \tparam T The type to be written.
+         * \details P2325R3 removed the `std::default_initializable` requirement from `std::weakly_incrementable`
+         * and thus from `std::input_or_output_iterator` and `std::output_iterator`.
+         * As libstdc++ prior to gcc-11 still implements the previous wording,
+         * iterators like `fmt::basic_appender` (which are not default-initializable) are rejected there.
+         * Spelling out the current requirements explicitly makes all supported toolchains agree on the outcome.
+         * \see https://wg21.link/P2325R3
+         */
+        template <typename Iter, typename T>
+        concept output_iterator = std::movable<Iter>
+                               && std::indirectly_writable<Iter, T>
+                               && requires(Iter iter) {
+                                      typename std::iter_difference_t<Iter>;
+                                      { ++iter } -> std::same_as<Iter&>;
+                                      iter++;
+                                  } && requires(Iter iter, T&& value) {
+                                      *iter++ = std::forward<T>(value);
+                                  };
+    }
+
     template <typename T>
-    concept print_iterator = std::output_iterator<T, const CharT&>;
+    concept print_iterator = detail::output_iterator<T, CharT const&>;
+#else
+    template <typename T>
+    concept print_iterator = std::output_iterator<T, CharT const&>;
+#endif
 
     template <typename Printer, typename OutIter, typename T>
     concept printer_for = print_iterator<OutIter>
@@ -48,51 +82,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
 #ifndef MIMICPP_CONFIG_USE_FMT
 
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format::detail::fmt
 {
-    // use std format
-    #if !MIMICPP_DETAIL_USES_LIBCXX
-
-    using std::format;
-    using std::format_to;
-    using std::formatter;
-    using std::make_format_args;
-    using std::vformat;
-    using std::vformat_to;
-
-    #else
-
-    // libc++ has some serious trouble when using its std::format implementation.
-    // Let's simply redirect any calls to std::vformat instead.
-
-    using std::formatter;
-    using std::make_format_args;
-    using std::vformat;
-    using std::vformat_to;
-
     template <typename... Args>
-    [[nodiscard]]
-    StringT format(const StringViewT fmt, Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
-    {
-        return format::vformat(
-            fmt,
-            std::make_format_args(args...));
-    }
+    using format_string = std::basic_format_string<CharT, std::type_identity_t<Args>...>;
+    using vformat_string = StringViewT;
+    using std::format_args;
+    using std::formatter;
+    using std::make_format_args;
+    using std::vformat;
+    using std::vformat_to;
 
-    template <class OutputIt, typename... Args>
-    OutputIt format_to(const OutputIt out, const StringViewT fmt, Args&&... args) // NOLINT(cppcoreguidelines-missing-std-forward)
-    {
-        return format::vformat_to(
-            std::move(out),
-            fmt,
-            std::make_format_args(args...));
-    }
-
-    #endif
-}
-
-namespace mimicpp::format::detail
-{
     template <typename Char>
     struct format_context;
 
@@ -112,11 +112,11 @@ namespace mimicpp::format::detail
     };
 
     /**
-     * \brief Determines, whether a complete specialization of ``std::formatter`` for the given (possibly cv-ref qualified) type exists.
+     * \brief Determines whether a complete specialization of `std::formatter` for the given (possibly cv-ref qualified) type exists.
      * \tparam T Type to check.
-     * \tparam Char Used character type.
-     * \details This is an adapted implementation of the ``std::formattable`` concept, which is added c++23.
-     * \note This implementation takes a simple but reasonable shortcut in assuming, that ```Char`` is either ``char`` or ``wchar_t``,
+     * \tparam Char Used character-type.
+     * \details This is an adapted implementation of the `std::formattable` concept, which is added c++23.
+     * \note This implementation takes a simple but reasonable shortcut in assuming that `Char` is either `char` or `wchar_t`,
      * which must not necessarily true.
      * \see Adapted from here: https://www.open-std.org/jtc1/sc22/wg21/docs/papers/2022/p2286r8.html#concept-formattable
      * \see https://en.cppreference.com/w/cpp/utility/format/formattable
@@ -139,22 +139,120 @@ namespace mimicpp::format::detail
     // use fmt format
 #else
 
-MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format::detail::fmt
 {
-    using fmt::format;
-    using fmt::format_to;
-    using fmt::formatter;
-    using fmt::make_format_args;
-    using fmt::vformat;
-    using fmt::vformat_to;
-}
+    template <typename... Args>
+    using format_string = ::fmt::format_string<Args...>;
+    using vformat_string = ::fmt::basic_string_view<CharT>;
+    using ::fmt::format_args;
+    using ::fmt::formatter;
+    using ::fmt::make_format_args;
+    using ::fmt::vformat;
+    using ::fmt::vformat_to;
 
-namespace mimicpp::format::detail
-{
     template <class T, class Char>
-    concept formattable = fmt::is_formattable<std::remove_reference_t<T>, Char>::value;
+    concept formattable = requires {
+        requires ::fmt::is_formattable<std::remove_reference_t<T>, Char>::value;
+    };
 }
 
 #endif
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
+{
+    template <class T, typename Char = CharT>
+    concept formattable = detail::fmt::formattable<T, Char>;
+
+    using detail::fmt::format_args;
+    using detail::fmt::format_string;
+    using detail::fmt::vformat_string;
+    using detail::fmt::formatter;
+    using detail::fmt::make_format_args;
+    using detail::fmt::vformat_to;
+    using detail::fmt::vformat;
+
+    template <print_iterator OutIter, typename... Args>
+    OutIter format_to(OutIter out, format_string<Args...> const fmt, Args&&... args)
+    {
+        return detail::fmt::vformat_to(
+            std::move(out),
+            fmt.get(),
+            format::make_format_args(args...));
+    }
+
+    template <typename... Args>
+    StringT format(format_string<Args...> const fmt, Args && ... args)
+    {
+        return detail::fmt::vformat(
+            fmt.get(),
+            format::make_format_args(args...));
+    }
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::format
+{
+    namespace detail
+    {
+        template <typename T>
+        struct fallback_formattable
+        {
+            using printer_type = printing::PrintFn;
+            std::remove_reference_t<T> value;
+
+            [[nodiscard]]
+            constexpr auto& get() const noexcept
+            {
+                return value;
+            }
+        };
+
+        template <typename T>
+            requires std::is_lvalue_reference_v<T>
+        struct fallback_formattable<T>
+        {
+            using printer_type = printing::PrintFn;
+            std::reference_wrapper<std::remove_reference_t<T>> ref;
+
+            [[nodiscard]]
+            constexpr auto& get() const noexcept
+            {
+                return ref.get();
+            }
+        };
+    }
+
+    template <typename T>
+    constexpr decltype(auto) fallback_formattable(T&& target)
+    {
+        if constexpr (formattable<T&>)
+        {
+            return std::forward<T>(target);
+        }
+        else
+        {
+            return detail::fallback_formattable<T>{std::forward<T>(target)};
+        }
+    }
+
+    template <typename T>
+    using fallback_formattable_t = decltype(fallback_formattable(std::declval<T>()));
+}
+
+template <typename T>
+struct mimicpp::format::formatter<mimicpp::format::detail::fallback_formattable<T>, mimicpp::CharT>
+{
+    using Target = mimicpp::format::detail::fallback_formattable<T>;
+    using Printer = typename Target::printer_type;
+
+    static constexpr auto parse(auto& ctx)
+    {
+        return ctx.begin();
+    }
+
+    static constexpr auto format(Target const& target, auto& ctx)
+    {
+        return std::invoke(Printer{}, ctx.out(), target.get());
+    }
+};
 
 #endif

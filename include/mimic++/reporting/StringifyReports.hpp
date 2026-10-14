@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -13,7 +13,7 @@
 #include "mimic++/printing/Format.hpp"
 #include "mimic++/reporting/CallReport.hpp"
 #include "mimic++/reporting/ExpectationReport.hpp"
-#include "mimic++/reporting/NoMatchReport.hpp"
+#include "mimic++/reporting/MatchReport.hpp"
 #include "mimic++/reporting/TypeReport.hpp"
 #include "mimic++/utilities/Algorithm.hpp"
 #include "mimic++/utilities/C++23Backports.hpp"
@@ -122,10 +122,10 @@ namespace mimicpp::reporting::detail
     template <print_iterator OutIter>
     OutIter stringify_expectation_report_requirement_adherences(
         OutIter out,
-        std::span<std::optional<StringT> const> const descriptions,
+        std::span<expectation::MatchResult const> const adherences,
         StringViewT const linePrefix)
     {
-        if (descriptions.empty())
+        if (adherences.empty())
         {
             return out;
         }
@@ -133,8 +133,9 @@ namespace mimicpp::reporting::detail
         out = std::ranges::copy(linePrefix, std::move(out)).out;
         out = format::format_to(std::move(out), "With Adherence(s):\n");
 
-        for (auto const& description : descriptions)
+        for (auto const& addherence : adherences)
         {
+            auto const& [description] = std::get<expectation::MatchSuccess>(addherence);
             if (description)
             {
                 out = std::ranges::copy(linePrefix, std::move(out)).out;
@@ -196,17 +197,18 @@ namespace mimicpp::reporting::detail
     template <print_iterator OutIter>
     OutIter stringify_expectation_report_requirement_violations(
         OutIter out,
-        std::span<std::optional<StringT> const> const descriptions,
+        std::span<expectation::MatchResult const> const failures,
         StringViewT const linePrefix)
     {
-        MIMICPP_ASSERT(!descriptions.empty(), "Zero requirements can never be violated.");
+        MIMICPP_ASSERT(!failures.empty(), "Zero requirements can never be violated.");
 
         out = std::ranges::copy(linePrefix, std::move(out)).out;
         out = format::format_to(std::move(out), "Due to Violation(s):\n");
 
         int withoutDescription{0};
-        for (auto const& description : descriptions)
+        for (auto const& failure : failures)
         {
+            auto const& [description] = std::get<expectation::MatchFailure>(failure);
             if (description)
             {
                 out = std::ranges::copy(linePrefix, std::move(out)).out;
@@ -312,9 +314,9 @@ namespace mimicpp::reporting::detail
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
 {
     [[nodiscard]]
-    inline StringT stringify_full_match(CallReport const& call, ExpectationReport expectation)
+    inline StringT stringify_full_match(CallReport const& call, MatchReport match)
     {
-        MIMICPP_ASSERT(std::holds_alternative<state_applicable>(expectation.controlReport), "Report denotes inapplicable expectation.");
+        MIMICPP_ASSERT(std::holds_alternative<state_applicable>(match.expectationReport.controlReport), "Report denotes inapplicable expectation.");
 
         StringStreamT ss{};
         ss << "Matched ";
@@ -323,14 +325,17 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
         ss << "\t" << "Chose ";
-        detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expectation);
+        detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, match.expectationReport);
 
-        if (!expectation.requirementDescriptions.empty())
+        if (!match.matchResults.empty())
         {
-            std::ranges::sort(expectation.requirementDescriptions);
+            std::ranges::sort(
+                match.matchResults,
+                {},
+                [](expectation::MatchResult const& m) -> auto const& { return std::get<expectation::MatchSuccess>(m).description; });
             detail::stringify_expectation_report_requirement_adherences(
                 std::ostreambuf_iterator{ss},
-                expectation.requirementDescriptions,
+                match.matchResults,
                 "\t");
         }
         else
@@ -346,9 +351,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
     }
 
     [[nodiscard]]
-    inline StringT stringify_inapplicable_matches(CallReport const& call, std::span<ExpectationReport> expectations)
+    inline StringT stringify_inapplicable_matches(CallReport const& call, std::span<MatchReport> reports)
     {
-        MIMICPP_ASSERT(!expectations.empty(), "No expectations given.");
+        MIMICPP_ASSERT(!reports.empty(), "No expectations given.");
 
         StringStreamT ss{};
 
@@ -357,11 +362,12 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
-        ss << expectations.size() << " inapplicable but otherwise matching Expectation(s):";
+        ss << reports.size() << " inapplicable but otherwise matching Expectation(s):";
 
         for (int i{};
-             auto& expReport : expectations)
+             auto& report : reports)
         {
+            auto& [expReport, matchReport] = report;
             ss << "\n\t#" << ++i << " ";
             detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
 
@@ -370,11 +376,11 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
                 std::bind_front(detail::inapplicable_reason_printer{}, std::ostreambuf_iterator{ss}),
                 expReport.controlReport);
 
-            std::ranges::sort(expReport.requirementDescriptions);
-            detail::stringify_expectation_report_requirement_adherences(
-                std::ostreambuf_iterator{ss},
-                expReport.requirementDescriptions,
-                "\t");
+            std::ranges::sort(
+                matchReport,
+                {},
+                [](expectation::MatchResult const& m) -> auto const& { return std::get<expectation::MatchSuccess>(m).description; });
+            detail::stringify_expectation_report_requirement_adherences(std::ostreambuf_iterator{ss}, matchReport, "\t");
         }
 
         detail::stringify_stacktrace(
@@ -385,7 +391,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
     }
 
     [[nodiscard]]
-    inline StringT stringify_no_matches(CallReport const& call, std::span<NoMatchReport> noMatchReports)
+    inline StringT stringify_no_matches(CallReport const& call, std::span<MatchReport> noMatchReports)
     {
         StringStreamT ss{};
 
@@ -394,7 +400,7 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         detail::stringify_call_report_target(std::ostreambuf_iterator{ss}, call);
         detail::stringify_call_report_arguments(std::ostreambuf_iterator{ss}, call, "\t");
 
-        std::vector<NoMatchReport*> applicableReports{};
+        std::vector<MatchReport*> applicableReports{};
         for (auto& noMatch : noMatchReports)
         {
             if (std::holds_alternative<state_applicable>(noMatch.expectationReport.controlReport))
@@ -414,27 +420,26 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
             for (int i{};
                  auto* report : applicableReports)
             {
-                auto& [expReport, outcomes] = *report;
+                auto& [expReport, matchResults] = *report;
 
                 ss << "\n\t#" << ++i << " ";
                 detail::stringify_expectation_report_from(std::ostreambuf_iterator{ss}, expReport);
 
-                std::span const violations = util::partition_by(
-                    expReport.requirementDescriptions,
-                    outcomes.outcomes,
-                    std::bind_front(std::equal_to{}, true));
-                MIMICPP_ASSERT(!violations.empty(), "Zero violations do not denote a no-match.");
-                std::ranges::sort(violations);
-                detail::stringify_expectation_report_requirement_violations(
-                    std::ostreambuf_iterator{ss},
-                    violations,
-                    "\t");
+                std::ranges::sort(
+                    matchResults,
+                    {},
+                    [](expectation::MatchResult const& m) -> auto const& {
+                        return std::visit([](auto const& inner) -> auto const& { return inner.description; }, m);
+                    });
+                std::ranges::subrange const violations = std::ranges::stable_partition(
+                    matchResults,
+                    [](expectation::MatchResult const& r) { return std::holds_alternative<expectation::MatchSuccess>(r); });
 
-                std::span const adherences{expReport.requirementDescriptions.data(), violations.data()};
-                std::ranges::sort(adherences);
+                MIMICPP_ASSERT(!violations.empty(), "Zero violations do not denote a no-match.");
+                detail::stringify_expectation_report_requirement_violations(std::ostreambuf_iterator{ss}, violations, "\t");
                 detail::stringify_expectation_report_requirement_adherences(
                     std::ostreambuf_iterator{ss},
-                    adherences,
+                    std::span{matchResults.data(), violations.data()},
                     "\t");
             }
         }

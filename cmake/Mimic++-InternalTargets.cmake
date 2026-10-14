@@ -11,8 +11,8 @@ if (NOT TARGET mimicpp::internal::enable-std-stacktrace)
         cxx_std_23
     )
     target_compile_definitions(mimicpp-internal-enable-std-stacktrace INTERFACE
-        MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-        MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE=1
+        MIMICPP_CONFIG_STACKTRACE=1
+        MIMICPP_CONFIG_USE_CXX23_STACKTRACE=1
     )
 endif ()
 
@@ -21,9 +21,9 @@ if (NOT TARGET mimicpp::internal::enable-cpptrace)
     add_library(mimicpp::internal::enable-cpptrace ALIAS mimicpp-internal-enable-cpptrace)
 
     target_compile_definitions(mimicpp-internal-enable-cpptrace INTERFACE
-        MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-        MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE=1
-        $<$<BOOL:${MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_EXPERIMENTAL_IMPORT_CPPTRACE=1>
+        MIMICPP_CONFIG_STACKTRACE=1
+        MIMICPP_CONFIG_USE_CPPTRACE=1
+        $<$<BOOL:${MIMICPP_CONFIG_IMPORT_CPPTRACE}>:MIMICPP_CONFIG_IMPORT_CPPTRACE=1>
     )
 endif ()
 
@@ -32,8 +32,8 @@ if (NOT TARGET mimicpp::internal::enable-boost-stacktrace)
     add_library(mimicpp::internal::enable-boost-stacktrace ALIAS mimicpp-internal-enable-boost-stacktrace)
 
     target_compile_definitions(mimicpp-internal-enable-boost-stacktrace INTERFACE
-        MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-        MIMICPP_CONFIG_EXPERIMENTAL_USE_BOOST_STACKTRACE=1
+        MIMICPP_CONFIG_STACKTRACE=1
+        MIMICPP_CONFIG_USE_BOOST_STACKTRACE=1
     )
 endif ()
 
@@ -42,7 +42,7 @@ if (NOT TARGET mimicpp::internal::enable-custom-stacktrace)
     add_library(mimicpp::internal::enable-custom-stacktrace ALIAS mimicpp-internal-enable-custom-stacktrace)
 
     target_compile_definitions(mimicpp-internal-enable-custom-stacktrace INTERFACE
-        MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE=1
-        MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE=1
+        MIMICPP_CONFIG_STACKTRACE=1
+        MIMICPP_CONFIG_USE_CUSTOM_STACKTRACE=1
     )
 endif ()

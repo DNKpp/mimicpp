@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -49,13 +49,13 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util::stacktrace
      * To address this, *mimic++* introduces a simple stacktrace abstraction that allows integration with existing
      * stacktrace implementations.
      *
-     * \note For more information about available backends, see the \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE config option.
+     * \note For more information about available backends, see the \ref MIMICPP_CONFIG_STACKTRACE config option.
      *
      * \details
      * ### Custom Stacktrace Backends
      *
      * *mimic++* always prefers available custom stacktrace backends, registered via `mimicpp::custom::find_stacktrace_backend` trait.
-     * \note This is always the case, even if the \ref MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE option is set to a different value than `custom`.
+     * \note This is always the case, even if the \ref MIMICPP_CONFIG_STACKTRACE option is set to a different value than `custom`.
      * Nevertheless, when configuring with cmake, users should set that option accordingly, because this will enable some sanity checks internally.
      *
      * \details Setting up `mimicpp::custom::find_stacktrace_backend` is rather easy,
@@ -408,7 +408,7 @@ namespace mimicpp::util::stacktrace::detail
     Traits<typename FindBackend::type> find_traits_impl([[maybe_unused]] priority_tag<1u>);
 
     // When users explicitly register a custom stacktrace, we should not accidentally fall back to another backend.
-#ifndef MIMICPP_CONFIG_EXPERIMENTAL_USE_CUSTOM_STACKTRACE
+#ifndef MIMICPP_CONFIG_USE_CUSTOM_STACKTRACE
     template <template <typename> typename Traits, backend_finder FindBackend = stacktrace::find_backend>
     Traits<typename FindBackend::type> find_traits_impl([[maybe_unused]] priority_tag<0u>);
 #endif
@@ -513,13 +513,13 @@ struct mimicpp::printing::detail::state::common_type_printer<mimicpp::util::Stac
     }
 };
 
-#if MIMICPP_CONFIG_EXPERIMENTAL_USE_CXX23_STACKTRACE
+#if MIMICPP_CONFIG_USE_CXX23_STACKTRACE
     #include "mimic++_ext/stacktrace/std-stacktrace.hpp"
     #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
-#elif MIMICPP_CONFIG_EXPERIMENTAL_USE_BOOST_STACKTRACE
+#elif MIMICPP_CONFIG_USE_BOOST_STACKTRACE
     #include "mimic++_ext/stacktrace/boost-stacktrace.hpp"
     #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
-#elif MIMICPP_CONFIG_EXPERIMENTAL_USE_CPPTRACE
+#elif MIMICPP_CONFIG_USE_CPPTRACE
     #include "mimic++_ext/stacktrace/cpptrace.hpp"
     #define MIMICPP_DETAIL_HAS_WORKING_STACKTRACE_BACKEND 1
 #else

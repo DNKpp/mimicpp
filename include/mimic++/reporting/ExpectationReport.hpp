@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -88,23 +88,9 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::reporting
         TargetReport target;
         control_state_t controlReport{};
         std::optional<StringT> finalizerDescription{};
-        std::vector<std::optional<StringT>> requirementDescriptions{};
 
         [[nodiscard]]
         friend bool operator==(ExpectationReport const&, ExpectationReport const&) = default;
-    };
-
-    /**
-     * \brief Contains the boolean outcomes of a match-test.
-     * \ingroup REPORTING_REPORTS
-     */
-    class RequirementOutcomes
-    {
-    public:
-        std::vector<bool> outcomes{};
-
-        [[nodiscard]]
-        friend bool operator==(RequirementOutcomes const&, RequirementOutcomes const&) = default;
     };
 }
 

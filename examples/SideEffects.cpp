@@ -1,10 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "mimic++/Mock.hpp"
-#include "mimic++/policies/SideEffectPolicies.hpp"
+#include "mimic++/expectation/policies/SideEffectPolicies.hpp"
 
 TEST_CASE(
     "Side-effects can execute arbitrary actions.",

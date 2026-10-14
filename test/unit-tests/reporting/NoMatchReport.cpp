@@ -1,25 +1,26 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/reporting/NoMatchReport.hpp"
+#include "mimic++/reporting/MatchReport.hpp"
 
 using namespace mimicpp;
 
 TEST_CASE(
-    "reporting::NoMatchReport is equality-comparable.",
+    "reporting::MatchReport is equality-comparable.",
     "[reporting]")
 {
-    reporting::NoMatchReport const report{
+    reporting::MatchReport const report{
         .expectationReport = {
                               .from = {},
-                              .target = {"Test", reporting::TypeReport::make<void()>()}},
-        .requirementOutcomes = {{true}}};
+                              .target = {.name = "Test", .overloadReport = reporting::TypeReport::make<void()>()}},
+        .matchResults = {expectation::MatchSuccess{}},
+    };
 
     SECTION("Compares equal, when both sides are equal.")
     {
-        reporting::NoMatchReport const other = report;
+        reporting::MatchReport const other = report;
 
         REQUIRE(other == report);
         REQUIRE(report == other);
@@ -29,7 +30,7 @@ TEST_CASE(
 
     SECTION("Compares unequal, when expectation reports differ.")
     {
-        reporting::NoMatchReport other{report};
+        reporting::MatchReport other{report};
         other.expectationReport.from = {};
 
         REQUIRE_FALSE(other == report);
@@ -40,8 +41,8 @@ TEST_CASE(
 
     SECTION("Compares unequal, when outcomes differ.")
     {
-        reporting::NoMatchReport other{report};
-        other.requirementOutcomes.outcomes = {false};
+        reporting::MatchReport other{report};
+        other.matchResults = {expectation::MatchFailure{}};
 
         REQUIRE_FALSE(other == report);
         REQUIRE_FALSE(report == other);

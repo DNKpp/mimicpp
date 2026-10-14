@@ -1,9 +1,9 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
-#include "mimic++/printing/type/NameLexer.hpp"
+#include "mimic++/printing/type/Lexer.hpp"
 
 #include "TestTypes.hpp"
 
@@ -19,21 +19,23 @@ namespace
     public:
         [[nodiscard]]
         explicit constexpr TokenMatcher(TokenClass tokenClass)
-            : m_ClassMatcher{std::move(tokenClass)}
+            : m_Expected{std::move(tokenClass)}
         {
         }
 
         [[nodiscard]]
         explicit constexpr TokenMatcher(StringViewT content, TokenClass tokenClass)
-            : m_ClassMatcher{std::move(tokenClass)},
+            : m_Expected{std::move(tokenClass)},
               m_Content{std::move(content)}
         {
         }
 
         [[nodiscard]]
-        constexpr bool match(printing::type::lexing::token const& token) const
+        bool match(printing::type::lexing::token const& token) const
         {
-            return m_ClassMatcher.match(token.classification)
+            UNSCOPED_CAPTURE(token);
+            return std::holds_alternative<TokenClass>(token.classification)
+                && m_Expected == std::get<TokenClass>(token.classification)
                 && (!m_Content || token.content == m_Content.value());
         }
 
@@ -53,7 +55,7 @@ namespace
         }
 
     private:
-        VariantEqualsMatcher<TokenClass> m_ClassMatcher;
+        TokenClass m_Expected;
         std::optional<StringViewT> m_Content{};
     };
 
@@ -345,30 +347,6 @@ TEST_CASE(
     SECTION("Common access-operators are detected.")
     {
         StringViewT const input = GENERATE(from_range(texts::access));
-        CAPTURE(input);
-
-        auto const expectedToken = matches_token(input, operator_or_punctuator{input});
-
-        NameLexer lexer{input};
-        CHECK_THAT(
-            std::as_const(lexer).peek(),
-            expectedToken);
-
-        CHECK_THAT(
-            lexer.next(),
-            expectedToken);
-        CHECK_THAT(
-            std::as_const(lexer).peek(),
-            matches_end_token());
-
-        CHECK_THAT(
-            lexer.next(),
-            matches_end_token());
-    }
-
-    SECTION("Common special angles are detected.")
-    {
-        StringViewT const input = GENERATE(from_range(texts::specialAngles));
         CAPTURE(input);
 
         auto const expectedToken = matches_token(input, operator_or_punctuator{input});

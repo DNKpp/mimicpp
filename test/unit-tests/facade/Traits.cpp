@@ -1,11 +1,10 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
 
 #include "TestReporter.hpp"
 #include "mimic++/Facade.hpp"
-#include "mimic++/ScopedSequence.hpp"
 
 using namespace mimicpp;
 
@@ -118,7 +117,7 @@ TEST_CASE(
         expectation.mock_name(),
         Catch::Matchers::ContainsSubstring("Type")
             && Catch::Matchers::EndsWith("::foo")
-            && Catch::Matchers::Matches(R"(.+Type::foo)"));
+            && Catch::Matchers::Matches(R"((.+::)?Type::foo)"));
 }
 
 TEST_CASE(
@@ -143,6 +142,6 @@ TEST_CASE(
         expectation.mock_name(),
         Catch::Matchers::ContainsSubstring("Type")
             && Catch::Matchers::EndsWith("::foo")
-            && Catch::Matchers::Matches(R"(.+Type::foo)"));
+            && Catch::Matchers::Matches(R"((.+::)?Type::foo)"));
 }
 

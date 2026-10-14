@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -178,5 +178,35 @@ namespace mimicpp
  * \ingroup MACRO_DETAIL_STRINGIFY
  */
 #define MIMICPP_DETAIL_STRINGIFY(...) MIMICPP_DETAIL_STRINGIFY_IMPL(__VA_ARGS__)
+
+/**
+ * \brief General-purpose counter
+ * \ingroup MACRO_DETAIL
+ * \details
+ * This macro generates unique integer values within the current translation unit.
+ * Although this mechanism is widely supported, it is not yet part of the official standard.
+ * However, a proposal to standardize it has already been accepted, so it is expected to become part of future C and C++ standards.
+ * \see https://www.open-std.org/jtc1/sc22/wg14/www/docs/n3457.htm
+ *
+ * Recent versions of Clang (e.g., Clang 22) may emit the following warning:
+ * > error: '__COUNTER__' is a C2y extension [-Werror,-Wc2y-extensions]
+ *
+ * Since this macro is currently only used to generate unique names for scoped-expectations,
+ * falling back to `__LINE__` should generally be safe in such cases.
+ *
+ * \note As a last-resort mechanism, users can override this macro by defining it themselves before including this header.
+ */
+#ifndef MIMICPP_DETAIL_COUNTER
+    #if (!defined(__clang__) || __clang_major__ < 22)
+        #if defined(__COUNTER__) \
+            && (__COUNTER__ + 1 == __COUNTER__ + 0)
+            #define MIMICPP_DETAIL_COUNTER __COUNTER__
+        #endif
+    #endif
+
+    #ifndef MIMICPP_DETAIL_COUNTER
+        #define MIMICPP_DETAIL_COUNTER __LINE__
+    #endif
+#endif
 
 #endif

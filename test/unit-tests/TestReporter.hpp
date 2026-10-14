@@ -30,51 +30,38 @@ class TestReporter final
 public:
     using CallReport = mimicpp::reporting::CallReport;
     using ExpectationReport = mimicpp::reporting::ExpectationReport;
-    using NoMatchReport = mimicpp::reporting::NoMatchReport;
+    using MatchReport = mimicpp::reporting::MatchReport;
 
-    std::vector<std::tuple<CallReport, std::vector<NoMatchReport>>> noMatchResults{};
+    std::vector<std::tuple<CallReport, std::vector<MatchReport>>> noMatchResults{};
 
     [[noreturn]]
-    void report_no_matches(
-        CallReport call,
-        std::vector<NoMatchReport> noMatchReports) override
+    void report_no_matches(CallReport call, std::vector<MatchReport> noMatchReports) override
     {
-        noMatchResults.emplace_back(
-            std::move(call),
-            std::move(noMatchReports));
+        noMatchResults.emplace_back(std::move(call), std::move(noMatchReports));
 
         throw NoMatchError{};
     }
 
-    std::vector<std::tuple<CallReport, std::vector<ExpectationReport>>> inapplicableMatchResults{};
+    std::vector<std::tuple<CallReport, std::vector<MatchReport>>> inapplicableMatchResults{};
 
     [[noreturn]]
-    void report_inapplicable_matches(
-        CallReport call,
-        std::vector<ExpectationReport> expectationReports) override
+    void report_inapplicable_matches(CallReport call, std::vector<MatchReport> expectationReports) override
     {
-        inapplicableMatchResults.emplace_back(
-            std::move(call),
-            std::move(expectationReports));
+        inapplicableMatchResults.emplace_back(std::move(call), std::move(expectationReports));
 
         throw NonApplicableMatchError{};
     }
 
-    std::vector<std::tuple<CallReport, ExpectationReport>> fullMatchResults{};
+    std::vector<std::tuple<CallReport, MatchReport>> fullMatchResults{};
 
-    void report_full_match(
-        CallReport call,
-        ExpectationReport expectationReport) noexcept override
+    void report_full_match(CallReport call, MatchReport expectationReport) noexcept override
     {
-        fullMatchResults.emplace_back(
-            std::move(call),
-            std::move(expectationReport));
+        fullMatchResults.emplace_back(std::move(call), std::move(expectationReport));
     }
 
     std::vector<mimicpp::reporting::ExpectationReport> unfulfilledExpectations{};
 
-    void report_unfulfilled_expectation(
-        mimicpp::reporting::ExpectationReport expectationReport) override
+    void report_unfulfilled_expectation(mimicpp::reporting::ExpectationReport expectationReport) override
     {
         unfulfilledExpectations.emplace_back(std::move(expectationReport));
     }

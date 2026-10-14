@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -502,6 +502,13 @@ TEST_CASE(
     }
 }
 
+// This particular test crashes that particular clang version.
+// However, this seems to be fixed on the most recent clang 22.1.x, so we just ignore it.
+#if !(                       \
+    MIMICPP_DETAIL_IS_CLANG  \
+    && 22 == __clang_major__ \
+    && 1 == __clang_minor__  \
+    && 2 >= __clang_patch__)
 TEST_CASE(
     "Interface-Mocks support __vectorcall.",
     "[mock]")
@@ -584,3 +591,4 @@ TEST_CASE(
         }
     }
 }
+#endif

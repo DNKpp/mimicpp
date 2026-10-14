@@ -1,4 +1,4 @@
-#          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+#          Copyright Dominic (DNKpp) Koepke 2024-2026.
 # Distributed under the Boost Software License, Version 1.0.
 #    (See accompanying file LICENSE_1_0.txt or copy at
 #          https://www.boost.org/LICENSE_1_0.txt)
@@ -72,37 +72,33 @@ if (NOT TARGET mimicpp-enable-config-options)
 
     # Config option regarding stacktrace support.
     set(MIMICPP_DETAIL_STACKTRACE_FEATURES "off;c++23;cpptrace;boost;custom")
-    set(MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE "off" CACHE STRING "Which stacktrace backend to use.")
-    set(CACHE MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE PROPERTY
+    set(MIMICPP_CONFIG_STACKTRACE "off" CACHE STRING "Which stacktrace backend to use.")
+    set(CACHE MIMICPP_CONFIG_STACKTRACE PROPERTY
         STRINGS ${MIMICPP_DETAIL_STACKTRACE_FEATURES}
     )
-    message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}")
-    if (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "c++23")
+    message(DEBUG "${MESSAGE_PREFIX} MIMICPP_CONFIG_STACKTRACE: ${MIMICPP_CONFIG_STACKTRACE}")
+    if (MIMICPP_CONFIG_STACKTRACE STREQUAL "c++23")
         target_link_libraries(mimicpp-enable-config-options INTERFACE
             mimicpp::internal::enable-std-stacktrace
         )
-    elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "cpptrace")
+    elseif (MIMICPP_CONFIG_STACKTRACE STREQUAL "cpptrace")
         find_package(mimicpp-cpptrace MODULE REQUIRED)
         target_link_libraries(mimicpp-enable-config-options INTERFACE
             cpptrace::cpptrace
-        )
-        target_link_libraries(mimicpp-enable-config-options INTERFACE
             mimicpp::internal::enable-cpptrace
         )
-    elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "boost")
+    elseif (MIMICPP_CONFIG_STACKTRACE STREQUAL "boost")
         find_package(Boost REQUIRED COMPONENTS stacktrace)
         target_link_libraries(mimicpp-enable-config-options INTERFACE
             Boost::stacktrace
-        )
-        target_link_libraries(mimicpp-enable-config-options INTERFACE
             mimicpp::internal::enable-boost-stacktrace
         )
-    elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE STREQUAL "custom")
+    elseif (MIMICPP_CONFIG_STACKTRACE STREQUAL "custom")
         target_link_libraries(mimicpp-enable-config-options INTERFACE
             mimicpp::internal::enable-custom-stacktrace
         )
-    elseif (MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE)
-        message(FATAL_ERROR "${MESSAGE_PREFIX} Invalid value for MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE: ${MIMICPP_CONFIG_EXPERIMENTAL_STACKTRACE}\
+    elseif (MIMICPP_CONFIG_STACKTRACE)
+        message(FATAL_ERROR "${MESSAGE_PREFIX} Invalid value for MIMICPP_CONFIG_STACKTRACE: ${MIMICPP_CONFIG_STACKTRACE}\
             \tOptions are: ${MIMICPP_DETAIL_STACKTRACE_FEATURES}"
         )
     endif ()

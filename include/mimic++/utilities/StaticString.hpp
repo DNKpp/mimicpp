@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -11,8 +11,11 @@
 
 #ifndef MIMICPP_DETAIL_IS_MODULE
     #include <algorithm>
+    #include <array>
+    #include <concepts>
     #include <cstddef>
-    #include <iterator>
+    #include <string>
+    #include <string_view>
 #endif
 
 MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
@@ -21,18 +24,19 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
     class StaticString
     {
     public:
-        Char data[length];
+        // We intentionally keep the null-terminator.
+        std::array<Char, length + 1u> data;
 
         [[nodiscard]] //
-        explicit(false) consteval StaticString(Char const (&arr)[length + 1]) noexcept
+        explicit(false) consteval StaticString(Char const (&arr)[length + 1u]) noexcept
         {
-            std::ranges::copy_n(arr, length, std::ranges::begin(data));
+            std::ranges::copy(arr, data.begin());
         }
 
         [[nodiscard]]
         static constexpr bool empty() noexcept
         {
-            return false;
+            return length == 0u;
         }
 
         [[nodiscard]]
@@ -44,47 +48,35 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
         [[nodiscard]]
         constexpr auto begin() const noexcept
         {
-            return std::ranges::begin(data);
+            return data.cbegin();
         }
 
         [[nodiscard]]
         constexpr auto end() const noexcept
         {
-            return std::ranges::end(data);
-        }
-    };
-
-    template <typename Char>
-    class StaticString<Char, 0u>
-    {
-    public:
-        [[nodiscard]] //
-        explicit(false) consteval StaticString([[maybe_unused]] Char const (&arr)[1]) noexcept
-        {
+            return begin() + size();
         }
 
         [[nodiscard]]
-        static constexpr bool empty() noexcept
+        constexpr std::basic_string_view<Char> view() const noexcept
         {
-            return true;
+            return {begin(), end()};
         }
 
         [[nodiscard]]
-        static constexpr std::size_t size() noexcept
+        constexpr std::basic_string<Char> str() const noexcept
         {
-            return 0u;
+            return {begin(), end()};
         }
 
         [[nodiscard]]
-        static constexpr Char const* begin() noexcept
-        {
-            return nullptr;
-        }
+        friend bool operator==(StaticString const&, StaticString const&) = default;
 
+        template <std::convertible_to<std::basic_string_view<Char>> String>
         [[nodiscard]]
-        static constexpr Char const* end() noexcept
+        constexpr bool operator==(String const& other) const noexcept
         {
-            return nullptr;
+            return view() == std::basic_string_view<Char>{other};
         }
     };
 

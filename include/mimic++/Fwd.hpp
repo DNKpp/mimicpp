@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -295,6 +295,22 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
 
     /**
      * \brief Primary template.
+     * \ingroup TYPE_TRAITS_SIGNATURE_ARITY
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    struct signature_arity;
+
+    /**
+     * \brief Convenience constant, exposing the `value` member of the actual type-trait.
+     * \ingroup TYPE_TRAITS_SIGNATURE_ARITY
+     * \tparam Signature A function signature.
+     */
+    template <typename Signature>
+    inline constexpr std::size_t signature_arity_v{signature_arity<Signature>::value};
+
+    /**
+     * \brief Primary template.
      * \ingroup TYPE_TRAITS_SIGNATURE_PREPEND_PARAM
      * \tparam Signature A function signature.
      * \tparam T The type to be added.
@@ -376,16 +392,6 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
     template <typename T>
     struct string_traits;
 
-    template <typename Signature>
-        requires std::same_as<Signature, signature_decay_t<Signature>>
-    class Expectation;
-
-    template <typename Signature>
-        requires std::same_as<Signature, signature_decay_t<Signature>>
-    class ExpectationCollection;
-
-    class ScopedExpectation;
-
     using CharT = char;
     using CharTraitsT = std::char_traits<CharT>;
     using StringT = std::basic_string<CharT, CharTraitsT>;
@@ -455,6 +461,29 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::util
 
     class Stacktrace;
     class SourceLocation;
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::expectation
+{
+    class Collector;
+    class Expectation;
+    class Registry;
+    class Owner;
+}
+
+MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp
+{
+    /**
+     * \copydoc expectation::Owner
+     * \ingroup EXPECTATION
+     */
+    using ScopedExpectation = expectation::Owner;
+
+    /**
+     * \copydoc expectation::Collector
+     * \ingroup EXPECTATION
+     */
+    using ScopedExpectations = expectation::Collector;
 }
 
 #endif

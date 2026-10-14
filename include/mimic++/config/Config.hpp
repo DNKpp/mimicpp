@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -23,16 +23,19 @@
     #define MIMICPP_DETAIL_IS_32BIT 1
 #endif
 
-#ifdef _LIBCPP_VERSION
-    #define MIMICPP_DETAIL_USES_LIBCXX 1
-#endif
-
 #ifdef __GNUC__
     #ifdef __clang__
         #define MIMICPP_DETAIL_IS_CLANG 1
+        #ifdef __apple_build_version__
+            #define MIMICPP_DETAIL_IS_APPLE_CLANG 1
+        #endif
     #else
         #define MIMICPP_DETAIL_IS_GCC 1
     #endif
+#endif
+
+#ifdef _LIBCPP_VERSION
+    #define MIMICPP_DETAIL_USES_LIBCXX 1
 #endif
 
 #ifdef _WIN32
@@ -69,11 +72,36 @@
     #define MIMICPP_DETAIL_CONSTEXPR_VECTOR inline
 #endif
 
+// Requires constexpr vector and constexpr optional
+// clang-format off
+// Prevent number from getting decorated with '.
+#if 201907L <= __cpp_lib_constexpr_vector \
+    && 202106L <= __cpp_lib_optional
+    // clang-format on
+
+    // std::optional is not fully constexpr on libc++ < 19.
+    // clang-format off
+    // Prevent number from getting decorated with '.
+    #if !MIMICPP_DETAIL_USES_LIBCXX \
+        || 190000 <= _LIBCPP_VERSION
+        // clang-format on
+        #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES constexpr
+    #endif
+#endif
+
+#ifndef MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES
+    #define MIMICPP_DETAIL_CONSTEXPR_PRETTY_TYPES inline
+#endif
+
 // gcc 10 requires a workaround, due to some ambiguities.
 // see: https://github.com/DNKpp/mimicpp/issues/151
 #if MIMICPP_DETAIL_IS_GCC \
     && __GNUC__ <= 10
     #define MIMICPP_DETAIL_STD_GET_WORKAROUND 1
+#endif
+
+#ifdef __cpp_lib_source_location
+    #define MIMICPP_DETAIL_HAS_SOURCE_LOCATION 1
 #endif
 
 #endif

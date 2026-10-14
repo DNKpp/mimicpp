@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -9,7 +9,7 @@
 TEMPLATE_TEST_CASE_SIG(
     "signature_add_lvalue_ref_qualifier adds lvalue-ref if not already present.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename ExpectAdded, typename Expected, typename Input>(
@@ -51,7 +51,7 @@ TEMPLATE_TEST_CASE_SIG(
 TEMPLATE_TEST_CASE_SIG(
     "signature_add_rvalue_ref_qualifier adds rvalue-ref if not already present.",
     "[type_traits]",
-    ((bool dummy, typename Return, typename... Args), dummy, Return, Args...),
+    ((typename Return, typename... Args), Return, Args...),
     TEST_SIGNATURE_COLLECTION)
 {
     static constexpr auto check = []<typename ExpectAdded, typename Expected, typename Input>(
