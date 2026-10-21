@@ -7,7 +7,9 @@
 #include "mimic++/printing/state/C++23Backports.hpp"
 #include "mimic++/printing/state/CommonTypes.hpp"
 
+#include <array>
 #include <memory>
+#include <ranges>
 #include <span>
 
 using namespace mimicpp;
@@ -687,6 +689,113 @@ TEST_CASE(
                 mimicpp::print(tuple),
                 Catch::Matchers::Equals(expected));
         }
+    }
+}
+
+TEST_CASE(
+    "Types which are both a forward-range and tuple-like are printed as a range, "
+    "without triggering an ambiguous printer selection.",
+    "[print]")
+{
+    // see: https://github.com/DNKpp/mimicpp/issues/176
+    // std::ranges::subrange (and similarly std::array and std::span) models both `std::ranges::forward_range`
+    // and the internal `tuple_like` concept at the same time.
+    // Without properly disambiguating `cxx23_backport_printer`, the compiler would report an
+    // ambiguous partial specialization, because both the range- and the tuple-like-specialization
+    // would be equally viable.
+
+    StringStreamT stream{};
+
+    SECTION("std::ranges::subrange is printed as a range.")
+    {
+        std::vector const vec{42, 1337, 42'1337};
+        std::ranges::subrange const subrange{vec};
+
+        StringT const expected{"[42, 1337, 421337]"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, subrange);
+            CHECK_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            CHECK_THAT(
+                print(subrange),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("An empty std::ranges::subrange is printed as a range.")
+    {
+        std::vector<int> const vec{};
+        std::ranges::subrange const subrange{vec};
+
+        StringT const expected{"[]"};
+
+        CHECK_THAT(
+            print(subrange),
+            Catch::Matchers::Equals(expected));
+    }
+
+    SECTION("std::array is also both a forward-range and tuple-like, and is printed as a range.")
+    {
+        std::array const arr{42, 1337};
+
+        StringT const expected{"[42, 1337]"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, arr);
+            CHECK_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            CHECK_THAT(
+                print(arr),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("A fixed-extent std::span is also both a forward-range and tuple-like, and is printed as a range.")
+    {
+        std::array const backing{42, 1337};
+        std::span<int const, 2> const span{backing};
+
+        StringT const expected{"[42, 1337]"};
+
+        SECTION("Printing to specific out-iter.")
+        {
+            print(std::ostreambuf_iterator{stream}, span);
+            CHECK_THAT(
+                std::move(stream).str(),
+                Catch::Matchers::Equals(expected));
+        }
+
+        SECTION("Printing to string")
+        {
+            CHECK_THAT(
+                print(span),
+                Catch::Matchers::Equals(expected));
+        }
+    }
+
+    SECTION("A dynamic-extent std::span is only a range (not tuple-like) and is printed as such.")
+    {
+        std::vector const vec{42, 1337};
+        std::span<int const> const span{vec};
+
+        StringT const expected{"[42, 1337]"};
+
+        CHECK_THAT(
+            print(span),
+            Catch::Matchers::Equals(expected));
     }
 }
 
