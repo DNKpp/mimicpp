@@ -424,19 +424,19 @@ while the **finalize policy** determines what a mock should do when it actually 
 throwing an exception).
 
 These policies can implement arbitrary logic, so feel free to experiment.
-There is no base type requirement; they simply need to satisfy either the ``mimicpp::expectation_policy_for``,
-``mimicpp::control_policy``, or ``mimicpp::finalize_policy_for``.
+There is no base type requirement; they simply need to satisfy either the `mimicpp::expectation::expectation_policy_for`,
+`mimicpp::expectation::control_policy`, or `mimicpp::expectation::finalize_policy_for`.
 
 <a name="stringification"></a>
 ### Stringification
 
-``mimic++`` cannot provide stringification for every type, but having a proper textual representation of an object can
+*mimic++* cannot provide stringification for every type, but having a proper textual representation of an object can
 be very useful when a test fails.
-``mimic++`` will use ``std::format`` (or [fmt](https://github.com/fmtlib/fmt)) for types that are formattable, but
+*mimic++* will use `std::format` (or [fmt](https://github.com/fmtlib/fmt)) for types that are formattable, but
 sometimes that may not meet users' needs,
 as they might prefer an alternative stringification specifically for testing purposes.
 
-To address this, users can add their own specializations of the ``mimicpp::custom::Printer`` type, allowing them to
+To address this, users can add their own specializations of the `mimicpp::custom::Printer` type, allowing them to
 specify how a given type should be printed.
 Custom specializations will always take precedence over any pre-existing printing methods, enabling users to override
 the stringification of internal report types as well.
@@ -497,8 +497,8 @@ Users can either select a commit in the **main** branch or a version tag and uti
 ```cmake
 include(FetchContent)
 
-FetchContent_Declare(mimicpp
-        VERSION 9.1.0 # or GIT_TAG <commit_hash> 
+FetchContent_Declare(mimicpp 
+    VERSION 10.0.0 # or GIT_TAG <commit_hash> 
     GIT_REPOSITORY https://github.com/DNKpp/mimicpp
 )
 
@@ -507,12 +507,12 @@ FetchContent_MakeAvailable(mimicpp)
 ```
 
 As an alternative, I recommend using [CPM](https://github.com/cpm-cmake/CPM.cmake), which is a convenient wrapper based
-on the ``FetchContent`` feature:
+on the *FetchContent* feature:
 
 ```cmake
 include(CPM.cmake) # or include(get_cpm.cmake)
 
-CPMAddPackage("gh:DNKpp/mimicpp@9.1.0") # or gh:DNKpp/mimicpp#<commit_hash>
+CPMAddPackage("gh:DNKpp/mimicpp@10.0.0") # or gh:DNKpp/mimicpp#<commit_hash>
 # do not forget linking via target_link_libraries as shown above
 ```
 
