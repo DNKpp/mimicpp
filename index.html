@@ -424,11 +424,11 @@ Matchers</h3>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md60"></a>
 Policies</h3>
 <p>There are multiple types of policies, depending on the tasks they are designed to fulfill. The <b>expectation policy</b> has full control over whether a match can be made or should be rejected, while the <b>finalize policy</b> determines what a mock should do when it actually matches (such as returning a value or throwing an exception).</p>
-<p>These policies can implement arbitrary logic, so feel free to experiment. There is no base type requirement; they simply need to satisfy either the <span class="tt">mimicpp::expectation_policy_for</span>, <span class="tt">mimicpp::control_policy</span>, or <span class="tt">mimicpp::finalize_policy_for</span>.</p>
+<p>These policies can implement arbitrary logic, so feel free to experiment. There is no base type requirement; they simply need to satisfy either the <span class="tt"><a class="el" href="df/d74/conceptmimicpp_1_1expectation_1_1expectation__policy__for.html" title="Determines whether the given type satisfies the requirements of an expectation-policy for the given s...">mimicpp::expectation::expectation_policy_for</a></span>, <span class="tt"><a class="el" href="d3/dbb/conceptmimicpp_1_1expectation_1_1control__policy.html" title="Determines whether the given type satisfies the requirements of a control-policy.">mimicpp::expectation::control_policy</a></span>, or <span class="tt"><a class="el" href="d0/d7b/conceptmimicpp_1_1expectation_1_1finalize__policy__for.html" title="Determines whether the given type satisfies the requirements of a finalize-policy for the given signa...">mimicpp::expectation::finalize_policy_for</a></span>.</p>
 <p><a class="anchor" id="stringification"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md61"></a>
 Stringification</h3>
-<p><span class="tt">mimic++</span> cannot provide stringification for every type, but having a proper textual representation of an object can be very useful when a test fails. <span class="tt">mimic++</span> will use <span class="tt">std::format</span> (or <a href="https://github.com/fmtlib/fmt">fmt</a>) for types that are formattable, but sometimes that may not meet users' needs, as they might prefer an alternative stringification specifically for testing purposes.</p>
+<p><em>mimic++</em> cannot provide stringification for every type, but having a proper textual representation of an object can be very useful when a test fails. <em>mimic++</em> will use <span class="tt">std::format</span> (or <a href="https://github.com/fmtlib/fmt">fmt</a>) for types that are formattable, but sometimes that may not meet users' needs, as they might prefer an alternative stringification specifically for testing purposes.</p>
 <p>To address this, users can add their own specializations of the <span class="tt"><a class="el" href="da/d68/classmimicpp_1_1custom_1_1_printer.html" title="User may add specializations, which will then be used during print calls.">mimicpp::custom::Printer</a></span> type, allowing them to specify how a given type should be printed. Custom specializations will always take precedence over any pre-existing printing methods, enabling users to override the stringification of internal report types as well.</p>
 <p><a class="anchor" id="bring-your-own-string--and-char-types"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md62"></a>
@@ -458,17 +458,17 @@ CMake</h3>
 </div><!-- fragment --><p>Users can either select a commit in the <b>main</b> branch or a version tag and utilize the CMake <span class="tt">FetchContent</span> module:</p>
 <div class="fragment"><div class="line">include(FetchContent)</div>
 <div class="line"> </div>
-<div class="line">FetchContent_Declare(mimicpp</div>
-<div class="line">        VERSION 9.1.0 # or GIT_TAG &lt;commit_hash&gt; </div>
+<div class="line">FetchContent_Declare(mimicpp </div>
+<div class="line">    VERSION 10.0.0 # or GIT_TAG &lt;commit_hash&gt; </div>
 <div class="line">    GIT_REPOSITORY https://github.com/DNKpp/mimicpp</div>
 <div class="line">)</div>
 <div class="line"> </div>
 <div class="line">FetchContent_MakeAvailable(mimicpp)</div>
 <div class="line"># do not forget linking via target_link_libraries as shown above</div>
-</div><!-- fragment --><p>As an alternative, I recommend using <a href="https://github.com/cpm-cmake/CPM.cmake">CPM</a>, which is a convenient wrapper based on the <span class="tt">FetchContent</span> feature:</p>
+</div><!-- fragment --><p>As an alternative, I recommend using <a href="https://github.com/cpm-cmake/CPM.cmake">CPM</a>, which is a convenient wrapper based on the <em>FetchContent</em> feature:</p>
 <div class="fragment"><div class="line">include(CPM.cmake) # or include(get_cpm.cmake)</div>
 <div class="line"> </div>
-<div class="line">CPMAddPackage(&quot;gh:DNKpp/mimicpp@9.1.0&quot;) # or gh:DNKpp/mimicpp#&lt;commit_hash&gt;</div>
+<div class="line">CPMAddPackage(&quot;gh:DNKpp/mimicpp@10.0.0&quot;) # or gh:DNKpp/mimicpp#&lt;commit_hash&gt;</div>
 <div class="line"># do not forget linking via target_link_libraries as shown above</div>
 </div><!-- fragment --><p><a class="anchor" id="packaging-tools"></a> </p>
 <h3 class="doxsection"><a class="anchor" id="autotoc_md68"></a>

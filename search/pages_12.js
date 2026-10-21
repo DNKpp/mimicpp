@@ -5,7 +5,7 @@ var searchData=
   ['single_20header_2',['Single-Header',['../index.html#autotoc_md69',1,'']]],
   ['special_20acknowledgement_3',['Special Acknowledgement',['../index.html#autotoc_md78',1,'']]],
   ['stacktrace_20backends_4',['Custom Stacktrace Backends',['../de/dc2/group___u_t_i_l___s_t_a_c_k_t_r_a_c_e.html#autotoc_md26',1,'']]],
-  ['stacktrace_20support_5',['Enable experimental stacktrace support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'']]],
+  ['stacktrace_20support_5',['Enable stacktrace support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'']]],
   ['string_6',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md6',1,'']]],
   ['string_20and_20char_20types_7',['Bring your own string- and char-types',['../index.html#autotoc_md62',1,'']]],
   ['string_20matcher_20unicode_20support_8',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'']]],
@@ -15,7 +15,7 @@ var searchData=
   ['strings_12',['Custom char-types and related strings',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
   ['strings_20with_20common_20char_20type_13',['Custom Strings with common char-type',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md22',1,'']]],
   ['strings_20with_20other_20character_20types_14',['Strings with other character-types',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md7',1,'']]],
-  ['support_15',['support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Enable experimental stacktrace support'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'Enable experimental string-matcher unicode support']]],
+  ['support_15',['support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'Enable experimental string-matcher unicode support'],['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md33',1,'Enable stacktrace support']]],
   ['support_20for_20case_20insensitive_20matching_16',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
   ['support_20for_20printing_17',['Support for printing',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md24',1,'']]]
 ];
