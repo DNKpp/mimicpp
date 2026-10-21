@@ -1,6 +1,6 @@
 var _side_effect_policies_8hpp =
 [
-    [ "mimicpp::expectation_policies::SideEffectAction&lt; Action &gt;", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html", "d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action" ],
+    [ "mimicpp::expectation::policies::SideEffectAction&lt; Action &gt;", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action.html", "d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action" ],
     [ "mimicpp::then::apply_all", "db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga1115bba8873d79b6492ad72f1051e22d", null ],
     [ "mimicpp::then::apply_arg", "db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#ga51b593416fa39d20f134216c56ab518f", null ],
     [ "mimicpp::then::apply_args", "db/d71/group___e_x_p_e_c_t_a_t_i_o_n___s_i_d_e___e_f_f_e_c_t_s.html#gaf865f7ad50812d38fdd5ee5420591127", null ],

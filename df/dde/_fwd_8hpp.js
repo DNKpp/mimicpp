@@ -3,6 +3,8 @@ var _fwd_8hpp =
     [ "mimicpp::sequence::rating", "de/d81/structmimicpp_1_1sequence_1_1rating.html", "de/d81/structmimicpp_1_1sequence_1_1rating" ],
     [ "mimicpp::CharT", "d1/d11/namespacemimicpp.html#a3cca43cdbdd561d88dddf4ceec9839fc", null ],
     [ "mimicpp::CharTraitsT", "d1/d11/namespacemimicpp.html#a460564a0d4038b990b5938ab0ab2b4ad", null ],
+    [ "mimicpp::ScopedExpectation", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html#gad5c2fca81b635df29fe820e58e04d992", null ],
+    [ "mimicpp::ScopedExpectations", "da/dbc/group___e_x_p_e_c_t_a_t_i_o_n.html#ga5c5195245b3386e7f86e415b4433d5c5", null ],
     [ "mimicpp::signature_add_const_qualifier_t", "df/ddb/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___c_o_n_s_t___q_u_a_l_i_f_i_e_r.html#gad0aa771934f5c52c2dbce782aae87ed5", null ],
     [ "mimicpp::signature_add_lvalue_ref_qualifier_t", "d5/dcc/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___l_v_a_l_u_e___r_e_f___q_u_a_l_i_f_i_e_r.html#ga456aee4ab2eae00f1996c3581b91ae35", null ],
     [ "mimicpp::signature_add_noexcept_t", "de/d03/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_d_d___n_o_e_x_c_e_p_t.html#ga8e3ea8f62502eac4396439c2010b9cb9", null ],
@@ -34,6 +36,7 @@ var _fwd_8hpp =
     ] ],
     [ "mimicpp::is_overload_set_v", "df/dc6/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d___s_e_t.html#ga39bc4106334393c907fb7c716490135c", null ],
     [ "mimicpp::is_overloadable_with_v", "d1/d9e/group___t_y_p_e___t_r_a_i_t_s___i_s___o_v_e_r_l_o_a_d_a_b_l_e___w_i_t_h.html#ga444a530890b564007a9d8f9b5d035785", null ],
+    [ "mimicpp::signature_arity_v", "dc/d17/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___a_r_i_t_y.html#ga46938ef06574154c256764c408b48da1", null ],
     [ "mimicpp::signature_const_qualification_v", "da/dc2/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___c_o_n_s_t___q_u_a_l_i_f_i_c_a_t_i_o_n.html#gac6d1b8f4ee38e8e6b60d2ddad0ce21a4", null ],
     [ "mimicpp::signature_is_noexcept_v", "d0/df7/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___i_s___n_o_e_x_c_e_p_t.html#ga9c8cd4e82dd32deb1f0f2afc9361ee3f", null ],
     [ "mimicpp::signature_ref_qualification_v", "db/d91/group___t_y_p_e___t_r_a_i_t_s___s_i_g_n_a_t_u_r_e___r_e_f___q_u_a_l_i_f_i_c_a_t_i_o_n.html#ga6993c58ce901120dc2de8bae60dcdf68", null ]

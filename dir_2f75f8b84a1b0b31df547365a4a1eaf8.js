@@ -6,10 +6,13 @@ var dir_2f75f8b84a1b0b31df547365a4a1eaf8 =
     [ "C++23Backports.hpp", "d7/d59/utilities_2_c_09_0923_backports_8hpp.html", "d7/d59/utilities_2_c_09_0923_backports_8hpp" ],
     [ "C++26Backports.hpp", "dc/dfc/_c_09_0926_backports_8hpp.html", "dc/dfc/_c_09_0926_backports_8hpp" ],
     [ "Concepts.hpp", "d9/db9/_concepts_8hpp.html", null ],
+    [ "CopyableBox.hpp", "da/de3/_copyable_box_8hpp.html", null ],
+    [ "Overloaded.hpp", "d6/d50/_overloaded_8hpp.html", "d6/d50/_overloaded_8hpp" ],
     [ "PassKey.hpp", "d7/d6d/_pass_key_8hpp.html", null ],
     [ "PriorityTag.hpp", "d8/d65/_priority_tag_8hpp.html", "d8/d65/_priority_tag_8hpp" ],
     [ "SourceLocation.hpp", "d3/d15/_source_location_8hpp.html", null ],
     [ "Stacktrace.hpp", "de/df5/_stacktrace_8hpp.html", "de/df5/_stacktrace_8hpp" ],
     [ "StaticString.hpp", "d7/d89/_static_string_8hpp.html", "d7/d89/_static_string_8hpp" ],
-    [ "TypeList.hpp", "df/d2e/_type_list_8hpp.html", "df/d2e/_type_list_8hpp" ]
+    [ "TypeList.hpp", "df/d2e/_type_list_8hpp.html", "df/d2e/_type_list_8hpp" ],
+    [ "UnwrapRef.hpp", "d2/d9b/_unwrap_ref_8hpp.html", "d2/d9b/_unwrap_ref_8hpp" ]
 ];

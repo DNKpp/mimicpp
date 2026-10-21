@@ -1,17 +1,22 @@
 var searchData=
 [
-  ['_7eargsequence_0',['~ArgSequence',['../d6/d54/classmimicpp_1_1printing_1_1type_1_1parsing_1_1token_1_1_arg_sequence.html#a719de7f59183b47b2130ffb4f8030ed0',1,'mimicpp::printing::type::parsing::token::ArgSequence']]],
-  ['_7ebasicexpectationbuilder_1',['~BasicExpectationBuilder',['../d5/de1/classmimicpp_1_1_basic_expectation_builder.html#ac21118a6f294d01b1ed2fa9cf347cf72',1,'mimicpp::BasicExpectationBuilder']]],
-  ['_7ebasicscopedsequence_2',['~BasicScopedSequence',['../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#a9bde4d56b45b5ab9c6493ca51af61571',1,'mimicpp::BasicScopedSequence']]],
-  ['_7eexpectation_3',['~Expectation',['../d3/d1c/classmimicpp_1_1_expectation.html#aaca0f2095b61fd259ff4382258091a36',1,'mimicpp::Expectation']]],
-  ['_7eexpectationcollection_4',['~ExpectationCollection',['../d5/d86/classmimicpp_1_1_expectation_collection.html#a244c0e5d57180114588cf69d441dab20',1,'mimicpp::ExpectationCollection']]],
+  ['_7ebasicbuilder_0',['~BasicBuilder',['../d4/d01/classmimicpp_1_1expectation_1_1_basic_builder.html#a7b6cba89fe0c0d26c1aa785c6704b407',1,'mimicpp::expectation::BasicBuilder']]],
+  ['_7ebasicscopedsequence_1',['~BasicScopedSequence',['../d2/d48/classmimicpp_1_1_basic_scoped_sequence.html#a5961accd06874dd5e21194113e0a3b02',1,'mimicpp::BasicScopedSequence']]],
+  ['_7ecollector_2',['~Collector',['../d7/dc7/classmimicpp_1_1expectation_1_1_collector.html#a1f40567d7a4e4277543f9238ba2de282',1,'mimicpp::expectation::Collector']]],
+  ['_7ecopyablebox_3',['~CopyableBox',['../d3/d77/classmimicpp_1_1util_1_1_copyable_box.html#a2e9865d1d8b8bfda1b0f7048c7abc83e',1,'mimicpp::util::CopyableBox']]],
+  ['_7eexpectation_4',['~Expectation',['../dd/df1/classmimicpp_1_1expectation_1_1_expectation.html#a9f598ced5a1a84ac9d5666349e595ea2',1,'mimicpp::expectation::Expectation']]],
   ['_7eireporter_5',['~IReporter',['../d2/dcd/classmimicpp_1_1reporting_1_1_i_reporter.html#ac661b52990c11ba4c020c55ae5ce58ec',1,'mimicpp::reporting::IReporter']]],
   ['_7elifetimewatcher_6',['~LifetimeWatcher',['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#ga437388b80d758c2d0338f8d86a07586d',1,'mimicpp::LifetimeWatcher']]],
   ['_7emock_7',['~Mock',['../d2/d48/classmimicpp_1_1_mock.html#a0b117b01ac737368ac453714adbfda44',1,'mimicpp::Mock']]],
-  ['_7erelocationwatcher_8',['~RelocationWatcher',['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#ga4dd3bd4a471844869fac24d1e5e1399a',1,'mimicpp::RelocationWatcher']]],
-  ['_7escopedexpectation_9',['~ScopedExpectation',['../d6/dc0/classmimicpp_1_1_scoped_expectation.html#ad74606fce962dc55495e735c56243fe7',1,'mimicpp::ScopedExpectation']]],
-  ['_7esideeffectaction_10',['~SideEffectAction',['../d5/d8f/classmimicpp_1_1expectation__policies_1_1_side_effect_action.html#a399903f019ce67d203a4c21a7936cad3',1,'mimicpp::expectation_policies::SideEffectAction']]],
-  ['_7esourcelocation_11',['~SourceLocation',['../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412',1,'mimicpp::util::SourceLocation']]],
-  ['_7estacktrace_12',['~Stacktrace',['../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#a06866e7c78fecd0887eca851a60309df',1,'mimicpp::util::Stacktrace']]],
-  ['_7ewatched_13',['~Watched',['../d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5',1,'mimicpp::Watched']]]
+  ['_7eowner_8',['~Owner',['../da/d33/classmimicpp_1_1expectation_1_1_owner.html#a6fc9b59784218bd518814410bc5793d8',1,'mimicpp::expectation::Owner']]],
+  ['_7erecursive_9',['~Recursive',['../de/d33/classmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_recursive.html#a34a0df27369e1652af592f0f779d975b',1,'mimicpp::printing::type::parsing::state::Recursive']]],
+  ['_7eregistry_10',['~Registry',['../df/df9/classmimicpp_1_1expectation_1_1_registry.html#a97b1ed890ec9f9d0376f7057398eb39b',1,'mimicpp::expectation::Registry']]],
+  ['_7erelocationwatcher_11',['~RelocationWatcher',['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#ga4dd3bd4a471844869fac24d1e5e1399a',1,'mimicpp::RelocationWatcher']]],
+  ['_7esideeffectaction_12',['~SideEffectAction',['../d1/d45/classmimicpp_1_1expectation_1_1policies_1_1_side_effect_action.html#ac8fd7e5fb4a4cf23f6bd59e11712fdcb',1,'mimicpp::expectation::policies::SideEffectAction']]],
+  ['_7esourcelocation_13',['~SourceLocation',['../db/df5/classmimicpp_1_1util_1_1_source_location.html#a2d8740d0689905bbcb72e6a6fea63412',1,'mimicpp::util::SourceLocation']]],
+  ['_7estacktrace_14',['~Stacktrace',['../d2/d27/classmimicpp_1_1util_1_1_stacktrace.html#a06866e7c78fecd0887eca851a60309df',1,'mimicpp::util::Stacktrace']]],
+  ['_7estateguard_15',['~StateGuard',['../de/de0/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_state_guard.html#ae4dcd72997590ebc8e9e03c0ceb53cd3',1,'mimicpp::printing::type::parsing::StateGuard']]],
+  ['_7ethatrequirement_16',['~ThatRequirement',['../d3/de4/classmimicpp_1_1expectation_1_1policies_1_1_that_requirement.html#abbbad45e727e42c14b3a119e848da8f8',1,'mimicpp::expectation::policies::ThatRequirement']]],
+  ['_7etransaction_17',['~Transaction',['../d5/d3b/classmimicpp_1_1printing_1_1type_1_1parsing_1_1_transaction.html#a61d4361e76af6311098fe06799403afb',1,'mimicpp::printing::type::parsing::Transaction']]],
+  ['_7ewatched_18',['~Watched',['../d3/d5d/classmimicpp_1_1_watched.html#ae15d71a18f6ee902dea433bfa86c29e5',1,'mimicpp::Watched']]]
 ];

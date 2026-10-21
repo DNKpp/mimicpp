@@ -4,7 +4,7 @@ var searchData=
   ['generalmatchers_2ehpp_1',['GeneralMatchers.hpp',['../d9/dd5/_general_matchers_8hpp.html',1,'']]],
   ['generalpolicies_2ehpp_2',['GeneralPolicies.hpp',['../de/d10/_general_policies_8hpp.html',1,'']]],
   ['generate_20facade_3',['generate facade',['../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html',1,'']]],
-  ['get_5for_5femplace_5fspecs_4',['get_or_emplace_specs',['../d2/d01/namespacemimicpp_1_1printing_1_1type_1_1parsing_1_1token.html#aea8a32c1af3a4e18ff0c853b429cc7ad',1,'mimicpp::printing::type::parsing::token']]],
+  ['genericmatcher_4',['GenericMatcher',['../d0/db8/classmimicpp_1_1_generic_matcher.html',1,'mimicpp::GenericMatcher&lt; isInverted, Predicate, Args &gt;'],['../d0/db8/classmimicpp_1_1_generic_matcher.html#a624815d48ee911e4f84504044a6cc1cd',1,'mimicpp::GenericMatcher::GenericMatcher()']]],
   ['gitignore_2etxt_5',['gitignore.txt',['../d2/db0/gitignore_8txt.html',1,'']]],
   ['globalreporter_2ehpp_6',['GlobalReporter.hpp',['../de/dd1/_global_reporter_8hpp.html',1,'']]],
   ['greedyscopedsequence_7',['GreedyScopedSequence',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#gaf9c4e7108a57906787965591f6064d82',1,'mimicpp']]],

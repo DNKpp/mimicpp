@@ -1,6 +1,7 @@
 var macros_2_common_8hpp =
 [
     [ "MIMICPP_DETAIL_COMMA_DELIMITER", "d1/d70/group___m_a_c_r_o___d_e_t_a_i_l___f_o_r___e_a_c_h.html#gaa4c970e396930cb25eb33ff3f794d065", null ],
+    [ "MIMICPP_DETAIL_COUNTER", "d3/d2f/group___m_a_c_r_o___d_e_t_a_i_l.html#ga4876f6e961e8741c9605a28509fa2808", null ],
     [ "MIMICPP_DETAIL_EXPAND", "d1/d70/group___m_a_c_r_o___d_e_t_a_i_l___f_o_r___e_a_c_h.html#gaf19968b10208e3ac9375768183582e1a", null ],
     [ "MIMICPP_DETAIL_EXPAND1", "d1/d70/group___m_a_c_r_o___d_e_t_a_i_l___f_o_r___e_a_c_h.html#ga50c07587f0c394fa639d3760005532e3", null ],
     [ "MIMICPP_DETAIL_EXPAND2", "d1/d70/group___m_a_c_r_o___d_e_t_a_i_l___f_o_r___e_a_c_h.html#ga5883185debdb05be3798d606c3248945", null ],
