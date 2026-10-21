@@ -2584,7 +2584,7 @@ details[open]>summary::before {
 }
 
 html {
---timestamp: 'Wed Oct 14 2026';
+--timestamp: 'Wed Oct 21 2026';
 }
 span.timestamp { content: ' '; }
 span.timestamp:before { content: var(--timestamp); }
