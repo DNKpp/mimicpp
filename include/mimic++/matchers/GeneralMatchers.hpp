@@ -609,15 +609,15 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::matches
     {
         return make_generic_matcher(
             []<typename Other>(auto& ctx, Other const& target) noexcept
-                requires std::is_convertible_v<std::remove_cvref_t<T> const volatile*, Other const volatile*>
+                requires std::is_convertible_v<std::remove_reference_t<T> const volatile*, Other const volatile*>
             {
                 auto const& [expected] = ctx.expectations();
-                auto* const targetPtr = std::addressof(target);
+                void const* const targetPtr = std::addressof(target);
                 ctx.capture(targetPtr);
                 return expected == targetPtr;
             },
             "is instance at {}",
-            std::addressof(instance));
+            static_cast<void const*>(std::addressof(instance)));
     }
 
     /**
