@@ -1,4 +1,3 @@
-
 //          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
@@ -107,3 +106,37 @@ TEST_CASE(
             variant_holds_alternative<expectation::MatchFailure>());
     }
 }
+
+#if MIMICPP_CONFIG_USE_FMT
+
+    #include <fmt/ranges.h> // required: this is where fmt's range detection, and so the ADL begin/end lookup, lives
+
+namespace
+{
+    struct PtrRange
+    {
+        int* data(); // deliberately non-const
+    };
+
+    // Found through ADL by fmt's range detection; the body is instantiated to deduce the return type.
+    template <typename T>
+        requires std::same_as<std::remove_const_t<T>, PtrRange>
+    auto begin(T* ptr)
+    {
+        return ptr->data(); // OK for PtrRange*, hard error for PtrRange const*
+    }
+}
+
+TEST_CASE(
+    "matches::instance does not fall for ADL-tricks with custom types.",
+    "[matcher]")
+{
+    PtrRange obj{};
+    auto const matcher = matches::instance(obj);
+
+    CHECK_THAT(
+        matcher.matches(std::as_const(obj)),
+        variant_holds_alternative<expectation::MatchSuccess>());
+}
+
+#endif
