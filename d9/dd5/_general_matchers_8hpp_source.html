@@ -655,15 +655,15 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('d9/dd5/_genera
 <div class="line"><a id="l00609" name="l00609"></a><span class="lineno">  609</span>    {</div>
 <div class="line"><a id="l00610" name="l00610"></a><span class="lineno">  610</span>        <span class="keywordflow">return</span> <a class="code hl_function" href="../../d1/d11/namespacemimicpp.html#a09a3fb984207cf2b36e8b59f70bfaccd">make_generic_matcher</a>(</div>
 <div class="line"><a id="l00611" name="l00611"></a><span class="lineno">  611</span>            []&lt;<span class="keyword">typename</span> Other&gt;(<span class="keyword">auto</span>&amp; ctx, Other <span class="keyword">const</span>&amp; target) <span class="keyword">noexcept</span></div>
-<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>                <span class="keyword">requires</span> std::is_convertible_v&lt;std::remove_cvref_t&lt;T&gt; <span class="keyword">const</span> <span class="keyword">volatile</span>*, Other <span class="keyword">const</span> <span class="keyword">volatile</span>*&gt;</div>
+<div class="line"><a id="l00612" name="l00612"></a><span class="lineno">  612</span>                <span class="keyword">requires</span> std::is_convertible_v&lt;std::remove_reference_t&lt;T&gt; <span class="keyword">const</span> <span class="keyword">volatile</span>*, Other <span class="keyword">const</span> <span class="keyword">volatile</span>*&gt;</div>
 <div class="line"><a id="l00613" name="l00613"></a><span class="lineno">  613</span>            {</div>
 <div class="line"><a id="l00614" name="l00614"></a><span class="lineno">  614</span>                <span class="keyword">auto</span> <span class="keyword">const</span>&amp; [expected] = ctx.expectations();</div>
-<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>                <span class="keyword">auto</span>* <span class="keyword">const</span> targetPtr = std::addressof(target);</div>
+<div class="line"><a id="l00615" name="l00615"></a><span class="lineno">  615</span>                <span class="keywordtype">void</span> <span class="keyword">const</span>* <span class="keyword">const</span> targetPtr = std::addressof(target);</div>
 <div class="line"><a id="l00616" name="l00616"></a><span class="lineno">  616</span>                ctx.capture(targetPtr);</div>
 <div class="line"><a id="l00617" name="l00617"></a><span class="lineno">  617</span>                <span class="keywordflow">return</span> expected == targetPtr;</div>
 <div class="line"><a id="l00618" name="l00618"></a><span class="lineno">  618</span>            },</div>
 <div class="line"><a id="l00619" name="l00619"></a><span class="lineno">  619</span>            <span class="stringliteral">&quot;is instance at {}&quot;</span>,</div>
-<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            std::addressof(<a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">instance</a>));</div>
+<div class="line"><a id="l00620" name="l00620"></a><span class="lineno">  620</span>            <span class="keyword">static_cast&lt;</span><span class="keywordtype">void</span> const*<span class="keyword">&gt;</span>(std::addressof(<a class="code hl_function" href="../../d4/d14/group___m_a_t_c_h_e_r_s.html#ga369aedf4edb7313cf70f7ac78ec233f9">instance</a>)));</div>
 <div class="line"><a id="l00621" name="l00621"></a><span class="lineno">  621</span>    }</div>
 </div>
 <div class="line"><a id="l00622" name="l00622"></a><span class="lineno">  622</span></div>
