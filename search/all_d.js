@@ -5,7 +5,7 @@ var searchData=
   ['lazyscopedsequence_2',['LazyScopedSequence',['../d3/dd3/group___e_x_p_e_c_t_a_t_i_o_n___s_e_q_u_e_n_c_e.html#ga9efea600d953c01de2d99d7d144264e4',1,'mimicpp']]],
   ['lazysequence_3',['LazySequence',['../db/d46/classmimicpp_1_1_lazy_sequence.html',1,'mimicpp::LazySequence'],['../db/d46/classmimicpp_1_1_lazy_sequence.html#a5b8b0ffd34e750b3487e5a22eafe5be0',1,'mimicpp::LazySequence::LazySequence()']]],
   ['le_4',['le',['../d4/d14/group___m_a_t_c_h_e_r_s.html#ga4a114a648ee1923e852dc3677038ad9a',1,'mimicpp::matches']]],
-  ['legacy_20matchers_5',['Legacy matchers',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md10',1,'']]],
+  ['legacy_20matchers_5',['Legacy matchers',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md5',1,'']]],
   ['lexer_2ehpp_6',['Lexer.hpp',['../d5/d24/_lexer_8hpp.html',1,'']]],
   ['libc_7',['Clang-18.1 + libc++',['../index.html#autotoc_md76',1,'']]],
   ['lifetimewatcher_8',['LifetimeWatcher',['../db/d98/classmimicpp_1_1_lifetime_watcher.html',1,'mimicpp::LifetimeWatcher'],['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#ga0f094d7e7a01d25242fbef78fc79e036',1,'mimicpp::LifetimeWatcher::LifetimeWatcher()=default'],['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#gabb228b64a1d358c7d5f3dfdd521bbc40',1,'mimicpp::LifetimeWatcher::LifetimeWatcher(const for_base_tag&lt; Base &gt;)'],['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#ga742de5eca9a842181e342e5590f1d0d3',1,'mimicpp::LifetimeWatcher::LifetimeWatcher(const LifetimeWatcher &amp;other)'],['../dd/d5c/group___o_b_j_e_c_t___w_a_t_c_h_i_n_g.html#ga884ad5d536259e2c6cd3881a3f8eee74',1,'mimicpp::LifetimeWatcher::LifetimeWatcher(LifetimeWatcher &amp;&amp;)=default']]],
