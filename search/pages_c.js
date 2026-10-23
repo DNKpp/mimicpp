@@ -8,7 +8,7 @@ var searchData=
   ['matcher_20unicode_20support_5',['Enable experimental string-matcher unicode support',['../d2/d65/group___c_o_n_f_i_g_u_r_a_t_i_o_n.html#autotoc_md39',1,'']]],
   ['matchers_6',['Matchers',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md4',1,'Case-Insensitive Matchers'],['../index.html#autotoc_md59',1,'Matchers']]],
   ['matchers_7',['Legacy matchers',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md10',1,'']]],
-  ['matching_8',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md23',1,'']]],
+  ['matching_8',['Support for case-insensitive matching',['../d8/d47/group___s_t_r_i_n_g.html#autotoc_md25',1,'']]],
   ['matching_20arguments_9',['Matching arguments',['../d4/d14/group___m_a_t_c_h_e_r_s.html#autotoc_md8',1,'']]],
   ['mimic_10',['mimic++',['../index.html',1,'']]],
   ['mimic_20a_20modern_20and_20mostly_20macro_20free_20mocking_20framework_11',['mimic++, a modern and (mostly) macro free mocking framework',['../index.html#autotoc_md47',1,'']]],
