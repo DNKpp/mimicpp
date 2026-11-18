@@ -894,16 +894,18 @@ TEST_CASE(
             mimicpp::print(sharedInt),
             Catch::Matchers::Matches(print(sharedInt.get())));
 
+        std::weak_ptr<int> weak{};
         CHECK_THAT(
-            mimicpp::print(std::weak_ptr<int>{}),
+            mimicpp::print(weak),
             Catch::Matchers::Matches("nullptr"));
+        weak = sharedInt;
         CHECK_THAT(
-            mimicpp::print(std::weak_ptr{sharedInt}),
+            mimicpp::print(weak),
             Catch::Matchers::Matches(print(sharedInt.get())));
         sharedInt.reset();
         CHECK_THAT(
-            mimicpp::print(std::weak_ptr{sharedInt}),
-            Catch::Matchers::Matches("nullptr"));
+            mimicpp::print(weak),
+            Catch::Matchers::Matches("expired"));
     }
 }
 

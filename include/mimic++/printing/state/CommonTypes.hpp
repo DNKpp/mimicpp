@@ -220,7 +220,20 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static constexpr OutIter print(OutIter out, std::weak_ptr<T> const& ptr)
         {
-            return mimicpp::print(std::move(out), ptr.lock());
+            // empty: no control block, i.e. ownership-equivalent to a default-constructed weak_ptr
+            if (std::weak_ptr<T> const empty{};
+                !ptr.owner_before(empty)
+                && !empty.owner_before(ptr))
+            {
+                return mimicpp::print(std::move(out), nullptr);
+            }
+
+            if (auto const shared = ptr.lock())
+            {
+                return mimicpp::print(std::move(out), shared);
+            }
+
+            return format::format_to(std::move(out), "expired");
         }
     };
 
