@@ -174,6 +174,30 @@ namespace mimicpp::printing::detail::state
         }
     };
 
+    // Member-pointers are very special. They are not actual pointers and have varying size.
+    template <typename Ptr>
+        requires std::is_member_pointer_v<Ptr>
+    struct common_type_printer<Ptr>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, auto ptr)
+        {
+            if (!ptr)
+            {
+                return mimicpp::print(std::move(out), nullptr);
+            }
+
+            auto const bytes = util::bit_cast<std::array<std::byte, sizeof(Ptr)>>(ptr);
+            out = format::format_to(std::move(out), "0x");
+            for (std::byte const b : bytes)
+            {
+                out = format::format_to(std::move(out), "{:02x}", std::to_integer<unsigned>(b));
+            }
+
+            return out;
+        }
+    };
+
     template <typename T>
     concept smart_pointer = requires(T const& ptr) {
         typename T::element_type;

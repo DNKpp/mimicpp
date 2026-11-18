@@ -845,10 +845,33 @@ TEST_CASE(
 #elif
             "{8}";
 #endif
-
         CHECK_THAT(print(fun), Catch::Matchers::Matches(regex));
         CHECK_THAT(
             print(decltype(fun){}),
+            Catch::Matchers::Matches("nullptr"));
+    }
+
+    SECTION("Member pointers.")
+    {
+        struct MyObject
+        {
+            int x{};
+
+            void foo()
+            {
+            }
+        };
+
+        CHECK_THAT(print(&MyObject::x), Catch::Matchers::Matches(R"(0x[\dA-Fa-f]{4,24})"));
+        using MemberDataPtr = decltype(&MyObject::x);
+        CHECK_THAT(
+            print(MemberDataPtr{}),
+            Catch::Matchers::Matches("nullptr"));
+
+        CHECK_THAT(print(&MyObject::foo), Catch::Matchers::Matches(R"(0x[\dA-Fa-f]{8,48})"));
+        using MemberFunPtr = decltype(&MyObject::foo);
+        CHECK_THAT(
+            print(MemberFunPtr{}),
             Catch::Matchers::Matches("nullptr"));
     }
 
