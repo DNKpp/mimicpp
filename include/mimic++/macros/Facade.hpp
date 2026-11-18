@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -498,7 +498,7 @@ namespace mimicpp
  *
  * \attention
  * This macro requires a `self_type` alias to be defined in the class where the mock is declared.
- * If `self_type` does not match the actual containing type, the behavior is undefined.
+ * If `self_type` does not match the actual containing type, the compilation will fail with a diagnostic.
  *
  * \snippet FacadeMock.cpp facade mock with this
  */
