@@ -157,22 +157,16 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static constexpr OutIter print(OutIter out, T const* ptr)
         {
-            if (auto const* inner = std::to_address(ptr))
+            if (ptr)
             {
-                auto const value = util::bit_cast<std::uintptr_t>(inner);
+                auto const value = util::bit_cast<std::uintptr_t>(ptr);
                 if constexpr (4u < sizeof(std::uintptr_t))
                 {
-                    return format::format_to(
-                        std::move(out),
-                        "0x{:0>16x}",
-                        value);
+                    return format::format_to(std::move(out), "0x{:0>16x}", value);
                 }
                 else
                 {
-                    return format::format_to(
-                        std::move(out),
-                        "0x{:0>8x}",
-                        value);
+                    return format::format_to(std::move(out), "0x{:0>8x}", value);
                 }
             }
 
