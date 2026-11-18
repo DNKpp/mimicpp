@@ -466,7 +466,7 @@ Mocks and variadic templates</h2>
 </dl>
 <p>This macro defines a single mock member-object for one method signature and generates a corresponding facade member function. The facade member function forwards its calls to the underlying mock object-member and prepends an explicit <span class="tt">this</span> pointer to the argument list.</p>
 <p>The mock member-object name is the content of <span class="tt">fn_name</span> suffixed by an additional <span class="tt">_</span>.</p>
-<dl class="section attention"><dt>Attention</dt><dd>This macro requires a <span class="tt">self_type</span> alias to be defined in the class where the mock is declared. If <span class="tt">self_type</span> does not match the actual containing type, the behavior is undefined.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>This macro requires a <span class="tt">self_type</span> alias to be defined in the class where the mock is declared. If <span class="tt">self_type</span> does not match the actual containing type, the compilation will fail with a diagnostic.</dd></dl>
 <div class="fragment"><div class="line">    <span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">class </span>Base</div>
@@ -896,7 +896,7 @@ Mocks and variadic templates</h2>
 </dl>
 <p>This macro defines a single mock member-object for one method signature and generates a corresponding facade member function. The facade member function forwards its calls to the underlying mock object-member and prepends an explicit <span class="tt">this</span> pointer to the argument list.</p>
 <p>The mock member-object name is the content of <span class="tt">fn_name</span> suffixed by an additional <span class="tt">_</span>.</p>
-<dl class="section attention"><dt>Attention</dt><dd>This macro requires a <span class="tt">self_type</span> alias to be defined in the class where the mock is declared. If <span class="tt">self_type</span> does not match the actual containing type, the behavior is undefined.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>This macro requires a <span class="tt">self_type</span> alias to be defined in the class where the mock is declared. If <span class="tt">self_type</span> does not match the actual containing type, the compilation will fail with a diagnostic.</dd></dl>
 <div class="fragment"><div class="line">    <span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">class </span>Base</div>
@@ -1017,7 +1017,7 @@ Mocks and variadic templates</h2>
 <div class="line">    fn_name,                                          \</div>
 <div class="line">    ,                                                 \</div>
 <div class="line">    __VA_ARGS__)</div>
-<div class="ttc" id="anamespacemimicpp_1_1facade_html_a521719872d389a137d8f42b0bd19effc"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html#a521719872d389a137d8f42b0bd19effc">mimicpp::facade::mock_as_member</a></div><div class="ttdeci">basic_as_member&lt; Mock &gt; mock_as_member</div><div class="ttdef"><b>Definition</b> Facade.hpp:155</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1facade_html_a521719872d389a137d8f42b0bd19effc"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html#a521719872d389a137d8f42b0bd19effc">mimicpp::facade::mock_as_member</a></div><div class="ttdeci">basic_as_member&lt; Mock &gt; mock_as_member</div><div class="ttdef"><b>Definition</b> Facade.hpp:156</div></div>
 </div><!-- fragment -->
 <p>Entry point for mocking a member method overload-set. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1086,7 +1086,7 @@ Mocks and variadic templates</h2>
 <div class="line">    fn_name,                                                    \</div>
 <div class="line">    ,                                                           \</div>
 <div class="line">    __VA_ARGS__)</div>
-<div class="ttc" id="anamespacemimicpp_1_1facade_html_a17fa11e0d717aafe4c40ccf115c4ae3f"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html#a17fa11e0d717aafe4c40ccf115c4ae3f">mimicpp::facade::mock_as_member_with_this</a></div><div class="ttdeci">basic_as_member_with_this&lt; Self, Mock &gt; mock_as_member_with_this</div><div class="ttdef"><b>Definition</b> Facade.hpp:190</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1facade_html_a17fa11e0d717aafe4c40ccf115c4ae3f"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html#a17fa11e0d717aafe4c40ccf115c4ae3f">mimicpp::facade::mock_as_member_with_this</a></div><div class="ttdeci">basic_as_member_with_this&lt; Self, Mock &gt; mock_as_member_with_this</div><div class="ttdef"><b>Definition</b> Facade.hpp:197</div></div>
 </div><!-- fragment -->
 <p>Entry point for mocking a member method overload-set with an explicit <span class="tt">this</span> pointer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
