@@ -157,26 +157,44 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static constexpr OutIter print(OutIter out, T const* ptr)
         {
-            if (auto const* inner = std::to_address(ptr))
+            if (ptr)
             {
-                auto const value = util::bit_cast<std::uintptr_t>(inner);
+                auto const value = util::bit_cast<std::uintptr_t>(ptr);
                 if constexpr (4u < sizeof(std::uintptr_t))
                 {
-                    return format::format_to(
-                        std::move(out),
-                        "0x{:0>16x}",
-                        value);
+                    return format::format_to(std::move(out), "0x{:0>16x}", value);
                 }
                 else
                 {
-                    return format::format_to(
-                        std::move(out),
-                        "0x{:0>8x}",
-                        value);
+                    return format::format_to(std::move(out), "0x{:0>8x}", value);
                 }
             }
 
             return mimicpp::print(std::move(out), nullptr);
+        }
+    };
+
+    // Member-pointers are very special. They are not actual pointers and have varying size.
+    template <typename Ptr>
+        requires std::is_member_pointer_v<Ptr>
+    struct common_type_printer<Ptr>
+    {
+        template <print_iterator OutIter>
+        static constexpr OutIter print(OutIter out, auto ptr)
+        {
+            if (!ptr)
+            {
+                return mimicpp::print(std::move(out), nullptr);
+            }
+
+            auto const bytes = util::bit_cast<std::array<std::byte, sizeof(Ptr)>>(ptr);
+            out = format::format_to(std::move(out), "0x");
+            for (std::byte const b : bytes)
+            {
+                out = format::format_to(std::move(out), "{:02x}", std::to_integer<unsigned>(b));
+            }
+
+            return out;
         }
     };
 
@@ -202,7 +220,20 @@ namespace mimicpp::printing::detail::state
         template <print_iterator OutIter>
         static constexpr OutIter print(OutIter out, std::weak_ptr<T> const& ptr)
         {
-            return mimicpp::print(std::move(out), ptr.lock());
+            // empty: no control block, i.e. ownership-equivalent to a default-constructed weak_ptr
+            if (std::weak_ptr<T> const empty{};
+                !ptr.owner_before(empty)
+                && !empty.owner_before(ptr))
+            {
+                return mimicpp::print(std::move(out), nullptr);
+            }
+
+            if (auto const shared = ptr.lock())
+            {
+                return mimicpp::print(std::move(out), shared);
+            }
+
+            return format::format_to(std::move(out), "expired");
         }
     };
 

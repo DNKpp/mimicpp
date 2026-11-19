@@ -708,7 +708,7 @@ TEST_CASE(
 
     SECTION("std::ranges::subrange is printed as a range.")
     {
-        std::vector const vec{42, 1337, 42'1337};
+        std::vector const vec{42, 1337, 421'337};
         std::ranges::subrange const subrange{vec};
 
         StringT const expected{"[42, 1337, 421337]"};
@@ -834,6 +834,47 @@ TEST_CASE(
 #endif
     }
 
+    SECTION("Function pointers.")
+    {
+        void (*fun)(int) = [](int) {};
+
+        std::string const regex =
+            R"(0x[\dA-Fa-f])"
+#if not MIMICPP_DETAIL_IS_32BIT
+            "{16}";
+#elif
+            "{8}";
+#endif
+        CHECK_THAT(print(fun), Catch::Matchers::Matches(regex));
+        CHECK_THAT(
+            print(decltype(fun){}),
+            Catch::Matchers::Matches("nullptr"));
+    }
+
+    SECTION("Member pointers.")
+    {
+        struct MyObject
+        {
+            int x{};
+
+            void foo()
+            {
+            }
+        };
+
+        CHECK_THAT(print(&MyObject::x), Catch::Matchers::Matches(R"(0x[\dA-Fa-f]{4,24})"));
+        using MemberDataPtr = decltype(&MyObject::x);
+        CHECK_THAT(
+            print(MemberDataPtr{}),
+            Catch::Matchers::Matches("nullptr"));
+
+        CHECK_THAT(print(&MyObject::foo), Catch::Matchers::Matches(R"(0x[\dA-Fa-f]{8,48})"));
+        using MemberFunPtr = decltype(&MyObject::foo);
+        CHECK_THAT(
+            print(MemberFunPtr{}),
+            Catch::Matchers::Matches("nullptr"));
+    }
+
     SECTION("Std smart-pointers are unwrapped.")
     {
         CHECK_THAT(
@@ -853,16 +894,18 @@ TEST_CASE(
             mimicpp::print(sharedInt),
             Catch::Matchers::Matches(print(sharedInt.get())));
 
+        std::weak_ptr<int> weak{};
         CHECK_THAT(
-            mimicpp::print(std::weak_ptr<int>{}),
+            mimicpp::print(weak),
             Catch::Matchers::Matches("nullptr"));
+        weak = sharedInt;
         CHECK_THAT(
-            mimicpp::print(std::weak_ptr{sharedInt}),
+            mimicpp::print(weak),
             Catch::Matchers::Matches(print(sharedInt.get())));
         sharedInt.reset();
         CHECK_THAT(
-            mimicpp::print(std::weak_ptr{sharedInt}),
-            Catch::Matchers::Matches("nullptr"));
+            mimicpp::print(weak),
+            Catch::Matchers::Matches("expired"));
     }
 }
 
@@ -1008,7 +1051,7 @@ TEST_CASE(
     SECTION("When valid ValueCategory is given.")
     {
         auto const [expected, category] = GENERATE((table<StringT, ValueCategory>)({
-            {   "any",    ValueCategory::any},
+            {"any",    ValueCategory::any   },
             {"rvalue", ValueCategory::rvalue},
             {"lvalue", ValueCategory::lvalue},
         }));
@@ -1028,8 +1071,8 @@ TEST_CASE(
     SECTION("When valid Constness is given.")
     {
         auto const [expected, category] = GENERATE((table<StringT, Constness>)({
-            {    "any",       Constness::any},
-            {  "const",  Constness::as_const},
+            {"any",     Constness::any      },
+            {"const",   Constness::as_const },
             {"mutable", Constness::non_const},
         }));
 
@@ -1048,8 +1091,8 @@ TEMPLATE_TEST_CASE(
     std::wstring_view const)
 {
     auto const [expected, source] = GENERATE((table<std::string, wchar_t const*>)({
-        {                                                    "L\"\"",          L""},
-        {            "L\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   L"He, llo"},
+        {"L\"\"",                                                     L""         },
+        {"L\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",             L"He, llo"  },
         {"L\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", L" He, llo "}
     }));
 
@@ -1069,8 +1112,8 @@ TEMPLATE_TEST_CASE(
     std::u8string_view const)
 {
     auto const [expected, source] = GENERATE((table<std::string, char8_t const*>)({
-        {                                                    "u8\"\"",          u8""},
-        {            "u8\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   u8"He, llo"},
+        {"u8\"\"",                                                     u8""         },
+        {"u8\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",             u8"He, llo"  },
         {"u8\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u8" He, llo "}
     }));
 
@@ -1090,8 +1133,8 @@ TEMPLATE_TEST_CASE(
     std::u16string_view const)
 {
     auto const [expected, source] = GENERATE((table<std::string, char16_t const*>)({
-        {                                                    "u\"\"",          u""},
-        {            "u\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   u"He, llo"},
+        {"u\"\"",                                                     u""         },
+        {"u\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",             u"He, llo"  },
         {"u\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", u" He, llo "}
     }));
 
@@ -1111,8 +1154,8 @@ TEMPLATE_TEST_CASE(
     std::u32string_view const)
 {
     auto const [expected, source] = GENERATE((table<std::string, char32_t const*>)({
-        {                                                    "U\"\"",          U""},
-        {            "U\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",   U"He, llo"},
+        {"U\"\"",                                                     U""         },
+        {"U\"0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f\"",             U"He, llo"  },
         {"U\"0x20, 0x48, 0x65, 0x2c, 0x20, 0x6c, 0x6c, 0x6f, 0x20\"", U" He, llo "}
     }));
 

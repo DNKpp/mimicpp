@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -239,6 +239,9 @@ namespace mimicpp
  * \param forward_list Enclosed forward statements.
  */
 #define MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
+    static_assert(                                                                                                                                                          \
+        ::mimicpp::facade::detail::is_supported_spec(std::string_view{#specs}),                                                                                             \
+        "unsupported specifier; allowed are `const`, `&`, `&&`, `noexcept`, `override` and `final`.");                                                                      \
     linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                                \
     call_convention fn_name param_list specs                                                                                                                                \
     {                                                                                                                                                                       \
@@ -498,7 +501,7 @@ namespace mimicpp
  *
  * \attention
  * This macro requires a `self_type` alias to be defined in the class where the mock is declared.
- * If `self_type` does not match the actual containing type, the behavior is undefined.
+ * If `self_type` does not match the actual containing type, the compilation will fail with a diagnostic.
  *
  * \snippet FacadeMock.cpp facade mock with this
  */
