@@ -99,8 +99,7 @@ namespace mimicpp::expectation
             [[nodiscard]]
             virtual std::optional<MatchResults> matches(std::any&& opaqueCallInfo) const = 0;
 
-            [[nodiscard]]
-            virtual std::any consume(std::any&& opaqueCallInfo) = 0;
+            virtual void consume(std::any&& opaqueCallInfo, std::any&& opaqueResultSlot) = 0;
 
         protected:
             Concept() = default;
@@ -185,18 +184,26 @@ namespace mimicpp::expectation
                 return std::nullopt;
             }
 
-            [[nodiscard]]
-            std::any consume(std::any&& opaqueCallInfo) override
+            void consume(std::any&& opaqueCallInfo, std::any&& opaqueResultSlot) override
             {
                 auto const* const info = std::any_cast<CallInfoRef>(&opaqueCallInfo);
                 MIMICPP_ASSERT(info, "Invalid call type.");
+                [[maybe_unused]] auto* const* const slot = std::any_cast<call::ResultSlot<Return>*>(&opaqueResultSlot);
+                MIMICPP_ASSERT(slot && *slot, "Invalid result-slot type.");
 
                 m_ControlPolicy.consume();
                 std::apply(
                     [&](auto&... policies) { (..., policies.consume(info->get())); },
                     m_Policies);
 
-                return finalize(info->get());
+                if constexpr (std::is_void_v<Return>)
+                {
+                    m_Finalizer.finalize_call(info->get());
+                }
+                else
+                {
+                    (*slot)->emplace(m_Finalizer.finalize_call(info->get()));
+                }
             }
 
         private:
@@ -212,27 +219,6 @@ namespace mimicpp::expectation
                 return std::apply(
                     [&](auto const&... policies) { return MatchResults{policies.matches(call)...}; },
                     m_Policies);
-            }
-
-            [[nodiscard]]
-            std::any finalize(call::info_for_signature_t<Signature> const& call)
-            {
-                // Workaround: MSVC (x86, Release) emits C4702 "unreachable code" here when the finalizer always throws (e.g. finally::throws),
-                // because the optimizer inlines it.
-                // By constructing the `result` first empty and then re-assigning it, seems to please it.
-                std::any result{};
-
-                if constexpr (std::is_void_v<Return>)
-                {
-                    m_Finalizer.finalize_call(call);
-                    result = std::make_any<call::ResultStorage<void>>();
-                }
-                else
-                {
-                    result = std::make_any<call::ResultStorage<Return>>(m_Finalizer.finalize_call(call));
-                }
-
-                return result;
             }
         };
 
@@ -369,11 +355,10 @@ namespace mimicpp::expectation
         [[nodiscard]]
         Return consume(call::Info<Return, Args...> const& callInfo)
         {
-            std::any opaqueResult = m_Inner->consume(std::any{std::ref(callInfo)});
-            auto* const resultStorage = std::any_cast<call::ResultStorage<Return>>(&opaqueResult);
-            MIMICPP_ASSERT(resultStorage, "Invalid result-type.");
+            call::ResultSlot<Return> slot{};
+            m_Inner->consume(std::any{std::ref(callInfo)}, std::any{&slot});
 
-            return resultStorage->extract();
+            return slot.extract();
         }
 
         [[nodiscard]]

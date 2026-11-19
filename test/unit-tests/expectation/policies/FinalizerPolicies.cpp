@@ -22,7 +22,8 @@ TEST_CASE(
     CallInfoT const call{
         .args = {},
         .fromCategory = GENERATE(from_range(refQualifiers)),
-        .fromConstness = GENERATE(from_range(constQualifiers))};
+        .fromConstness = GENERATE(from_range(constQualifiers)),
+    };
 
     int value{42};
     InvocableMock<int&, CallInfoT const&> action{};
@@ -34,6 +35,33 @@ TEST_CASE(
         .LR_RETURN(value);
     int& result = policy.finalize_call(call);
     REQUIRE(&value == &result);
+}
+
+TEST_CASE(
+    "expectation::policies::ReturnsResultOf supports move-only types.",
+    "[expectation][expectation::policy]")
+{
+    using trompeloeil::_;
+
+    using SignatureT = std::unique_ptr<int>();
+    using CallInfoT = call::info_for_signature_t<SignatureT>;
+
+    CallInfoT const call{
+        .args = {},
+        .fromCategory = GENERATE(from_range(refQualifiers)),
+        .fromConstness = GENERATE(from_range(constQualifiers)),
+    };
+
+    InvocableMock<std::unique_ptr<int>, CallInfoT const&> action{};
+    expectation::policies::ReturnsResultOf policy{std::ref(action)};
+    STATIC_REQUIRE(expectation::finalize_policy_for<decltype(policy), SignatureT>);
+
+    REQUIRE_CALL(action, Invoke(_))
+        .LR_WITH(&call == &_1)
+        .LR_RETURN(std::make_unique<int>(42));
+    std::unique_ptr result = policy.finalize_call(call);
+    REQUIRE(result);
+    CHECK(*result == 42);
 }
 
 TEST_CASE(
@@ -65,7 +93,7 @@ TEST_CASE(
 
     SECTION("When non-void is returned.")
     {
-        using SignatureT = int && ();
+        using SignatureT = int&&();
         using CallInfoT = call::info_for_signature_t<SignatureT>;
         using PolicyT = expectation::policies::Throws<test_exception>;
         STATIC_REQUIRE(expectation::finalize_policy_for<PolicyT, SignatureT>);
