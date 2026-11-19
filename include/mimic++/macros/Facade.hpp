@@ -239,6 +239,9 @@ namespace mimicpp
  * \param forward_list Enclosed forward statements.
  */
 #define MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \
+    static_assert(                                                                                                                                                          \
+        ::mimicpp::facade::detail::is_supported_spec(std::string_view{#specs}),                                                                                             \
+        "unsupported specifier; allowed are `const`, `&`, `&&`, `noexcept`, `override` and `final`.");                                                                      \
     linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                                \
     call_convention fn_name param_list specs                                                                                                                                \
     {                                                                                                                                                                       \

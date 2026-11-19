@@ -56,6 +56,7 @@ function(check_compile_error SOURCE_FILE)
 endfunction()
 
 check_compile_error("incorrect-self-on-member-mock-with-this.cpp")
+check_compile_error("invalid-facade-mock-specifier.cpp")
 check_compile_error("missing-finalizer-for-non-void.cpp")
 check_compile_error("multiple-times-policies.cpp")
 check_compile_error("multiple-finalize-policies.cpp")
