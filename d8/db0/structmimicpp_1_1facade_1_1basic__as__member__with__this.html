@@ -131,8 +131,7 @@ Public Types</h2></td></tr>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:ac4bde78002f1e8f119d7d308035f0089" id="r_ac4bde78002f1e8f119d7d308035f0089"><td class="memTemplParams" colspan="2">template&lt;typename Signature, typename... Args&gt; </td></tr>
 <tr class="memitem:ac4bde78002f1e8f119d7d308035f0089 template"><td class="memItemLeft">static constexpr decltype(auto)&#160;</td><td class="memItemRight"><a class="el" href="#ac4bde78002f1e8f119d7d308035f0089">invoke</a> (auto &amp;target, auto *const self, std::tuple&lt; Args... &gt; &amp;&amp;args)</td></tr>
-<tr class="memitem:a79ba1b2ab37e1c167baa4ea2b395f8f5" id="r_a79ba1b2ab37e1c167baa4ea2b395f8f5"><td class="memTemplParams" colspan="2">template&lt;typename ReportedSelf&gt; </td></tr>
-<tr class="memitem:a79ba1b2ab37e1c167baa4ea2b395f8f5 template"><td class="memItemLeft">static <a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> <a class="el" href="../../d4/d24/classmimicpp_1_1_mock_settings.html">MockSettings</a>&#160;</td><td class="memItemRight"><a class="el" href="#a79ba1b2ab37e1c167baa4ea2b395f8f5">make_settings</a> (ReportedSelf const *const, <a class="el" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> const functionName)</td></tr>
+<tr class="memitem:a4875ccc917cc0fb4551962bbe9746305" id="r_a4875ccc917cc0fb4551962bbe9746305"><td class="memItemLeft">static <a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> <a class="el" href="../../d4/d24/classmimicpp_1_1_mock_settings.html">MockSettings</a>&#160;</td><td class="memItemRight"><a class="el" href="#a4875ccc917cc0fb4551962bbe9746305">make_settings</a> (auto const *const self, <a class="el" href="../../d1/d11/namespacemimicpp.html#afa212d98f2d4a7016c05d3e9171431c6">StringViewT</a> const functionName)</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
 Static Public Attributes</h2></td></tr>
@@ -218,15 +217,13 @@ template&lt;typename Signature, typename... Args&gt; </div>
 
 </div>
 </div>
-<a id="a79ba1b2ab37e1c167baa4ea2b395f8f5" name="a79ba1b2ab37e1c167baa4ea2b395f8f5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79ba1b2ab37e1c167baa4ea2b395f8f5">&#9670;&#160;</a></span>make_settings()</h2>
+<a id="a4875ccc917cc0fb4551962bbe9746305" name="a4875ccc917cc0fb4551962bbe9746305"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4875ccc917cc0fb4551962bbe9746305">&#9670;&#160;</a></span>make_settings()</h2>
 
 <div class="memitem">
 <div class="memproto">
 <div class="memtemplate">
 template&lt;typename Self, template&lt; typename... &gt; typename TargetTemplate&gt; </div>
-<div class="memtemplate">
-template&lt;typename ReportedSelf&gt; </div>
 <table class="mlabels">
   <tr>
   <td class="mlabels-left">
@@ -234,7 +231,7 @@ template&lt;typename ReportedSelf&gt; </div>
         <tr>
           <td class="memname"><a class="el" href="../../d8/dd2/_config_8hpp.html#a518339ec5b5e2ab8af756cf228e686f2">MIMICPP_DETAIL_CONSTEXPR_STRING</a> <a class="el" href="../../d4/d24/classmimicpp_1_1_mock_settings.html">MockSettings</a> <a class="el" href="../../d8/db0/structmimicpp_1_1facade_1_1basic__as__member__with__this.html">mimicpp::facade::basic_as_member_with_this</a>&lt; Self, TargetTemplate &gt;::make_settings </td>
           <td>(</td>
-          <td class="paramtype">ReportedSelf const * const</td>          <td class="paramname"><span class="paramname"><em></em></span>, </td>
+          <td class="paramtype">auto const *const</td>          <td class="paramname"><span class="paramname"><em>self</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
