@@ -198,7 +198,7 @@ Macros</h2></td></tr>
 <div class="line"> </div>
 <div class="line">    my_function(mock);</div>
 </div><!-- fragment --><p><em>mimic++</em> therefore introduces several macros, which helps to reduce the effort to a minimum. With them, the boilerplate can be reduced to this macro invocation, which effectively does the same as before: </p><div class="fragment"><div class="line"><a class="code hl_define" href="#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a>(foo, <span class="keywordtype">void</span>, (), <span class="keyword">override</span>);</div>
-<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga7df48c038b42f8cedb05a15cedd1dfba"><div class="ttname"><a href="#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a></div><div class="ttdeci">#define MAKE_MEMBER_MOCK</div><div class="ttdoc">Shorthand variant of MIMICPP_MAKE_MEMBER_MOCK.</div><div class="ttdef"><b>Definition</b> Facade.hpp:444</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga7df48c038b42f8cedb05a15cedd1dfba"><div class="ttname"><a href="#ga7df48c038b42f8cedb05a15cedd1dfba">MAKE_MEMBER_MOCK</a></div><div class="ttdeci">#define MAKE_MEMBER_MOCK</div><div class="ttdoc">Shorthand variant of MIMICPP_MAKE_MEMBER_MOCK.</div><div class="ttdef"><b>Definition</b> Facade.hpp:447</div></div>
 </div><!-- fragment --><p>The good news is that these macros are just a thin layer around the macro-free core and can thus be easily avoided. Nevertheless, <em>mimic++</em> still aims to become as macro-less as possible. As soon as reflection becomes available, an attempt will be made to solve this feature completely in the C++ language (hopefully with c++26, but only time will tell).</p>
 <h2 class="doxsection"><a class="anchor" id="autotoc_md1"></a>
 Multiple inheritance</h2>
@@ -466,7 +466,7 @@ Mocks and variadic templates</h2>
 </dl>
 <p>This macro defines a single mock member-object for one method signature and generates a corresponding facade member function. The facade member function forwards its calls to the underlying mock object-member and prepends an explicit <span class="tt">this</span> pointer to the argument list.</p>
 <p>The mock member-object name is the content of <span class="tt">fn_name</span> suffixed by an additional <span class="tt">_</span>.</p>
-<dl class="section attention"><dt>Attention</dt><dd>This macro requires a <span class="tt">self_type</span> alias to be defined in the class where the mock is declared. If <span class="tt">self_type</span> does not match the actual containing type, the behavior is undefined.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>This macro requires a <span class="tt">self_type</span> alias to be defined in the class where the mock is declared. If <span class="tt">self_type</span> does not match the actual containing type, the compilation will fail with a diagnostic.</dd></dl>
 <div class="fragment"><div class="line">    <span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">class </span>Base</div>
@@ -749,8 +749,8 @@ Mocks and variadic templates</h2>
 <div class="line">    fn_name,                                                                                  \</div>
 <div class="line">    linkage,                                                                                  \</div>
 <div class="line">    <a class="code hl_define" href="#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a>(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</div>
-<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga3612f52419579eedc315817fdf991365"><div class="ttname"><a href="#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a></div><div class="ttdeci">#define MIMICPP_ADD_OVERLOAD(ret, param_type_list,...)</div><div class="ttdoc">Adds an overload to the currently built facade.</div><div class="ttdef"><b>Definition</b> Facade.hpp:306</div></div>
-<div class="ttc" id="agroup___f_a_c_a_d_e_html_gace5cd4cc6efbd2c5cc9e07883e2144b5"><div class="ttname"><a href="#gace5cd4cc6efbd2c5cc9e07883e2144b5">MIMICPP_MAKE_OVERLOADED_FACADE_EXT</a></div><div class="ttdeci">#define MIMICPP_MAKE_OVERLOADED_FACADE_EXT(traits, target_name, fn_name, linkage,...)</div><div class="ttdoc">The most powerful entry point for creating a facade overload-set.</div><div class="ttdef"><b>Definition</b> Facade.hpp:335</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga3612f52419579eedc315817fdf991365"><div class="ttname"><a href="#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a></div><div class="ttdeci">#define MIMICPP_ADD_OVERLOAD(ret, param_type_list,...)</div><div class="ttdoc">Adds an overload to the currently built facade.</div><div class="ttdef"><b>Definition</b> Facade.hpp:309</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e_html_gace5cd4cc6efbd2c5cc9e07883e2144b5"><div class="ttname"><a href="#gace5cd4cc6efbd2c5cc9e07883e2144b5">MIMICPP_MAKE_OVERLOADED_FACADE_EXT</a></div><div class="ttdeci">#define MIMICPP_MAKE_OVERLOADED_FACADE_EXT(traits, target_name, fn_name, linkage,...)</div><div class="ttdoc">The most powerful entry point for creating a facade overload-set.</div><div class="ttdef"><b>Definition</b> Facade.hpp:338</div></div>
 </div><!-- fragment -->
 <p>The most powerful entry point for creating a single facade function. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -802,7 +802,7 @@ Mocks and variadic templates</h2>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga5d8c170d38d254e448ca40de97d01b0f">MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK</a>(                             \</div>
 <div class="line">    fn_name,                                                     \</div>
 <div class="line">    <a class="code hl_define" href="#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a>(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</div>
-<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga5d8c170d38d254e448ca40de97d01b0f"><div class="ttname"><a href="#ga5d8c170d38d254e448ca40de97d01b0f">MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK</a></div><div class="ttdeci">#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(fn_name,...)</div><div class="ttdoc">Entry point for mocking a member method overload-set.</div><div class="ttdef"><b>Definition</b> Facade.hpp:399</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga5d8c170d38d254e448ca40de97d01b0f"><div class="ttname"><a href="#ga5d8c170d38d254e448ca40de97d01b0f">MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK</a></div><div class="ttdeci">#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(fn_name,...)</div><div class="ttdoc">Entry point for mocking a member method overload-set.</div><div class="ttdef"><b>Definition</b> Facade.hpp:402</div></div>
 </div><!-- fragment -->
 <p>Entry point for mocking a single member method. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -879,7 +879,7 @@ Mocks and variadic templates</h2>
 <b>Value:</b><div class="fragment"><div class="line"><a class="code hl_define" href="#ga32e60cd3929acd792f37e87f591b2131">MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS</a>(                             \</div>
 <div class="line">    fn_name,                                                               \</div>
 <div class="line">    <a class="code hl_define" href="#ga3612f52419579eedc315817fdf991365">MIMICPP_ADD_OVERLOAD</a>(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</div>
-<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga32e60cd3929acd792f37e87f591b2131"><div class="ttname"><a href="#ga32e60cd3929acd792f37e87f591b2131">MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS</a></div><div class="ttdeci">#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS(fn_name,...)</div><div class="ttdoc">Entry point for mocking a member method overload-set with an explicit this pointer.</div><div class="ttdef"><b>Definition</b> Facade.hpp:466</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e_html_ga32e60cd3929acd792f37e87f591b2131"><div class="ttname"><a href="#ga32e60cd3929acd792f37e87f591b2131">MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS</a></div><div class="ttdeci">#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS(fn_name,...)</div><div class="ttdoc">Entry point for mocking a member method overload-set with an explicit this pointer.</div><div class="ttdef"><b>Definition</b> Facade.hpp:469</div></div>
 </div><!-- fragment -->
 <p>Entry point for mocking a single member method with an explicit <em>this</em> pointer. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -896,7 +896,7 @@ Mocks and variadic templates</h2>
 </dl>
 <p>This macro defines a single mock member-object for one method signature and generates a corresponding facade member function. The facade member function forwards its calls to the underlying mock object-member and prepends an explicit <span class="tt">this</span> pointer to the argument list.</p>
 <p>The mock member-object name is the content of <span class="tt">fn_name</span> suffixed by an additional <span class="tt">_</span>.</p>
-<dl class="section attention"><dt>Attention</dt><dd>This macro requires a <span class="tt">self_type</span> alias to be defined in the class where the mock is declared. If <span class="tt">self_type</span> does not match the actual containing type, the behavior is undefined.</dd></dl>
+<dl class="section attention"><dt>Attention</dt><dd>This macro requires a <span class="tt">self_type</span> alias to be defined in the class where the mock is declared. If <span class="tt">self_type</span> does not match the actual containing type, the compilation will fail with a diagnostic.</dd></dl>
 <div class="fragment"><div class="line">    <span class="keyword">namespace </span>finally = <a class="code hl_namespace" href="../../d2/d8d/namespacemimicpp_1_1finally.html">mimicpp::finally</a>;</div>
 <div class="line"> </div>
 <div class="line">    <span class="keyword">class </span>Base</div>
@@ -976,7 +976,7 @@ Mocks and variadic templates</h2>
 <div class="line">    linkage,                                                                       \</div>
 <div class="line">    __VA_ARGS__)</div>
 <div class="ttc" id="agroup___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e_html_ga38fcea03c2f93ed9d252606e4289e5a6"><div class="ttname"><a href="../../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html#ga38fcea03c2f93ed9d252606e4289e5a6">MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION</a></div><div class="ttdeci">#define MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list,...)</div><div class="ttdoc">Creates a single facade function.</div><div class="ttdef"><b>Definition</b> Facade.hpp:241</div></div>
-<div class="ttc" id="agroup___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e_html_ga6b770c04d874beb7551c01f8ed6381c2"><div class="ttname"><a href="../../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html#ga6b770c04d874beb7551c01f8ed6381c2">MIMICPP_DETAIL_GENERATE_FACADE</a></div><div class="ttdeci">#define MIMICPP_DETAIL_GENERATE_FACADE(fn_op, traits, target_name, fn_name, linkage,...)</div><div class="ttdoc">Creates all overloads for a specific function facade and the target object.</div><div class="ttdef"><b>Definition</b> Facade.hpp:288</div></div>
+<div class="ttc" id="agroup___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e_html_ga6b770c04d874beb7551c01f8ed6381c2"><div class="ttname"><a href="../../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html#ga6b770c04d874beb7551c01f8ed6381c2">MIMICPP_DETAIL_GENERATE_FACADE</a></div><div class="ttdeci">#define MIMICPP_DETAIL_GENERATE_FACADE(fn_op, traits, target_name, fn_name, linkage,...)</div><div class="ttdoc">Creates all overloads for a specific function facade and the target object.</div><div class="ttdef"><b>Definition</b> Facade.hpp:291</div></div>
 </div><!-- fragment -->
 <p>The most powerful entry point for creating a facade overload-set. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1017,7 +1017,7 @@ Mocks and variadic templates</h2>
 <div class="line">    fn_name,                                          \</div>
 <div class="line">    ,                                                 \</div>
 <div class="line">    __VA_ARGS__)</div>
-<div class="ttc" id="anamespacemimicpp_1_1facade_html_a521719872d389a137d8f42b0bd19effc"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html#a521719872d389a137d8f42b0bd19effc">mimicpp::facade::mock_as_member</a></div><div class="ttdeci">basic_as_member&lt; Mock &gt; mock_as_member</div><div class="ttdef"><b>Definition</b> Facade.hpp:155</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1facade_html_a521719872d389a137d8f42b0bd19effc"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html#a521719872d389a137d8f42b0bd19effc">mimicpp::facade::mock_as_member</a></div><div class="ttdeci">basic_as_member&lt; Mock &gt; mock_as_member</div><div class="ttdef"><b>Definition</b> Facade.hpp:153</div></div>
 </div><!-- fragment -->
 <p>Entry point for mocking a member method overload-set. </p>
 <dl class="params"><dt>Parameters</dt><dd>
@@ -1086,7 +1086,7 @@ Mocks and variadic templates</h2>
 <div class="line">    fn_name,                                                    \</div>
 <div class="line">    ,                                                           \</div>
 <div class="line">    __VA_ARGS__)</div>
-<div class="ttc" id="anamespacemimicpp_1_1facade_html_a17fa11e0d717aafe4c40ccf115c4ae3f"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html#a17fa11e0d717aafe4c40ccf115c4ae3f">mimicpp::facade::mock_as_member_with_this</a></div><div class="ttdeci">basic_as_member_with_this&lt; Self, Mock &gt; mock_as_member_with_this</div><div class="ttdef"><b>Definition</b> Facade.hpp:190</div></div>
+<div class="ttc" id="anamespacemimicpp_1_1facade_html_a17fa11e0d717aafe4c40ccf115c4ae3f"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html#a17fa11e0d717aafe4c40ccf115c4ae3f">mimicpp::facade::mock_as_member_with_this</a></div><div class="ttdeci">basic_as_member_with_this&lt; Self, Mock &gt; mock_as_member_with_this</div><div class="ttdef"><b>Definition</b> Facade.hpp:206</div></div>
 </div><!-- fragment -->
 <p>Entry point for mocking a member method overload-set with an explicit <span class="tt">this</span> pointer. </p>
 <dl class="params"><dt>Parameters</dt><dd>

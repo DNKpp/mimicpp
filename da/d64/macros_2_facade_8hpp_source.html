@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('da/d64/macros_
   <div class="headertitle"><div class="title">Facade.hpp</div></div>
 </div><!--header-->
 <div class="contents">
-<a href="../../da/d64/macros_2_facade_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.</span></div>
+<a href="../../da/d64/macros_2_facade_8hpp.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="comment">//          Copyright Dominic (DNKpp) Koepke 2024-2026.</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="comment">// Distributed under the Boost Software License, Version 1.0.</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span><span class="comment">//    (See accompanying file LICENSE_1_0.txt or copy at</span></div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="comment">//          https://www.boost.org/LICENSE_1_0.txt)</span></div>
@@ -236,142 +236,145 @@ document.addEventListener('DOMContentLoaded',() => { initNavTree('da/d64/macros_
 <div class="line"><a id="l00225" name="l00225"></a><span class="lineno">  225</span></div>
 <div class="foldopen" id="foldopen00241" data-start="" data-end="">
 <div class="line"><a id="l00241" name="l00241"></a><span class="lineno"><a class="line" href="../../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html#ga38fcea03c2f93ed9d252606e4289e5a6">  241</a></span><span class="preprocessor">#define MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION(ignore, traits, target_name, fn_name, linkage, ret, call_convention, param_type_list, specs, param_list, forward_list, ...) \</span></div>
-<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="preprocessor">    linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                                \</span></div>
-<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="preprocessor">    call_convention fn_name param_list specs                                                                                                                                \</span></div>
-<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="preprocessor">    {                                                                                                                                                                       \</span></div>
-<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="preprocessor">        using Signature = ::mimicpp::facade::detail::apply_normalized_specs_t&lt;                                                                                              \</span></div>
-<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="preprocessor">            MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list,                                                                                                               \</span></div>
-<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">            ::mimicpp::util::StaticString{#specs}&gt;;                                                                                                                         \</span></div>
-<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="preprocessor">        auto args = ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                            \</span></div>
-<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">                                                                                                                                                                            \</span></div>
-<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="preprocessor">        return [&amp;]&lt;typename T = traits&gt;() -&gt; decltype(auto) {                                                                                                               \</span></div>
-<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="preprocessor">            if constexpr (::mimicpp::facade::detail::is_member_v&lt;T&gt;)                                                                                                        \</span></div>
-<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="preprocessor">            {                                                                                                                                                               \</span></div>
-<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="preprocessor">                return T::template invoke&lt;Signature&gt;(target_name, this, ::std::move(args));                                                                                 \</span></div>
-<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="preprocessor">            }                                                                                                                                                               \</span></div>
-<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="preprocessor">            else                                                                                                                                                            \</span></div>
-<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span><span class="preprocessor">            {                                                                                                                                                               \</span></div>
-<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="preprocessor">                return T::template invoke&lt;Signature&gt;(target_name, ::std::move(args));                                                                                       \</span></div>
-<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span><span class="preprocessor">            }                                                                                                                                                               \</span></div>
-<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span><span class="preprocessor">        }();                                                                                                                                                                \</span></div>
-<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="preprocessor">    }</span></div>
+<div class="line"><a id="l00242" name="l00242"></a><span class="lineno">  242</span><span class="preprocessor">    static_assert(                                                                                                                                                          \</span></div>
+<div class="line"><a id="l00243" name="l00243"></a><span class="lineno">  243</span><span class="preprocessor">        ::mimicpp::facade::detail::is_supported_spec(std::string_view{#specs}),                                                                                             \</span></div>
+<div class="line"><a id="l00244" name="l00244"></a><span class="lineno">  244</span><span class="preprocessor">        &quot;unsupported specifier; allowed are `const`, `&amp;`, `&amp;&amp;`, `noexcept`, `override` and `final`.&quot;);                                                                      \</span></div>
+<div class="line"><a id="l00245" name="l00245"></a><span class="lineno">  245</span><span class="preprocessor">    linkage MIMICPP_DETAIL_STRIP_PARENS(ret)                                                                                                                                \</span></div>
+<div class="line"><a id="l00246" name="l00246"></a><span class="lineno">  246</span><span class="preprocessor">    call_convention fn_name param_list specs                                                                                                                                \</span></div>
+<div class="line"><a id="l00247" name="l00247"></a><span class="lineno">  247</span><span class="preprocessor">    {                                                                                                                                                                       \</span></div>
+<div class="line"><a id="l00248" name="l00248"></a><span class="lineno">  248</span><span class="preprocessor">        using Signature = ::mimicpp::facade::detail::apply_normalized_specs_t&lt;                                                                                              \</span></div>
+<div class="line"><a id="l00249" name="l00249"></a><span class="lineno">  249</span><span class="preprocessor">            MIMICPP_DETAIL_STRIP_PARENS(ret) param_type_list,                                                                                                               \</span></div>
+<div class="line"><a id="l00250" name="l00250"></a><span class="lineno">  250</span><span class="preprocessor">            ::mimicpp::util::StaticString{#specs}&gt;;                                                                                                                         \</span></div>
+<div class="line"><a id="l00251" name="l00251"></a><span class="lineno">  251</span><span class="preprocessor">        auto args = ::std::tuple_cat(MIMICPP_DETAIL_STRIP_PARENS(forward_list));                                                                                            \</span></div>
+<div class="line"><a id="l00252" name="l00252"></a><span class="lineno">  252</span><span class="preprocessor">                                                                                                                                                                            \</span></div>
+<div class="line"><a id="l00253" name="l00253"></a><span class="lineno">  253</span><span class="preprocessor">        return [&amp;]&lt;typename T = traits&gt;() -&gt; decltype(auto) {                                                                                                               \</span></div>
+<div class="line"><a id="l00254" name="l00254"></a><span class="lineno">  254</span><span class="preprocessor">            if constexpr (::mimicpp::facade::detail::is_member_v&lt;T&gt;)                                                                                                        \</span></div>
+<div class="line"><a id="l00255" name="l00255"></a><span class="lineno">  255</span><span class="preprocessor">            {                                                                                                                                                               \</span></div>
+<div class="line"><a id="l00256" name="l00256"></a><span class="lineno">  256</span><span class="preprocessor">                return T::template invoke&lt;Signature&gt;(target_name, this, ::std::move(args));                                                                                 \</span></div>
+<div class="line"><a id="l00257" name="l00257"></a><span class="lineno">  257</span><span class="preprocessor">            }                                                                                                                                                               \</span></div>
+<div class="line"><a id="l00258" name="l00258"></a><span class="lineno">  258</span><span class="preprocessor">            else                                                                                                                                                            \</span></div>
+<div class="line"><a id="l00259" name="l00259"></a><span class="lineno">  259</span><span class="preprocessor">            {                                                                                                                                                               \</span></div>
+<div class="line"><a id="l00260" name="l00260"></a><span class="lineno">  260</span><span class="preprocessor">                return T::template invoke&lt;Signature&gt;(target_name, ::std::move(args));                                                                                       \</span></div>
+<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span><span class="preprocessor">            }                                                                                                                                                               \</span></div>
+<div class="line"><a id="l00262" name="l00262"></a><span class="lineno">  262</span><span class="preprocessor">        }();                                                                                                                                                                \</span></div>
+<div class="line"><a id="l00263" name="l00263"></a><span class="lineno">  263</span><span class="preprocessor">    }</span></div>
 </div>
-<div class="line"><a id="l00261" name="l00261"></a><span class="lineno">  261</span></div>
-<div class="foldopen" id="foldopen00271" data-start="" data-end="">
-<div class="line"><a id="l00271" name="l00271"></a><span class="lineno"><a class="line" href="../../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html#gaf61c17a26cdffa8fbdba38a4eb4283b7">  271</a></span><span class="preprocessor">#define MIMICPP_DETAIL_GENERATE_FACADE_OVERLOADS(op, traits, target_name, fn_name, linkage, ...) \</span></div>
-<div class="line"><a id="l00272" name="l00272"></a><span class="lineno">  272</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(                                                                 \</span></div>
-<div class="line"><a id="l00273" name="l00273"></a><span class="lineno">  273</span><span class="preprocessor">        op,                                                                                      \</span></div>
-<div class="line"><a id="l00274" name="l00274"></a><span class="lineno">  274</span><span class="preprocessor">        ,                                                                                        \</span></div>
-<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="preprocessor">        MIMICPP_DETAIL_NO_DELIMITER,                                                             \</span></div>
-<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="preprocessor">        MIMICPP_DETAIL_STRIP_PARENS,                                                             \</span></div>
-<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="preprocessor">        (traits, target_name, fn_name, linkage),                                                 \</span></div>
-<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="preprocessor">        __VA_ARGS__)</span></div>
+<div class="line"><a id="l00264" name="l00264"></a><span class="lineno">  264</span></div>
+<div class="foldopen" id="foldopen00274" data-start="" data-end="">
+<div class="line"><a id="l00274" name="l00274"></a><span class="lineno"><a class="line" href="../../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html#gaf61c17a26cdffa8fbdba38a4eb4283b7">  274</a></span><span class="preprocessor">#define MIMICPP_DETAIL_GENERATE_FACADE_OVERLOADS(op, traits, target_name, fn_name, linkage, ...) \</span></div>
+<div class="line"><a id="l00275" name="l00275"></a><span class="lineno">  275</span><span class="preprocessor">    MIMICPP_DETAIL_FOR_EACH_EXT(                                                                 \</span></div>
+<div class="line"><a id="l00276" name="l00276"></a><span class="lineno">  276</span><span class="preprocessor">        op,                                                                                      \</span></div>
+<div class="line"><a id="l00277" name="l00277"></a><span class="lineno">  277</span><span class="preprocessor">        ,                                                                                        \</span></div>
+<div class="line"><a id="l00278" name="l00278"></a><span class="lineno">  278</span><span class="preprocessor">        MIMICPP_DETAIL_NO_DELIMITER,                                                             \</span></div>
+<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span><span class="preprocessor">        MIMICPP_DETAIL_STRIP_PARENS,                                                             \</span></div>
+<div class="line"><a id="l00280" name="l00280"></a><span class="lineno">  280</span><span class="preprocessor">        (traits, target_name, fn_name, linkage),                                                 \</span></div>
+<div class="line"><a id="l00281" name="l00281"></a><span class="lineno">  281</span><span class="preprocessor">        __VA_ARGS__)</span></div>
 </div>
-<div class="line"><a id="l00279" name="l00279"></a><span class="lineno">  279</span></div>
-<div class="foldopen" id="foldopen00288" data-start="" data-end="">
-<div class="line"><a id="l00288" name="l00288"></a><span class="lineno"><a class="line" href="../../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html#ga6b770c04d874beb7551c01f8ed6381c2">  288</a></span><span class="preprocessor">#define MIMICPP_DETAIL_GENERATE_FACADE(fn_op, traits, target_name, fn_name, linkage, ...)               \</span></div>
-<div class="line"><a id="l00289" name="l00289"></a><span class="lineno">  289</span><span class="preprocessor">    MIMICPP_DETAIL_GENERATE_FACADE_OVERLOADS(fn_op, traits, target_name, fn_name, linkage, __VA_ARGS__) \</span></div>
-<div class="line"><a id="l00290" name="l00290"></a><span class="lineno">  290</span><span class="preprocessor">    MIMICPP_DETAIL_GENERATE_FACADE_TARGET(                                                              \</span></div>
-<div class="line"><a id="l00291" name="l00291"></a><span class="lineno">  291</span><span class="preprocessor">        traits,                                                                                         \</span></div>
-<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">        target_name,                                                                                    \</span></div>
-<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">        fn_name,                                                                                        \</span></div>
-<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">        linkage,                                                                                        \</span></div>
-<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="preprocessor">        (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))</span></div>
+<div class="line"><a id="l00282" name="l00282"></a><span class="lineno">  282</span></div>
+<div class="foldopen" id="foldopen00291" data-start="" data-end="">
+<div class="line"><a id="l00291" name="l00291"></a><span class="lineno"><a class="line" href="../../de/d0a/group___f_a_c_a_d_e___d_e_t_a_i_l___g_e_n_e_r_a_t_e___f_a_c_a_d_e.html#ga6b770c04d874beb7551c01f8ed6381c2">  291</a></span><span class="preprocessor">#define MIMICPP_DETAIL_GENERATE_FACADE(fn_op, traits, target_name, fn_name, linkage, ...)               \</span></div>
+<div class="line"><a id="l00292" name="l00292"></a><span class="lineno">  292</span><span class="preprocessor">    MIMICPP_DETAIL_GENERATE_FACADE_OVERLOADS(fn_op, traits, target_name, fn_name, linkage, __VA_ARGS__) \</span></div>
+<div class="line"><a id="l00293" name="l00293"></a><span class="lineno">  293</span><span class="preprocessor">    MIMICPP_DETAIL_GENERATE_FACADE_TARGET(                                                              \</span></div>
+<div class="line"><a id="l00294" name="l00294"></a><span class="lineno">  294</span><span class="preprocessor">        traits,                                                                                         \</span></div>
+<div class="line"><a id="l00295" name="l00295"></a><span class="lineno">  295</span><span class="preprocessor">        target_name,                                                                                    \</span></div>
+<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span><span class="preprocessor">        fn_name,                                                                                        \</span></div>
+<div class="line"><a id="l00297" name="l00297"></a><span class="lineno">  297</span><span class="preprocessor">        linkage,                                                                                        \</span></div>
+<div class="line"><a id="l00298" name="l00298"></a><span class="lineno">  298</span><span class="preprocessor">        (MIMICPP_DETAIL_MAKE_SIGNATURE_LIST(__VA_ARGS__)))</span></div>
 </div>
-<div class="line"><a id="l00296" name="l00296"></a><span class="lineno">  296</span></div>
-<div class="foldopen" id="foldopen00306" data-start="" data-end="">
-<div class="line"><a id="l00306" name="l00306"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga3612f52419579eedc315817fdf991365">  306</a></span><span class="preprocessor">#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \</span></div>
-<div class="line"><a id="l00307" name="l00307"></a><span class="lineno">  307</span><span class="preprocessor">    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \</span></div>
-<div class="line"><a id="l00308" name="l00308"></a><span class="lineno">  308</span><span class="preprocessor">        __VA_ARGS__,                                    \</span></div>
-<div class="line"><a id="l00309" name="l00309"></a><span class="lineno">  309</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL,         \</span></div>
-<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \</span></div>
-<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) </span><span class="comment">// clangCl doesn&#39;t compile without that extra `,`</span></div>
+<div class="line"><a id="l00299" name="l00299"></a><span class="lineno">  299</span></div>
+<div class="foldopen" id="foldopen00309" data-start="" data-end="">
+<div class="line"><a id="l00309" name="l00309"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga3612f52419579eedc315817fdf991365">  309</a></span><span class="preprocessor">#define MIMICPP_ADD_OVERLOAD(ret, param_type_list, ...) \</span></div>
+<div class="line"><a id="l00310" name="l00310"></a><span class="lineno">  310</span><span class="preprocessor">    MIMICPP_DETAIL_SELECT_MAKE_OVERLOAD_INFOS(          \</span></div>
+<div class="line"><a id="l00311" name="l00311"></a><span class="lineno">  311</span><span class="preprocessor">        __VA_ARGS__,                                    \</span></div>
+<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_ALL,         \</span></div>
+<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_SPECS,       \</span></div>
+<div class="line"><a id="l00314" name="l00314"></a><span class="lineno">  314</span><span class="preprocessor">        MIMICPP_DETAIL_MAKE_OVERLOAD_INFOS_BASIC)(ret, param_type_list, __VA_ARGS__, ) </span><span class="comment">// clangCl doesn&#39;t compile without that extra `,`</span></div>
 </div>
-<div class="line"><a id="l00312" name="l00312"></a><span class="lineno">  312</span> </div>
-<div class="line"><a id="l00313" name="l00313"></a><span class="lineno">  313</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00319" name="l00319"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">  319</a></span><span class="preprocessor">    #define ADD_OVERLOAD MIMICPP_ADD_OVERLOAD</span></div>
-<div class="line"><a id="l00320" name="l00320"></a><span class="lineno">  320</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00321" name="l00321"></a><span class="lineno">  321</span></div>
-<div class="foldopen" id="foldopen00335" data-start="" data-end="">
-<div class="line"><a id="l00335" name="l00335"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#gace5cd4cc6efbd2c5cc9e07883e2144b5">  335</a></span><span class="preprocessor">#define MIMICPP_MAKE_OVERLOADED_FACADE_EXT(traits, target_name, fn_name, linkage, ...) \</span></div>
-<div class="line"><a id="l00336" name="l00336"></a><span class="lineno">  336</span><span class="preprocessor">    MIMICPP_DETAIL_GENERATE_FACADE(                                                    \</span></div>
-<div class="line"><a id="l00337" name="l00337"></a><span class="lineno">  337</span><span class="preprocessor">        MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION,                                       \</span></div>
-<div class="line"><a id="l00338" name="l00338"></a><span class="lineno">  338</span><span class="preprocessor">        traits,                                                                        \</span></div>
-<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span><span class="preprocessor">        target_name,                                                                   \</span></div>
-<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="preprocessor">        fn_name,                                                                       \</span></div>
-<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="preprocessor">        linkage,                                                                       \</span></div>
-<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="preprocessor">        __VA_ARGS__)</span></div>
+<div class="line"><a id="l00315" name="l00315"></a><span class="lineno">  315</span> </div>
+<div class="line"><a id="l00316" name="l00316"></a><span class="lineno">  316</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00322" name="l00322"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#gaf7eca902448118eaf4359c12be4ed098">  322</a></span><span class="preprocessor">    #define ADD_OVERLOAD MIMICPP_ADD_OVERLOAD</span></div>
+<div class="line"><a id="l00323" name="l00323"></a><span class="lineno">  323</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00324" name="l00324"></a><span class="lineno">  324</span></div>
+<div class="foldopen" id="foldopen00338" data-start="" data-end="">
+<div class="line"><a id="l00338" name="l00338"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#gace5cd4cc6efbd2c5cc9e07883e2144b5">  338</a></span><span class="preprocessor">#define MIMICPP_MAKE_OVERLOADED_FACADE_EXT(traits, target_name, fn_name, linkage, ...) \</span></div>
+<div class="line"><a id="l00339" name="l00339"></a><span class="lineno">  339</span><span class="preprocessor">    MIMICPP_DETAIL_GENERATE_FACADE(                                                    \</span></div>
+<div class="line"><a id="l00340" name="l00340"></a><span class="lineno">  340</span><span class="preprocessor">        MIMICPP_DETAIL_GENERATE_FACADE_FUNCTION,                                       \</span></div>
+<div class="line"><a id="l00341" name="l00341"></a><span class="lineno">  341</span><span class="preprocessor">        traits,                                                                        \</span></div>
+<div class="line"><a id="l00342" name="l00342"></a><span class="lineno">  342</span><span class="preprocessor">        target_name,                                                                   \</span></div>
+<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span><span class="preprocessor">        fn_name,                                                                       \</span></div>
+<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="preprocessor">        linkage,                                                                       \</span></div>
+<div class="line"><a id="l00345" name="l00345"></a><span class="lineno">  345</span><span class="preprocessor">        __VA_ARGS__)</span></div>
 </div>
-<div class="line"><a id="l00343" name="l00343"></a><span class="lineno">  343</span> </div>
-<div class="line"><a id="l00344" name="l00344"></a><span class="lineno">  344</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00350" name="l00350"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga9cd21e06378a3aec7292d8bec93a603f">  350</a></span><span class="preprocessor">    #define MAKE_OVERLOADED_FACADE_EXT MIMICPP_MAKE_OVERLOADED_FACADE_EXT</span></div>
-<div class="line"><a id="l00351" name="l00351"></a><span class="lineno">  351</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00352" name="l00352"></a><span class="lineno">  352</span></div>
-<div class="foldopen" id="foldopen00368" data-start="" data-end="">
-<div class="line"><a id="l00368" name="l00368"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#gaff0eda1f5cf915ed42225720e7d13e64">  368</a></span><span class="preprocessor">#define MIMICPP_MAKE_FACADE_EXT(traits, target_name, fn_name, linkage, ret, param_type_list, ...) \</span></div>
-<div class="line"><a id="l00369" name="l00369"></a><span class="lineno">  369</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                                                           \</span></div>
-<div class="line"><a id="l00370" name="l00370"></a><span class="lineno">  370</span><span class="preprocessor">        traits,                                                                                   \</span></div>
-<div class="line"><a id="l00371" name="l00371"></a><span class="lineno">  371</span><span class="preprocessor">        target_name,                                                                              \</span></div>
-<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span><span class="preprocessor">        fn_name,                                                                                  \</span></div>
-<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span><span class="preprocessor">        linkage,                                                                                  \</span></div>
-<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span><span class="preprocessor">        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</span></div>
+<div class="line"><a id="l00346" name="l00346"></a><span class="lineno">  346</span> </div>
+<div class="line"><a id="l00347" name="l00347"></a><span class="lineno">  347</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00353" name="l00353"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga9cd21e06378a3aec7292d8bec93a603f">  353</a></span><span class="preprocessor">    #define MAKE_OVERLOADED_FACADE_EXT MIMICPP_MAKE_OVERLOADED_FACADE_EXT</span></div>
+<div class="line"><a id="l00354" name="l00354"></a><span class="lineno">  354</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00355" name="l00355"></a><span class="lineno">  355</span></div>
+<div class="foldopen" id="foldopen00371" data-start="" data-end="">
+<div class="line"><a id="l00371" name="l00371"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#gaff0eda1f5cf915ed42225720e7d13e64">  371</a></span><span class="preprocessor">#define MIMICPP_MAKE_FACADE_EXT(traits, target_name, fn_name, linkage, ret, param_type_list, ...) \</span></div>
+<div class="line"><a id="l00372" name="l00372"></a><span class="lineno">  372</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                                                           \</span></div>
+<div class="line"><a id="l00373" name="l00373"></a><span class="lineno">  373</span><span class="preprocessor">        traits,                                                                                   \</span></div>
+<div class="line"><a id="l00374" name="l00374"></a><span class="lineno">  374</span><span class="preprocessor">        target_name,                                                                              \</span></div>
+<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span><span class="preprocessor">        fn_name,                                                                                  \</span></div>
+<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="preprocessor">        linkage,                                                                                  \</span></div>
+<div class="line"><a id="l00377" name="l00377"></a><span class="lineno">  377</span><span class="preprocessor">        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</span></div>
 </div>
-<div class="line"><a id="l00375" name="l00375"></a><span class="lineno">  375</span> </div>
-<div class="line"><a id="l00376" name="l00376"></a><span class="lineno">  376</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00382" name="l00382"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga5c79e78989e65d7e372ff6cf5fe81bfc">  382</a></span><span class="preprocessor">    #define MAKE_FACADE_EXT MIMICPP_MAKE_FACADE_EXT</span></div>
-<div class="line"><a id="l00383" name="l00383"></a><span class="lineno">  383</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00384" name="l00384"></a><span class="lineno">  384</span></div>
-<div class="foldopen" id="foldopen00399" data-start="" data-end="">
-<div class="line"><a id="l00399" name="l00399"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga5d8c170d38d254e448ca40de97d01b0f">  399</a></span><span class="preprocessor">#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(fn_name, ...) \</span></div>
-<div class="line"><a id="l00400" name="l00400"></a><span class="lineno">  400</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                   \</span></div>
-<div class="line"><a id="l00401" name="l00401"></a><span class="lineno">  401</span><span class="preprocessor">        ::mimicpp::facade::mock_as_member,                \</span></div>
-<div class="line"><a id="l00402" name="l00402"></a><span class="lineno">  402</span><span class="preprocessor">        fn_name##_,                                       \</span></div>
-<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span><span class="preprocessor">        fn_name,                                          \</span></div>
-<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span><span class="preprocessor">        ,                                                 \</span></div>
-<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span><span class="preprocessor">        __VA_ARGS__)</span></div>
+<div class="line"><a id="l00378" name="l00378"></a><span class="lineno">  378</span> </div>
+<div class="line"><a id="l00379" name="l00379"></a><span class="lineno">  379</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00385" name="l00385"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga5c79e78989e65d7e372ff6cf5fe81bfc">  385</a></span><span class="preprocessor">    #define MAKE_FACADE_EXT MIMICPP_MAKE_FACADE_EXT</span></div>
+<div class="line"><a id="l00386" name="l00386"></a><span class="lineno">  386</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00387" name="l00387"></a><span class="lineno">  387</span></div>
+<div class="foldopen" id="foldopen00402" data-start="" data-end="">
+<div class="line"><a id="l00402" name="l00402"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga5d8c170d38d254e448ca40de97d01b0f">  402</a></span><span class="preprocessor">#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(fn_name, ...) \</span></div>
+<div class="line"><a id="l00403" name="l00403"></a><span class="lineno">  403</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                   \</span></div>
+<div class="line"><a id="l00404" name="l00404"></a><span class="lineno">  404</span><span class="preprocessor">        ::mimicpp::facade::mock_as_member,                \</span></div>
+<div class="line"><a id="l00405" name="l00405"></a><span class="lineno">  405</span><span class="preprocessor">        fn_name##_,                                       \</span></div>
+<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span><span class="preprocessor">        fn_name,                                          \</span></div>
+<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span><span class="preprocessor">        ,                                                 \</span></div>
+<div class="line"><a id="l00408" name="l00408"></a><span class="lineno">  408</span><span class="preprocessor">        __VA_ARGS__)</span></div>
 </div>
-<div class="line"><a id="l00406" name="l00406"></a><span class="lineno">  406</span> </div>
-<div class="line"><a id="l00407" name="l00407"></a><span class="lineno">  407</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00413" name="l00413"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga752c0d1b1ae33a85e9fade3596a7e99a">  413</a></span><span class="preprocessor">    #define MAKE_OVERLOADED_MEMBER_MOCK MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK</span></div>
-<div class="line"><a id="l00414" name="l00414"></a><span class="lineno">  414</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00415" name="l00415"></a><span class="lineno">  415</span></div>
-<div class="foldopen" id="foldopen00433" data-start="" data-end="">
-<div class="line"><a id="l00433" name="l00433"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga51cf9b133132c26fd19771743c373045">  433</a></span><span class="preprocessor">#define MIMICPP_MAKE_MEMBER_MOCK(fn_name, ret, param_type_list, ...) \</span></div>
-<div class="line"><a id="l00434" name="l00434"></a><span class="lineno">  434</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(                             \</span></div>
-<div class="line"><a id="l00435" name="l00435"></a><span class="lineno">  435</span><span class="preprocessor">        fn_name,                                                     \</span></div>
-<div class="line"><a id="l00436" name="l00436"></a><span class="lineno">  436</span><span class="preprocessor">        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</span></div>
+<div class="line"><a id="l00409" name="l00409"></a><span class="lineno">  409</span> </div>
+<div class="line"><a id="l00410" name="l00410"></a><span class="lineno">  410</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00416" name="l00416"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga752c0d1b1ae33a85e9fade3596a7e99a">  416</a></span><span class="preprocessor">    #define MAKE_OVERLOADED_MEMBER_MOCK MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK</span></div>
+<div class="line"><a id="l00417" name="l00417"></a><span class="lineno">  417</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00418" name="l00418"></a><span class="lineno">  418</span></div>
+<div class="foldopen" id="foldopen00436" data-start="" data-end="">
+<div class="line"><a id="l00436" name="l00436"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga51cf9b133132c26fd19771743c373045">  436</a></span><span class="preprocessor">#define MIMICPP_MAKE_MEMBER_MOCK(fn_name, ret, param_type_list, ...) \</span></div>
+<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK(                             \</span></div>
+<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span><span class="preprocessor">        fn_name,                                                     \</span></div>
+<div class="line"><a id="l00439" name="l00439"></a><span class="lineno">  439</span><span class="preprocessor">        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</span></div>
 </div>
-<div class="line"><a id="l00437" name="l00437"></a><span class="lineno">  437</span> </div>
-<div class="line"><a id="l00438" name="l00438"></a><span class="lineno">  438</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00444" name="l00444"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga7df48c038b42f8cedb05a15cedd1dfba">  444</a></span><span class="preprocessor">    #define MAKE_MEMBER_MOCK MIMICPP_MAKE_MEMBER_MOCK</span></div>
-<div class="line"><a id="l00445" name="l00445"></a><span class="lineno">  445</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00446" name="l00446"></a><span class="lineno">  446</span></div>
-<div class="foldopen" id="foldopen00466" data-start="" data-end="">
-<div class="line"><a id="l00466" name="l00466"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga32e60cd3929acd792f37e87f591b2131">  466</a></span><span class="preprocessor">#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS(fn_name, ...) \</span></div>
-<div class="line"><a id="l00467" name="l00467"></a><span class="lineno">  467</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                             \</span></div>
-<div class="line"><a id="l00468" name="l00468"></a><span class="lineno">  468</span><span class="preprocessor">        ::mimicpp::facade::mock_as_member_with_this&lt;self_type&gt;,     \</span></div>
-<div class="line"><a id="l00469" name="l00469"></a><span class="lineno">  469</span><span class="preprocessor">        fn_name##_,                                                 \</span></div>
-<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="preprocessor">        fn_name,                                                    \</span></div>
-<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="preprocessor">        ,                                                           \</span></div>
-<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span><span class="preprocessor">        __VA_ARGS__)</span></div>
+<div class="line"><a id="l00440" name="l00440"></a><span class="lineno">  440</span> </div>
+<div class="line"><a id="l00441" name="l00441"></a><span class="lineno">  441</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00447" name="l00447"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga7df48c038b42f8cedb05a15cedd1dfba">  447</a></span><span class="preprocessor">    #define MAKE_MEMBER_MOCK MIMICPP_MAKE_MEMBER_MOCK</span></div>
+<div class="line"><a id="l00448" name="l00448"></a><span class="lineno">  448</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00449" name="l00449"></a><span class="lineno">  449</span></div>
+<div class="foldopen" id="foldopen00469" data-start="" data-end="">
+<div class="line"><a id="l00469" name="l00469"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga32e60cd3929acd792f37e87f591b2131">  469</a></span><span class="preprocessor">#define MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS(fn_name, ...) \</span></div>
+<div class="line"><a id="l00470" name="l00470"></a><span class="lineno">  470</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_FACADE_EXT(                             \</span></div>
+<div class="line"><a id="l00471" name="l00471"></a><span class="lineno">  471</span><span class="preprocessor">        ::mimicpp::facade::mock_as_member_with_this&lt;self_type&gt;,     \</span></div>
+<div class="line"><a id="l00472" name="l00472"></a><span class="lineno">  472</span><span class="preprocessor">        fn_name##_,                                                 \</span></div>
+<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span><span class="preprocessor">        fn_name,                                                    \</span></div>
+<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span><span class="preprocessor">        ,                                                           \</span></div>
+<div class="line"><a id="l00475" name="l00475"></a><span class="lineno">  475</span><span class="preprocessor">        __VA_ARGS__)</span></div>
 </div>
-<div class="line"><a id="l00473" name="l00473"></a><span class="lineno">  473</span> </div>
-<div class="line"><a id="l00474" name="l00474"></a><span class="lineno">  474</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00480" name="l00480"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga6badccd147359295f5c43ab60cd3b449">  480</a></span><span class="preprocessor">    #define MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS</span></div>
-<div class="line"><a id="l00481" name="l00481"></a><span class="lineno">  481</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00482" name="l00482"></a><span class="lineno">  482</span></div>
-<div class="foldopen" id="foldopen00505" data-start="" data-end="">
-<div class="line"><a id="l00505" name="l00505"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#gad70428e4a6c959438da624cdcc230917">  505</a></span><span class="preprocessor">#define MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS(fn_name, ret, param_type_list, ...) \</span></div>
-<div class="line"><a id="l00506" name="l00506"></a><span class="lineno">  506</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS(                             \</span></div>
-<div class="line"><a id="l00507" name="l00507"></a><span class="lineno">  507</span><span class="preprocessor">        fn_name,                                                               \</span></div>
-<div class="line"><a id="l00508" name="l00508"></a><span class="lineno">  508</span><span class="preprocessor">        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</span></div>
+<div class="line"><a id="l00476" name="l00476"></a><span class="lineno">  476</span> </div>
+<div class="line"><a id="l00477" name="l00477"></a><span class="lineno">  477</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00483" name="l00483"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga6badccd147359295f5c43ab60cd3b449">  483</a></span><span class="preprocessor">    #define MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS</span></div>
+<div class="line"><a id="l00484" name="l00484"></a><span class="lineno">  484</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00485" name="l00485"></a><span class="lineno">  485</span></div>
+<div class="foldopen" id="foldopen00508" data-start="" data-end="">
+<div class="line"><a id="l00508" name="l00508"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#gad70428e4a6c959438da624cdcc230917">  508</a></span><span class="preprocessor">#define MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS(fn_name, ret, param_type_list, ...) \</span></div>
+<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span><span class="preprocessor">    MIMICPP_MAKE_OVERLOADED_MEMBER_MOCK_WITH_THIS(                             \</span></div>
+<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span><span class="preprocessor">        fn_name,                                                               \</span></div>
+<div class="line"><a id="l00511" name="l00511"></a><span class="lineno">  511</span><span class="preprocessor">        MIMICPP_ADD_OVERLOAD(ret, param_type_list __VA_OPT__(, ) __VA_ARGS__))</span></div>
 </div>
-<div class="line"><a id="l00509" name="l00509"></a><span class="lineno">  509</span> </div>
-<div class="line"><a id="l00510" name="l00510"></a><span class="lineno">  510</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
-<div class="line"><a id="l00516" name="l00516"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga3a2b66a5bd1c595cfdc548723a0b2204">  516</a></span><span class="preprocessor">    #define MAKE_MEMBER_MOCK_WITH_THIS MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS</span></div>
-<div class="line"><a id="l00517" name="l00517"></a><span class="lineno">  517</span><span class="preprocessor">#endif</span></div>
-<div class="line"><a id="l00518" name="l00518"></a><span class="lineno">  518</span> </div>
-<div class="line"><a id="l00519" name="l00519"></a><span class="lineno">  519</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00512" name="l00512"></a><span class="lineno">  512</span> </div>
+<div class="line"><a id="l00513" name="l00513"></a><span class="lineno">  513</span><span class="preprocessor">#ifndef MIMICPP_CONFIG_ONLY_PREFIXED_MACROS</span><span class="preprocessor"></span></div>
+<div class="line"><a id="l00519" name="l00519"></a><span class="lineno"><a class="line" href="../../dc/da4/group___f_a_c_a_d_e.html#ga3a2b66a5bd1c595cfdc548723a0b2204">  519</a></span><span class="preprocessor">    #define MAKE_MEMBER_MOCK_WITH_THIS MIMICPP_MAKE_MEMBER_MOCK_WITH_THIS</span></div>
+<div class="line"><a id="l00520" name="l00520"></a><span class="lineno">  520</span><span class="preprocessor">#endif</span></div>
+<div class="line"><a id="l00521" name="l00521"></a><span class="lineno">  521</span> </div>
+<div class="line"><a id="l00522" name="l00522"></a><span class="lineno">  522</span><span class="preprocessor">#endif</span></div>
 <div class="ttc" id="amacros_2_common_8hpp_html"><div class="ttname"><a href="../../dd/dfa/macros_2_common_8hpp.html">Common.hpp</a></div></div>
 <div class="ttc" id="anamespacemimicpp_1_1facade_html"><div class="ttname"><a href="../../d8/da4/namespacemimicpp_1_1facade.html">mimicpp::facade</a></div><div class="ttdef"><b>Definition</b> Facade.hpp:75</div></div>
 <div class="ttc" id="anamespacemimicpp_html"><div class="ttname"><a href="../../d1/d11/namespacemimicpp.html">mimicpp</a></div><div class="ttdef"><b>Definition</b> Call.hpp:24</div></div>

@@ -37,5 +37,5 @@ var searchData=
   ['bring_20your_20own_20string_20and_20char_20types_34',['Bring your own string- and char-types',['../index.html#autotoc_md62',1,'']]],
   ['builder_2ehpp_35',['Builder.hpp',['../d6/d15/_builder_8hpp.html',1,'']]],
   ['builtintype_36',['BuiltinType',['../df/d42/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_builtin_type.html',1,'mimicpp::printing::type::parsing::state']]],
-  ['byte_20string_37',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md6',1,'']]]
+  ['byte_20string_37',['Byte-String',['../d0/d65/group___m_a_t_c_h_e_r_s___s_t_r_i_n_g.html#autotoc_md9',1,'']]]
 ];
