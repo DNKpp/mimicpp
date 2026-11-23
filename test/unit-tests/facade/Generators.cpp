@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -8,6 +8,98 @@
 #include "mimic++/ScopedSequence.hpp"
 
 using namespace mimicpp;
+
+TEST_CASE(
+    "facade::detail::is_supported_spec rejects unsupported specifiers.",
+    "[facade][detail]")
+{
+    auto const spec = GENERATE(
+        as<std::string_view>{},
+        // duplicates
+        "const const",
+        "noexcept noexcept",
+        "const noexcept const",
+        "override override",
+        "final final",
+        // multiple ref-qualifiers
+        "& &",
+        "& &&",
+        "&& &",
+        "&&&",
+        "&&&&",
+        "const& &&",
+        "& const &",
+        // valid C++ specifiers, which are not supported
+        "volatile",
+        "const volatile",
+        // noexcept with an expression
+        "noexcept(true)",
+        "noexcept (false)",
+        "noexcept(noexcept(foo()))",
+        // pure, defaulted and deleted
+        "= 0",
+        "=0",
+        "= default",
+        "= delete",
+        // other syntax
+        "throw()",
+        "requires true",
+        "-> int",
+        "[[nodiscard]]",
+        // other keywords
+        "virtual",
+        "static",
+        "mutable",
+        "constexpr",
+        "inline",
+        // case and near misses
+        "Const",
+        "NOEXCEPT",
+        "Override",
+        "cons",
+        "constt",
+        "overrides",
+        "finally",
+        "constnoexcept",
+        // characters outside of keywords
+        "const_",
+        "const1",
+        "_",
+        "1",
+        "const,noexcept",
+        "const;",
+        "#");
+    CAPTURE(spec);
+
+    CHECK(!mimicpp::facade::detail::is_supported_spec(spec));
+}
+
+TEST_CASE(
+    "facade::detail::is_supported_spec accepts supported specifiers.",
+    "[facade][detail]")
+{
+    auto const spec = GENERATE(
+        as<std::string_view>{},
+        "",
+        " ",
+        "const",
+        "noexcept",
+        "&",
+        "&&",
+        "override",
+        "final",
+        "const&",
+        "const &&",
+        "const noexcept",
+        "const & noexcept override",
+        "const&& noexcept final",
+        "override final",
+        "final override",
+        "\tconst\t");
+    CAPTURE(spec);
+
+    CHECK(mimicpp::facade::detail::is_supported_spec(spec));
+}
 
 TEMPLATE_TEST_CASE_SIG(
     "facade::detail::apply_normalized_specs omits override and final specifiers.",
@@ -45,9 +137,9 @@ TEMPLATE_TEST_CASE_SIG(
 
         SECTION("With lvalue-ref.")
         {
-            STATIC_REQUIRE(std::same_as<Return(Params...)&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& override"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...)&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& final"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...)&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) &, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) &, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) &, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&"}>>);
         }
 
         SECTION("With const lvalue-ref.")
@@ -59,9 +151,9 @@ TEMPLATE_TEST_CASE_SIG(
 
         SECTION("With rvalue-ref.")
         {
-            STATIC_REQUIRE(std::same_as<Return(Params...)&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& override"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...)&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& final"}>>);
-            STATIC_REQUIRE(std::same_as<Return(Params...)&&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&&"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) &&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) &&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&& final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) &&, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"&&"}>>);
         }
 
         SECTION("With const rvalue-ref.")
@@ -90,16 +182,16 @@ TEMPLATE_TEST_CASE_SIG(
 
         SECTION("With lvalue-ref.")
         {
-            STATIC_REQUIRE(std::same_as < Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"& noexcept override"} >>);
-            STATIC_REQUIRE(std::same_as < Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"& noexcept final"} >>);
-            STATIC_REQUIRE(std::same_as < Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"& noexcept"} >>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& noexcept override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& noexcept final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) & noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"& noexcept"}>>);
         }
 
         SECTION("With const lvalue-ref.")
         {
-            STATIC_REQUIRE(std::same_as < Return(Params...) const& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const& noexcept override"} >>);
-            STATIC_REQUIRE(std::same_as < Return(Params...) const& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const& noexcept final"} >>);
-            STATIC_REQUIRE(std::same_as < Return(Params...) const& noexcept, facade::detail::apply_normalized_specs_t < RawSig, util::StaticString{"const& noexcept"} >>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const & noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& noexcept override"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const & noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& noexcept final"}>>);
+            STATIC_REQUIRE(std::same_as<Return(Params...) const & noexcept, facade::detail::apply_normalized_specs_t<RawSig, util::StaticString{"const& noexcept"}>>);
         }
 
         SECTION("With rvalue-ref.")
@@ -235,9 +327,9 @@ TEST_CASE(
         };
 
         using Expected = Mock<
-            void()&,
+            void() &,
             void() const&,
-            void()&&,
+            void() &&,
             void() const&&>;
         STATIC_REQUIRE(std::same_as<Expected, decltype(type::foo_)>);
 
@@ -421,9 +513,9 @@ TEST_CASE(
         };
 
         using Expected = Mock<
-            void()&,
+            void() &,
             void() const&,
-            void()&&,
+            void() &&,
             void() const&&>;
         STATIC_REQUIRE(std::same_as<Expected, decltype(derived::foo_)>);
 
@@ -550,7 +642,7 @@ TEST_CASE(
 
     SECTION("Mocking lvalue qualified member function.")
     {
-        STATIC_REQUIRE(std::same_as<Mock<void()&>, decltype(Type::foo_lvalue_)>);
+        STATIC_REQUIRE(std::same_as<Mock<void() &>, decltype(Type::foo_lvalue_)>);
         ScopedExpectation const expectation = object.foo_lvalue_.expect_call();
         REQUIRE_NOTHROW(object.foo_lvalue());
     }
@@ -664,7 +756,7 @@ TEST_CASE(
 
     SECTION("Mocking lvalue qualified member function.")
     {
-        STATIC_REQUIRE(std::same_as<Mock<void(Type*)&>, decltype(Type::foo_lvalue_)>);
+        STATIC_REQUIRE(std::same_as<Mock<void(Type*) &>, decltype(Type::foo_lvalue_)>);
         SCOPED_EXP object.foo_lvalue_.expect_call(&object);
         REQUIRE_NOTHROW(object.foo_lvalue());
     }

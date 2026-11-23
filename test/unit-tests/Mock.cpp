@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2026.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -62,9 +62,9 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void()),
     (true, int()),
     (true, void(int&), int&),
-    (true, float && (int&), int&),
-    (true, float && (std::tuple<int&>&&), std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&), std::tuple<int&>&&, std::tuple<double&&> const&))
+    (true, float&&(int&), int&),
+    (true, float&&(std::tuple<int&>&&), std::tuple<int&>&&),
+    (true, float&&(std::tuple<int&>&&, std::tuple<double&&> const&), std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
@@ -122,9 +122,9 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void() const),
     (true, int() const),
     (true, void(int&) const, int&),
-    (true, float && (int&) const, int&),
-    (true, float && (std::tuple<int&>&&) const, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&) const, std::tuple<int&>&&, std::tuple<double&&> const&))
+    (true, float&&(int&) const, int&),
+    (true, float&&(std::tuple<int&>&&) const, std::tuple<int&>&&),
+    (true, float&&(std::tuple<int&>&&, std::tuple<double&&> const&) const, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
@@ -178,9 +178,9 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void() &),
     (true, int() &),
     (true, void(int&) &, int&),
-    (true, float && (int&)&, int&),
-    (true, float && (std::tuple<int&>&&)&, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&)&, std::tuple<int&>&&, std::tuple<double&&> const&))
+    (true, float&&(int&)&, int&),
+    (true, float&&(std::tuple<int&>&&)&, std::tuple<int&>&&),
+    (true, float&&(std::tuple<int&>&&, std::tuple<double&&> const&)&, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
@@ -238,9 +238,9 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void() const&),
     (true, int() const&),
     (true, void(int&) const&, int&),
-    (true, float && (int&) const&, int&),
-    (true, float && (std::tuple<int&>&&) const&, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&) const&, std::tuple<int&>&&, std::tuple<double&&> const&))
+    (true, float&&(int&) const&, int&),
+    (true, float&&(std::tuple<int&>&&) const&, std::tuple<int&>&&),
+    (true, float&&(std::tuple<int&>&&, std::tuple<double&&> const&) const&, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
@@ -294,9 +294,9 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void() &&),
     (true, int() &&),
     (true, void(int&) &&, int&),
-    (true, float && (int&) &&, int&),
-    (true, float && (std::tuple<int&>&&) &&, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&) &&, std::tuple<int&>&&, std::tuple<double&&> const&))
+    (true, float&&(int&) &&, int&),
+    (true, float&&(std::tuple<int&>&&) &&, std::tuple<int&>&&),
+    (true, float&&(std::tuple<int&>&&, std::tuple<double&&> const&) &&, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
@@ -354,9 +354,9 @@ TEMPLATE_TEST_CASE_SIG(
     (true, void() const&&),
     (true, int() const&&),
     (true, void(int&) const&&, int&),
-    (true, float && (int&) const&&, int&),
-    (true, float && (std::tuple<int&>&&) const&&, std::tuple<int&>&&),
-    (true, float && (std::tuple<int&>&&, std::tuple<double&&> const&) const&&, std::tuple<int&>&&, std::tuple<double&&> const&))
+    (true, float&&(int&) const&&, int&),
+    (true, float&&(std::tuple<int&>&&) const&&, std::tuple<int&>&&),
+    (true, float&&(std::tuple<int&>&&, std::tuple<double&&> const&) const&&, std::tuple<int&>&&, std::tuple<double&&> const&))
 {
     using ReturnT = signature_return_type_t<Sig>;
     using MockT = Mock<Sig>;
@@ -530,7 +530,7 @@ TEST_CASE(
 
     SECTION("With void() signature.")
     {
-        Mock<void()&> mock{};
+        Mock<void() &> mock{};
 
         ScopedExpectation const expectation = mock.expect_call();
         REQUIRE_FALSE(expectation.is_satisfied());
@@ -541,12 +541,12 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void()&>()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() &>()));
     }
 
     SECTION("With int() signature.")
     {
-        Mock<int()&> mock{};
+        Mock<int() &> mock{};
 
         ScopedExpectation const expectation = mock.expect_call()
                                            && finally::returns(42);
@@ -557,7 +557,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int()&>()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() &>()));
     }
 }
 
@@ -775,7 +775,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget < void() & noexcept > ()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() & noexcept>()));
     }
 
     SECTION("With int() signature.")
@@ -791,7 +791,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget < int() & noexcept > ()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() & noexcept>()));
     }
 }
 
@@ -814,7 +814,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget < void() const& noexcept > ()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() const & noexcept>()));
     }
 
     SECTION("With int() signature.")
@@ -830,7 +830,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget < int() const& noexcept > ()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() const & noexcept>()));
     }
 }
 
@@ -853,7 +853,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget < void() && noexcept > ()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() && noexcept>()));
     }
 
     SECTION("With int() signature.")
@@ -869,7 +869,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget < int() && noexcept > ()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() && noexcept>()));
     }
 }
 
@@ -892,7 +892,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget < void() const&& noexcept > ()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<void() const && noexcept>()));
     }
 
     SECTION("With int() signature.")
@@ -908,7 +908,7 @@ TEST_CASE(
         CHECK_THAT(
             reporter.full_match_reports(),
             Catch::Matchers::SizeIs(1u)
-                && Catch::Matchers::AllMatch(MatchesOverloadTarget < int() const&& noexcept > ()));
+                && Catch::Matchers::AllMatch(MatchesOverloadTarget<int() const && noexcept>()));
     }
 }
 
@@ -1248,4 +1248,43 @@ TEST_CASE(
 #endif
         }
     }
+}
+
+TEST_CASE(
+    "Mocks support move-only return-types.",
+    "[mock]")
+{
+    Mock<std::unique_ptr<int>()> mock{};
+    ScopedExpectation const expectation = mock.expect_call()
+                                      and finally::returns_result_of([] { return std::make_unique<int>(42); });
+
+    std::unique_ptr const result = mock();
+
+    REQUIRE(result);
+    CHECK(42 == *result);
+}
+
+TEST_CASE(
+    "Mocks support move-constructible but non-assignable return-types.",
+    "[mock]")
+{
+    struct MoveOnlyNonAssignable
+    {
+        std::unique_ptr<int> ptr;
+        int& ref;
+    };
+
+    STATIC_REQUIRE(std::move_constructible<MoveOnlyNonAssignable>);
+    STATIC_REQUIRE(!std::movable<MoveOnlyNonAssignable>);
+
+    int value{1337};
+    Mock<MoveOnlyNonAssignable()> mock{};
+    ScopedExpectation const expectation = mock.expect_call()
+                                      and finally::returns_result_of([&] { return MoveOnlyNonAssignable{std::make_unique<int>(42), value}; });
+
+    MoveOnlyNonAssignable const result = mock();
+
+    REQUIRE(result.ptr);
+    CHECK(42 == *result.ptr);
+    CHECK(&value == &result.ref);
 }

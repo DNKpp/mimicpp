@@ -1,4 +1,4 @@
-//          Copyright Dominic (DNKpp) Koepke 2024 - 2025.
+//          Copyright Dominic (DNKpp) Koepke 2024-2026.
 // Distributed under the Boost Software License, Version 1.0.
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          https://www.boost.org/LICENSE_1_0.txt)
@@ -132,23 +132,21 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade
         using target_type = TargetTemplate<Signatures...>;
 
         template <typename Signature, typename... Args>
-        static constexpr decltype(auto) invoke(
-            auto& target,
-            [[maybe_unused]] auto* const self,
-            std::tuple<Args...>&& args)
+        static constexpr decltype(auto) invoke(auto& target, auto* const /*self*/, std::tuple<Args...>&& args)
         {
             return detail::apply<Signature>(target, std::move(args));
         }
 
         template <typename Self>
         [[nodiscard]]
-        static MIMICPP_DETAIL_CONSTEXPR_STRING MockSettings make_settings([[maybe_unused]] Self const* const self, StringViewT const functionName)
+        static MIMICPP_DETAIL_CONSTEXPR_STRING MockSettings make_settings(Self const* const /*self*/, StringViewT const functionName)
         {
             constexpr std::size_t skip = 1u + detail::facadeBaseCallDepth + detail::applyCallDepth;
 
             return MockSettings{
                 .name = detail::generate_member_target_name<Self>(functionName),
-                .stacktraceSkip = skip};
+                .stacktraceSkip = skip,
+            };
         }
     };
 
@@ -167,22 +165,40 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade
         template <typename... Signatures>
         using target_type = TargetTemplate<prepend_this<Signatures>...>;
 
-        template <typename Signature, typename... Args>
-        static constexpr decltype(auto) invoke(auto& target, auto* const self, std::tuple<Args...>&& args)
+        template <typename ReportedSelf>
+        static constexpr bool check_self()
         {
-            return detail::apply<Signature>(
-                target,
-                std::tuple_cat(std::make_tuple(self), std::move(args)));
+            constexpr bool result = std::same_as<Self, ReportedSelf>;
+            static_assert(
+                result,
+                "The `self_type` alias must name the type that holds the member-mock with the additional this-argument, "
+                "e.g. `using self_type = Foo;` where `Foo` is the surrounding class.");
+            return result;
         }
 
-        [[nodiscard]]
-        static MIMICPP_DETAIL_CONSTEXPR_STRING MockSettings make_settings([[maybe_unused]] auto const* const self, StringViewT const functionName)
+        template <typename Signature, typename ReportedSelf, typename... Args>
+        static constexpr decltype(auto) invoke(auto& target, ReportedSelf* const self, std::tuple<Args...>&& args)
         {
+            // prevent a lot of noise, when the check fails
+            if constexpr (check_self<std::remove_const_t<ReportedSelf>>())
+            {
+                return detail::apply<Signature>(
+                    target,
+                    std::tuple_cat(std::make_tuple(self), std::move(args)));
+            }
+        }
+
+        template <typename ReportedSelf>
+        [[nodiscard]]
+        static MIMICPP_DETAIL_CONSTEXPR_STRING MockSettings make_settings(ReportedSelf const* const /*self*/, StringViewT const functionName)
+        {
+            check_self<ReportedSelf>();
             constexpr std::size_t skip = 1u + detail::facadeBaseCallDepth + detail::applyCallDepth;
 
             return MockSettings{
                 .name = detail::generate_member_target_name<Self>(functionName),
-                .stacktraceSkip = skip};
+                .stacktraceSkip = skip,
+            };
         }
     };
 
@@ -200,106 +216,90 @@ MIMICPP_DETAIL_MODULE_EXPORT namespace mimicpp::facade::detail
         requires requires { Traits::is_member; }
     inline constexpr bool is_member_v<Traits>{Traits::is_member};
 
-    template <auto specText>
-    struct apply_normalized_specs
+    struct spec_info
     {
-    private:
-        struct spec_info
-        {
-            bool hasConst{false};
-            ValueCategory refQualifier = ValueCategory::any;
-            bool hasNoexcept{false};
+        bool hasConst{false};
+        ValueCategory refQualifier = ValueCategory::any;
+        bool hasNoexcept{false};
+        bool hasOverride{false};
+        bool hasFinal{false};
+        bool isValid{true};
+    };
+
+    [[nodiscard]]
+    constexpr spec_info evaluate_specs(std::string_view specs)
+    {
+        constexpr std::string_view spaces{" \t"};
+        constexpr std::string_view letters{"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"};
+
+        spec_info info{};
+        auto const set_once = [&](bool& flag) {
+            info.isValid = info.isValid && !std::exchange(flag, true);
+        };
+        auto const set_ref = [&](ValueCategory const category) {
+            info.isValid = info.isValid && ValueCategory::any == std::exchange(info.refQualifier, category);
+        };
+        auto const skip_spaces = [&] {
+            specs.remove_prefix(std::min(specs.find_first_not_of(spaces), specs.size()));
         };
 
-        [[nodiscard]]
-        static consteval auto evaluate_specs()
+        for (skip_spaces();
+             info.isValid && !specs.empty();
+             skip_spaces())
         {
-            auto const end = std::ranges::end(specText);
-            auto const find_token_begin = [&](auto const first) noexcept {
-                // LCOV_EXCL_START
-                // For whatever reason, marking this lambda as `consteval` does not compile...
-                constexpr auto is_space = [](char const c) noexcept {
-                    return ' ' == c || '\t' == c;
-                };
-
-                return std::ranges::find_if_not(first, end, is_space);
-                // LCOV_EXCL_STOP
-            };
-
-            spec_info result{};
-            for (auto tokenBegin = find_token_begin(std::ranges::begin(specText));
-                 tokenBegin != end;
-                 tokenBegin = find_token_begin(tokenBegin))
+            if (specs.starts_with("&&"))
             {
-                tokenBegin = ('&' == *tokenBegin)
-                               ? parse_ref_specifier(tokenBegin, end, result)
-                               : parse_keyword_specifier(tokenBegin, end, result);
+                set_ref(ValueCategory::rvalue);
+                specs.remove_prefix(2u);
             }
-
-            return result;
-        }
-
-        template <typename Iter>
-        [[nodiscard]]
-        static consteval Iter parse_ref_specifier(Iter first, auto const end, spec_info& out_info)
-        {
-            MIMICPP_ASSERT(first != end, "First must point to the first `&` character.");
-            MIMICPP_ASSERT(out_info.refQualifier == ValueCategory::any, "Ref-qualifier already set.");
-
-            if (++first != end
-                && '&' == *first)
+            else if (specs.starts_with('&'))
             {
-                ++first;
-                out_info.refQualifier = ValueCategory::rvalue;
+                set_ref(ValueCategory::lvalue);
+                specs.remove_prefix(1u);
             }
             else
             {
-                out_info.refQualifier = ValueCategory::lvalue;
+                auto const length = std::min(specs.find_first_not_of(letters), specs.size());
+                std::string_view const keyword = specs.substr(0u, length);
+                specs.remove_prefix(length);
+                if ("const" == keyword)
+                {
+                    set_once(info.hasConst);
+                }
+                else if ("noexcept" == keyword)
+                {
+                    set_once(info.hasNoexcept);
+                }
+                else if ("override" == keyword)
+                {
+                    set_once(info.hasOverride);
+                }
+                else if ("final" == keyword)
+                {
+                    set_once(info.hasFinal);
+                }
+                else
+                {
+                    info.isValid = false;
+                }
             }
-
-            return first;
         }
 
-        template <typename Iter>
-        [[nodiscard]]
-        static consteval Iter parse_keyword_specifier(Iter first, auto const end, spec_info& out_info)
-        {
-            MIMICPP_ASSERT(first != end, "First must point to the first keyword character.");
+        return info;
+    }
 
-            constexpr auto is_keyword_continue = [](char const c) noexcept {
-                // LCOV_EXCL_START
-                // For whatever reason, marking this lambda as `consteval` does not compile...
-                return ('a' <= c && c <= 'z')
-                    || ('A' <= c && c <= 'Z');
-                // LCOV_EXCL_STOP
-            };
+    [[nodiscard]]
+    constexpr bool is_supported_spec(std::string_view const specs)
+    {
+        return evaluate_specs(specs).isValid;
+    }
 
-            auto const tokenEnd = std::ranges::find_if_not(first + 1u, end, is_keyword_continue);
-            std::string_view const token{first, tokenEnd};
-            if (constexpr std::string_view constKeyword{"const"};
-                constKeyword == token)
-            {
-                MIMICPP_ASSERT(!out_info.hasConst, "Const-qualifier already set.");
-                out_info.hasConst = true;
-            }
-            else if (constexpr std::string_view noexceptKeyword{"noexcept"};
-                     noexceptKeyword == token)
-            {
-                MIMICPP_ASSERT(!out_info.hasNoexcept, "Noexcept-qualifier already set.");
-                out_info.hasNoexcept = true;
-            }
-            else if (constexpr std::string_view overrideKeyword{"override"}, finalKeyword{"final"};
-                     overrideKeyword != token && finalKeyword != token)
-            {
-                throw "Invalid spec";
-            }
+    template <auto specText>
+    struct apply_normalized_specs
+    {
+        static constexpr auto info = evaluate_specs(specText.view());
+        static_assert(info.isValid, "Unsupported specifier.");
 
-            return tokenEnd;
-        }
-
-        static constexpr auto info = evaluate_specs();
-
-    public:
         template <typename Signature>
         [[nodiscard]]
         static consteval auto evaluate() noexcept
