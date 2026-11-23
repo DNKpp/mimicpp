@@ -1,11 +1,5 @@
 var NAVTREEINDEX6 =
 {
-"de/d62/_state_printer_8hpp_source.html":[6,0,1,4,5],
-"de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html":[2,11,24,2],
-"de/d62/structmimicpp_1_1uint__with__size_3_012u_01_4.html#a1087b04b099a74a359bf025a33dde0c3":[2,11,24,2,0],
-"de/d7b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_identifier.html":[3,0,0,8,0,1,0,2],
-"de/d7b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_identifier.html":[5,0,0,4,0,1,0,2],
-"de/d7b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_identifier.html#a081c80573ec95e7538efeea87b8123c9":[3,0,0,8,0,1,0,2,1],
 "de/d7b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_identifier.html#a081c80573ec95e7538efeea87b8123c9":[5,0,0,4,0,1,0,2,1],
 "de/d7b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_identifier.html#a666ce0187695d0612a9ea9966904a81e":[3,0,0,8,0,1,0,2,0],
 "de/d7b/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_identifier.html#a666ce0187695d0612a9ea9966904a81e":[5,0,0,4,0,1,0,2,0],
@@ -27,6 +21,10 @@ var NAVTREEINDEX6 =
 "de/d89/classmimicpp_1_1reporting_1_1_type_report.html#a7fc933251f6bec4ab966b2540baf3827":[5,0,0,5,12,1],
 "de/d89/classmimicpp_1_1reporting_1_1_type_report.html#aa7c3e57963406769b38c5dcb7ba4ba32":[3,0,0,9,12,2],
 "de/d89/classmimicpp_1_1reporting_1_1_type_report.html#aa7c3e57963406769b38c5dcb7ba4ba32":[5,0,0,5,12,2],
+"de/da4/classmimicpp_1_1call_1_1_result_slot_3_01void_01_4.html":[3,0,0,0,4],
+"de/da4/classmimicpp_1_1call_1_1_result_slot_3_01void_01_4.html":[5,0,0,0,4],
+"de/da4/classmimicpp_1_1call_1_1_result_slot_3_01void_01_4.html#a806782f78939d130eff8a1ded53c3962":[3,0,0,0,4,1],
+"de/da4/classmimicpp_1_1call_1_1_result_slot_3_01void_01_4.html#a806782f78939d130eff8a1ded53c3962":[5,0,0,0,4,1],
 "de/da5/structmimicpp_1_1is__character_3_01signed_01char_01_4.html":[2,10,0,2],
 "de/da5/structmimicpp_1_1is__character_3_01signed_01char_01_4.html":[2,11,1,2],
 "de/da5/structmimicpp_1_1util_1_1stacktrace_1_1backend__traits_3_01mimicpp_1_1util_1_1stacktrace_1_1_null_backend_01_4.html":[3,0,0,13,0,3],
@@ -249,5 +247,7 @@ var NAVTREEINDEX6 =
 "dir_f6af1113142479a5fa0447ddd9471db7.html":[6,0,1,4,1],
 "dir_fd16f845ff6d6fa1e1a7dbe545e57b8c.html":[6,0,2,0],
 "files.html":[6,0],
-"functions.html":[5,3,0]
+"functions.html":[5,3,0],
+"functions.html":[5,3,0,0],
+"functions_b.html":[5,3,0,1]
 };

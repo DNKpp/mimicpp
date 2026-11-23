@@ -6,8 +6,8 @@ var searchData=
   ['referencedeclarator_3',['ReferenceDeclarator',['../d3/daa/structmimicpp_1_1printing_1_1type_1_1parsing_1_1state_1_1_reference_declarator.html',1,'mimicpp::printing::type::parsing::state']]],
   ['registry_4',['Registry',['../df/df9/classmimicpp_1_1expectation_1_1_registry.html',1,'mimicpp::expectation']]],
   ['relocationwatcher_5',['RelocationWatcher',['../da/d45/classmimicpp_1_1_relocation_watcher.html',1,'mimicpp']]],
-  ['resultstorage_6',['ResultStorage',['../de/d02/classmimicpp_1_1call_1_1_result_storage.html',1,'mimicpp::call']]],
-  ['resultstorage_3c_20result_20_3e_7',['ResultStorage&lt; Result &gt;',['../d8/d19/classmimicpp_1_1call_1_1_result_storage_3_01_result_01_4.html',1,'mimicpp::call']]],
-  ['resultstorage_3c_20void_20_3e_8',['ResultStorage&lt; void &gt;',['../dc/d91/classmimicpp_1_1call_1_1_result_storage_3_01void_01_4.html',1,'mimicpp::call']]],
+  ['resultslot_6',['ResultSlot',['../db/d33/classmimicpp_1_1call_1_1_result_slot.html',1,'mimicpp::call']]],
+  ['resultslot_3c_20result_20_3e_7',['ResultSlot&lt; Result &gt;',['../dc/dd3/classmimicpp_1_1call_1_1_result_slot_3_01_result_01_4.html',1,'mimicpp::call']]],
+  ['resultslot_3c_20void_20_3e_8',['ResultSlot&lt; void &gt;',['../de/da4/classmimicpp_1_1call_1_1_result_slot_3_01void_01_4.html',1,'mimicpp::call']]],
   ['returnsresultof_9',['ReturnsResultOf',['../d8/d0b/classmimicpp_1_1expectation_1_1policies_1_1_returns_result_of.html',1,'mimicpp::expectation::policies']]]
 ];
